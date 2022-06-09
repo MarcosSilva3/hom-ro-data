@@ -45,6 +45,8 @@ public class SQLiteDB {
                     tonrw_harv, lat, lon, grower, moisture, tracking_number);
             hResult.put(field, r);
         }
+        stmt.close();
+        resultSet.close();
         return hResult;
     }
 
