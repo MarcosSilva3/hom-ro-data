@@ -1,2 +1,4 @@
-com/bayer/hom/CSWOutput.class
+com/bayer/hom/HOMResult.class
+com/bayer/hom/SQLiteDB.class
 com/bayer/hom/App.class
+com/bayer/hom/CSWOutput.class
