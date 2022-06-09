@@ -1,5 +1,7 @@
 package com.bayer.hom;
 
+import java.util.Objects;
+
 public class CSWOutput {
     private String country;
     private String plant;
