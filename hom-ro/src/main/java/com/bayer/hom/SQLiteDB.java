@@ -50,6 +50,33 @@ public class SQLiteDB {
         return hResult;
     }
 
+    public Map<String, GSMData> getGSMData(String country) throws SQLException {
+        final String query = "select site_key, year, season, tracking_number, pfo_name, entityid, variety, mst, mst_date, drydown_rate from gsm where country='"
+                + country + "'";
+        Map<String, GSMData> hResult = new HashMap<>();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        ResultSet resultSet = stmt.executeQuery();
+        while (resultSet.next()) {
+            String site_key = resultSet.getString("site_key");
+            int year = resultSet.getInt("year");
+            String season = resultSet.getString("season");
+            String tracking_number = resultSet.getString("tracking_number");
+            String pfo_name = resultSet.getString("pfo_name");
+            String entityid = resultSet.getString("entityid");
+            String variety = resultSet.getString("variety");
+            double mst = resultSet.getDouble("mst");
+            String mst_date = resultSet.getString("mst_date");
+            double drydown_rate = resultSet.getDouble("drydown_rate");
+
+            GSMData g = new GSMData(country, site_key, year, season, tracking_number, pfo_name, entityid, variety, mst,
+                    mst_date, drydown_rate);
+            hResult.put(tracking_number, g);
+        }
+        stmt.close();
+        resultSet.close();
+        return hResult;
+    }
+
     public String getDb_filename() {
         return this.db_filename;
     }

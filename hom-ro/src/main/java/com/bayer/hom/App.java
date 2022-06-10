@@ -6,16 +6,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 /**
- * Hello world!
+ * HOM Romania
  *
  */
 public class App {
     public static void main(String[] args) throws SQLException {
-        Map<String, HOMResult> hHOMResult = new HashMap<>();
-        SQLiteDB db = new SQLiteDB("/mnt/hom-ro-result-2021-10-13-19_24_59-Domino.db");
-        hHOMResult = db.getHOMResult();
 
-        for (Entry<String, HOMResult> entry : hHOMResult.entrySet()) {
+        final String country = "Romania";
+        final String db_filename = "/mnt/hom-ro-result-2021-10-13-19_24_59-Domino.db";
+
+        Map<String, HOMResult> hHOMResult = new HashMap<>();
+        Map<String, GSMData> hGSMData = new HashMap<>();
+        SQLiteDB db = new SQLiteDB(db_filename);
+        hHOMResult = db.getHOMResult();
+        hGSMData = db.getGSMData(country);
+
+        for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
             System.out.println(entry.getKey() + " => " + entry.getValue());
         }
 
