@@ -6,14 +6,14 @@ import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.util.Objects;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class ScoutWkt {
@@ -25,21 +25,27 @@ public class ScoutWkt {
     public ScoutWkt() {
     }
 
-    public ScoutWkt(String entity_id, String question_code, String token) {
+    public ScoutWkt(String entity_id, String question_code, String token)
+            throws ClientProtocolException, IOException, ParseException {
         this.entity_id = entity_id;
         this.question_code = question_code;
         this.token = token;
+        getWkData();
     }
 
     public void getWkData() throws ClientProtocolException, IOException, ParseException {
         String url = "https://geoserver-core-api.location360.ag/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=velocity-scout:scout_points&srsname=EPSG:4326&outputFormat=application/json&cql_filter=";
-        String tmp = "entity_id='" + entity_id + "' and question_code='" + question_code + "' and answered_date_time_utc >= '2021-06-01'";
+        // String tmp = "entity_id='" + entity_id + "' and question_code='" +
+        // question_code
+        // + "' and answered_date_time_utc >= '2021-06-01'";
+        String tmp = "entity_id='" + entity_id + "' and answered_date_time_utc >= '2021-06-01'";
         url += URLEncoder.encode(tmp, "UTF-8");
         HttpGet get = new HttpGet(url);
         get.setHeader("Authorization", "Bearer " + token);
         HttpClient client = HttpClientBuilder.create().build();
         HttpResponse response = client.execute(get);
         int responseCode = response.getStatusLine().getStatusCode();
+
         if (responseCode == 200) {
             BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
             StringBuilder result = new StringBuilder();
@@ -47,15 +53,15 @@ public class ScoutWkt {
             while ((line = rd.readLine()) != null) {
                 result.append(line);
             }
-            Object obj = new JSONParser().parse(result.toString());
-            JSONObject jo = (JSONObject) obj;
-            JSONArray arr = (JSONArray) jo.get("features");
-            String wkt = (String) ((JSONObject) ((JSONObject) arr.toArray()[0]).get("properties")).get("pfo_geom_wkt");
-            System.out.println(wkt);
+
+            if (result.toString().indexOf("pfo_geom_wkt") > -1) {
+                JsonNode jn = new ObjectMapper().readTree(result.toString());
+                this.wkt = jn.get("features").get(0).get("properties").get("pfo_geom_wkt").textValue();
+            }
+
         } else {
             System.out.println("Error: " + response.getStatusLine());
             System.out.println(response.getEntity().getContent());
-            System.exit(1);
         }
     }
 

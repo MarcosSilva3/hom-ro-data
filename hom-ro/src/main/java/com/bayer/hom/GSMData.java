@@ -15,6 +15,7 @@ public class GSMData {
     private double mst;
     private String mst_date;
     private double drydown_rate;
+    private String wkt;
 
     public GSMData() {
     }
@@ -122,6 +123,14 @@ public class GSMData {
         this.drydown_rate = drydown_rate;
     }
 
+    public String getWkt() {
+        return this.wkt;
+    }
+
+    public void setWkt(String wkt) {
+        this.wkt = wkt;
+    }
+
     public GSMData country(String country) {
         this.country = country;
         return this;
@@ -177,6 +186,11 @@ public class GSMData {
         return this;
     }
 
+    public GSMData wkt(String wkt) {
+        this.wkt = wkt;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -190,13 +204,14 @@ public class GSMData {
                 && Objects.equals(tracking_number, gSMData.tracking_number)
                 && Objects.equals(pfo_name, gSMData.pfo_name) && Objects.equals(entityid, gSMData.entityid)
                 && Objects.equals(variety, gSMData.variety) && mst == gSMData.mst
-                && Objects.equals(mst_date, gSMData.mst_date) && drydown_rate == gSMData.drydown_rate;
+                && Objects.equals(mst_date, gSMData.mst_date) && drydown_rate == gSMData.drydown_rate
+                && Objects.equals(wkt, gSMData.wkt);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(country, site_key, year, season, tracking_number, pfo_name, entityid, variety, mst,
-                mst_date, drydown_rate);
+                mst_date, drydown_rate, wkt);
     }
 
     @Override
@@ -205,7 +220,7 @@ public class GSMData {
                 + "'" + ", season='" + getSeason() + "'" + ", tracking_number='" + getTracking_number() + "'"
                 + ", pfo_name='" + getPfo_name() + "'" + ", entityid='" + getEntityid() + "'" + ", variety='"
                 + getVariety() + "'" + ", mst='" + getMst() + "'" + ", mst_date='" + getMst_date() + "'"
-                + ", drydown_rate='" + getDrydown_rate() + "'" + "}";
+                + ", drydown_rate='" + getDrydown_rate() + "'" + ", wkt='" + getWkt() + "'" + "}";
     }
 
 }

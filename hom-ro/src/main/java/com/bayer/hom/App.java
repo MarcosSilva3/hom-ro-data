@@ -22,7 +22,6 @@ public class App {
 
         final String country = "Romania";
         final String db_filename = "/mnt/hom-ro-result-2021-10-13-19_24_59-Domino.db";
-        final String entity_id = "2ee2d94e-b09f-4657-8072-ef3ff5b805b2";
         final String question_code = "PLTDT";
 
         Map<String, HOMResult> hHOMResult = new HashMap<>();
@@ -31,15 +30,24 @@ public class App {
         hHOMResult = db.getHOMResult();
         hGSMData = db.getGSMData(country);
 
-        for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
-            System.out.println(entry.getKey() + " => " + entry.getValue());
-        }
+        
 
         String token = new ClientToken(client_id, client_secret).getToken();
         System.out.println("Token: " + token);
 
-        ScoutWkt wkt = new ScoutWkt(entity_id, question_code, token);
-        wkt.getWkData();
+        // Get wkt for each entity_id.
+        for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
+            GSMData g = entry.getValue();
+            String entity_id = g.getEntityid();
+            ScoutWkt wkt = new ScoutWkt(entity_id, question_code, token);
+            g.setWkt(wkt.getWkt());
+            hGSMData.put(entry.getKey(), g);
+        }
+
+        for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
+            System.out.println(entry.getKey() + " => " + entry.getValue());
+        }
+
 
     }
 }
