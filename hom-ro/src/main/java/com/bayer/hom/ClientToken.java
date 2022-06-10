@@ -57,7 +57,6 @@ public class ClientToken {
             Object obj = new JSONParser().parse(result.toString());
             JSONObject jo = (JSONObject) obj;
             token = (String) jo.get("access_token");
-            System.out.println("Token " + token + " successfully created!");
         } else {
             System.out.println("Error: " + response.getStatusLine());
             System.out.println(response.getEntity().getContent());
