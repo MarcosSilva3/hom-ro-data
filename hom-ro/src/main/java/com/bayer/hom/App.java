@@ -22,6 +22,8 @@ public class App {
 
         final String country = "Romania";
         final String db_filename = "/mnt/hom-ro-result-2021-10-13-19_24_59-Domino.db";
+        final String entity_id = "2ee2d94e-b09f-4657-8072-ef3ff5b805b2";
+        final String question_code = "PLTDT";
 
         Map<String, HOMResult> hHOMResult = new HashMap<>();
         Map<String, GSMData> hGSMData = new HashMap<>();
@@ -35,6 +37,9 @@ public class App {
 
         String token = new ClientToken(client_id, client_secret).getToken();
         System.out.println("Token: " + token);
+
+        ScoutWkt wkt = new ScoutWkt(entity_id, question_code, token);
+        wkt.getWkData();
 
     }
 }
