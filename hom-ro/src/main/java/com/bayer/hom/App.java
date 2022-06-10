@@ -1,16 +1,24 @@
 package com.bayer.hom;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.simple.parser.ParseException;
 
 /**
  * HOM Romania
  *
  */
 public class App {
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, ClientProtocolException, IOException, ParseException {
+
+        Map<String, String> env = System.getenv();
+        String client_id = env.get("ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID");
+        String client_secret = env.get("ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET");
 
         final String country = "Romania";
         final String db_filename = "/mnt/hom-ro-result-2021-10-13-19_24_59-Domino.db";
@@ -24,6 +32,9 @@ public class App {
         for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
             System.out.println(entry.getKey() + " => " + entry.getValue());
         }
+
+        String token = new ClientToken(client_id, client_secret).getToken();
+        System.out.println("Token: " + token);
 
     }
 }
