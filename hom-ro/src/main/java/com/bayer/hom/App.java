@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import org.apache.http.client.ClientProtocolException;
 import org.json.simple.parser.ParseException;
 
@@ -30,7 +33,8 @@ public class App {
         hHOMResult = db.getHOMResult();
         hGSMData = db.getGSMData(country);
 
-        
+        Table<String, Integer, HOMResult> tHOMResult = HashBasedTable.create();
+        tHOMResult = db.getHOMResultTable();
 
         String token = new ClientToken(client_id, client_secret).getToken();
         System.out.println("Token: " + token);
@@ -44,10 +48,13 @@ public class App {
             hGSMData.put(entry.getKey(), g);
         }
 
-        for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
-            System.out.println(entry.getKey() + " => " + entry.getValue());
-        }
+        // for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
+        //     System.out.println(entry.getKey() + " => " + entry.getValue());
+        // }
 
+        for (Table.Cell<String, Integer, HOMResult> cell : tHOMResult.cellSet()) {
+            System.out.println(cell.getRowKey() + "|" + cell.getColumnKey() + "|" + cell.getValue());
+        }
 
     }
 }

@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 public class SQLiteDB {
     private String db_filename;
     private Connection conn;
@@ -44,6 +47,35 @@ public class SQLiteDB {
             HOMResult r = new HOMResult(field, picker, variety, harv_date, total_area, area_harv, total_tonrw,
                     tonrw_harv, lat, lon, grower, moisture, tracking_number);
             hResult.put(field, r);
+        }
+        stmt.close();
+        resultSet.close();
+        return hResult;
+    }
+
+    public Table<String, Integer, HOMResult> getHOMResultTable() throws SQLException {
+        final String query = "SELECT field, picker, variety, harv_date, total_area, area_harv, total_tonrw, tonrw_harv, lat, lon, grower, moisture, tracking_number FROM result_all_fields";
+        Table<String, Integer, HOMResult> hResult = HashBasedTable.create();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        ResultSet resultSet = stmt.executeQuery();
+        while (resultSet.next()) {
+            String field = resultSet.getString("field");
+            int part = Integer.parseInt(field.substring(Math.max(field.length() - 2, 0)));
+            String picker = resultSet.getString("picker");
+            String variety = resultSet.getString("variety");
+            String harv_date = resultSet.getString("harv_date");
+            double total_area = resultSet.getDouble("total_area");
+            double area_harv = resultSet.getDouble("area_harv");
+            double total_tonrw = resultSet.getDouble("total_tonrw");
+            double tonrw_harv = resultSet.getDouble("tonrw_harv");
+            double lat = resultSet.getDouble("lat");
+            double lon = resultSet.getDouble("lon");
+            String grower = resultSet.getString("grower");
+            double moisture = resultSet.getDouble("total_area");
+            String tracking_number = resultSet.getString("tracking_number");
+            HOMResult r = new HOMResult(field, picker, variety, harv_date, total_area, area_harv, total_tonrw,
+                    tonrw_harv, lat, lon, grower, moisture, tracking_number);
+            hResult.put(tracking_number, part, r);
         }
         stmt.close();
         resultSet.close();
