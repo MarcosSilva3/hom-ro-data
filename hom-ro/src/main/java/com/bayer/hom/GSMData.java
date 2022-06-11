@@ -16,12 +16,15 @@ public class GSMData {
     private String mst_date;
     private double drydown_rate;
     private String wkt;
+    private String min_mst_harvest_date;
+    private String max_mst_harvest_date;
 
     public GSMData() {
     }
 
     public GSMData(String country, String site_key, int year, String season, String tracking_number, String pfo_name,
-            String entityid, String variety, double mst, String mst_date, double drydown_rate) {
+            String entityid, String variety, double mst, String mst_date, double drydown_rate,
+            String min_mst_harvest_date, String max_mst_harvest_date) {
         this.country = country;
         this.site_key = site_key;
         this.year = year;
@@ -33,6 +36,8 @@ public class GSMData {
         this.mst = mst;
         this.mst_date = mst_date;
         this.drydown_rate = drydown_rate;
+        this.min_mst_harvest_date = min_mst_harvest_date;
+        this.max_mst_harvest_date = max_mst_harvest_date;
     }
 
     public String getCountry() {
@@ -131,6 +136,22 @@ public class GSMData {
         this.wkt = wkt;
     }
 
+    public String getMin_mst_harvest_date() {
+        return this.min_mst_harvest_date;
+    }
+
+    public void setMin_mst_harvest_date(String min_mst_harvest_date) {
+        this.min_mst_harvest_date = min_mst_harvest_date;
+    }
+
+    public String getMax_mst_harvest_date() {
+        return this.max_mst_harvest_date;
+    }
+
+    public void setMax_mst_harvest_date(String max_mst_harvest_date) {
+        this.max_mst_harvest_date = max_mst_harvest_date;
+    }
+
     public GSMData country(String country) {
         this.country = country;
         return this;
@@ -191,6 +212,16 @@ public class GSMData {
         return this;
     }
 
+    public GSMData min_mst_harvest_date(String min_mst_harvest_date) {
+        this.min_mst_harvest_date = min_mst_harvest_date;
+        return this;
+    }
+
+    public GSMData max_mst_harvest_date(String max_mst_harvest_date) {
+        this.max_mst_harvest_date = max_mst_harvest_date;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -205,13 +236,15 @@ public class GSMData {
                 && Objects.equals(pfo_name, gSMData.pfo_name) && Objects.equals(entityid, gSMData.entityid)
                 && Objects.equals(variety, gSMData.variety) && mst == gSMData.mst
                 && Objects.equals(mst_date, gSMData.mst_date) && drydown_rate == gSMData.drydown_rate
-                && Objects.equals(wkt, gSMData.wkt);
+                && Objects.equals(wkt, gSMData.wkt)
+                && Objects.equals(min_mst_harvest_date, gSMData.min_mst_harvest_date)
+                && Objects.equals(max_mst_harvest_date, gSMData.max_mst_harvest_date);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(country, site_key, year, season, tracking_number, pfo_name, entityid, variety, mst,
-                mst_date, drydown_rate, wkt);
+                mst_date, drydown_rate, wkt, min_mst_harvest_date, max_mst_harvest_date);
     }
 
     @Override
@@ -220,7 +253,8 @@ public class GSMData {
                 + "'" + ", season='" + getSeason() + "'" + ", tracking_number='" + getTracking_number() + "'"
                 + ", pfo_name='" + getPfo_name() + "'" + ", entityid='" + getEntityid() + "'" + ", variety='"
                 + getVariety() + "'" + ", mst='" + getMst() + "'" + ", mst_date='" + getMst_date() + "'"
-                + ", drydown_rate='" + getDrydown_rate() + "'" + ", wkt='" + getWkt() + "'" + "}";
+                + ", drydown_rate='" + getDrydown_rate() + "'" + ", wkt='" + getWkt() + "'" + ", min_mst_harvest_date='"
+                + getMin_mst_harvest_date() + "'" + ", max_mst_harvest_date='" + getMax_mst_harvest_date() + "'" + "}";
     }
 
 }

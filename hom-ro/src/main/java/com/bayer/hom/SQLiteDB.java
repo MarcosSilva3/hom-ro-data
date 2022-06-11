@@ -83,7 +83,7 @@ public class SQLiteDB {
     }
 
     public Map<String, GSMData> getGSMData(String country) throws SQLException {
-        final String query = "select site_key, year, season, tracking_number, pfo_name, entityid, variety, mst, mst_date, drydown_rate from gsm where country='"
+        final String query = "select site_key, year, season, tracking_number, pfo_name, entityid, variety, mst, mst_date, drydown_rate, min_mst_harvest_date, max_mst_harvest_date from gsm where country='"
                 + country + "'";
         Map<String, GSMData> hResult = new HashMap<>();
         PreparedStatement stmt = conn.prepareStatement(query);
@@ -99,14 +99,35 @@ public class SQLiteDB {
             double mst = resultSet.getDouble("mst");
             String mst_date = resultSet.getString("mst_date");
             double drydown_rate = resultSet.getDouble("drydown_rate");
+            String min_mst_harvest_date = resultSet.getString("min_mst_harvest_date");
+            String max_mst_harvest_date = resultSet.getString("max_mst_harvest_date");
 
             GSMData g = new GSMData(country, site_key, year, season, tracking_number, pfo_name, entityid, variety, mst,
-                    mst_date, drydown_rate);
+                    mst_date, drydown_rate, min_mst_harvest_date, max_mst_harvest_date);
+
             hResult.put(tracking_number, g);
         }
         stmt.close();
         resultSet.close();
         return hResult;
+    }
+
+    public Map<String, HybridData> getHybridData() throws SQLException {
+        final String query = "select hybrid, highest_harv_moisture, lowest_harv_moisture from optimal_moistures";
+        Map<String, HybridData> hHybridData = new HashMap<>();
+        PreparedStatement stmt = conn.prepareStatement(query);
+        ResultSet resultSet = stmt.executeQuery();
+        while (resultSet.next()) {
+            String hybrid = resultSet.getString("hybrid");
+            double highest_harv_moisture = resultSet.getDouble("highest_harv_moisture");
+            double lowest_harv_moisture = resultSet.getDouble("lowest_harv_moisture");
+
+            HybridData hd = new HybridData(hybrid, highest_harv_moisture, lowest_harv_moisture);
+            hHybridData.put(hybrid, hd);
+        }
+        stmt.close();
+        resultSet.close();
+        return hHybridData;
     }
 
     public String getDb_filename() {

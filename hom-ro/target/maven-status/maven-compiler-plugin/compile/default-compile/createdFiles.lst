@@ -5,3 +5,4 @@ com/bayer/hom/SQLiteDB.class
 com/bayer/hom/App.class
 com/bayer/hom/GSMData.class
 com/bayer/hom/CSWOutput.class
+com/bayer/hom/HybridData.class
