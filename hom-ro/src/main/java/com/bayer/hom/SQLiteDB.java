@@ -71,7 +71,7 @@ public class SQLiteDB {
             double lat = resultSet.getDouble("lat");
             double lon = resultSet.getDouble("lon");
             String grower = resultSet.getString("grower");
-            double moisture = resultSet.getDouble("total_area");
+            double moisture = resultSet.getDouble("moisture");
             String tracking_number = resultSet.getString("tracking_number");
             HOMResult r = new HOMResult(field, picker, variety, harv_date, total_area, area_harv, total_tonrw,
                     tonrw_harv, lat, lon, grower, moisture, tracking_number);
@@ -98,6 +98,11 @@ public class SQLiteDB {
             String variety = resultSet.getString("variety");
             double mst = resultSet.getDouble("mst");
             String mst_date = resultSet.getString("mst_date");
+
+            if (mst_date.equalsIgnoreCase("undef")) {
+                mst_date = "";
+            }
+
             double drydown_rate = resultSet.getDouble("drydown_rate");
             String min_mst_harvest_date = resultSet.getString("min_mst_harvest_date");
             String max_mst_harvest_date = resultSet.getString("max_mst_harvest_date");
