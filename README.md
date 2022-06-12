@@ -1,6 +1,6 @@
 # Harvest Optimizatino Model (HOM) - CSW output
 
-This repository shows an example of saving HOM results in CSW, including how to get AWS credentials in *Vault*, to save the csv file with the output in an S3 bucket provided by Location 360.
+This repository shows an example of how to save HOM results in CSW, starting from how to get AWS credentials in *Vault*, to saving the csv file with the output in an S3 bucket provided by Location 360.
 
 The data used for this example uses HOM output from **Romania** 2021 harvest season.
 
