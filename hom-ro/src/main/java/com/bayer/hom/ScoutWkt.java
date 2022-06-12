@@ -18,17 +18,15 @@ import org.json.simple.parser.ParseException;
 
 public class ScoutWkt {
     private String entity_id;
-    private String question_code;
     private String token;
     private String wkt;
 
     public ScoutWkt() {
     }
 
-    public ScoutWkt(String entity_id, String question_code, String token)
+    public ScoutWkt(String entity_id, String token)
             throws ClientProtocolException, IOException, ParseException {
         this.entity_id = entity_id;
-        this.question_code = question_code;
         this.token = token;
         getWkData();
     }
@@ -73,14 +71,6 @@ public class ScoutWkt {
         this.entity_id = entity_id;
     }
 
-    public String getQuestion_code() {
-        return this.question_code;
-    }
-
-    public void setQuestion_code(String question_code) {
-        this.question_code = question_code;
-    }
-
     public String getWkt() {
         return this.wkt;
     }
@@ -91,11 +81,6 @@ public class ScoutWkt {
 
     public ScoutWkt entity_id(String entity_id) {
         this.entity_id = entity_id;
-        return this;
-    }
-
-    public ScoutWkt question_code(String question_code) {
-        this.question_code = question_code;
         return this;
     }
 
@@ -112,18 +97,17 @@ public class ScoutWkt {
             return false;
         }
         ScoutWkt scoutWkt = (ScoutWkt) o;
-        return Objects.equals(entity_id, scoutWkt.entity_id) && Objects.equals(question_code, scoutWkt.question_code)
-                && Objects.equals(wkt, scoutWkt.wkt);
+        return Objects.equals(entity_id, scoutWkt.entity_id) && Objects.equals(wkt, scoutWkt.wkt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(entity_id, question_code, wkt);
+        return Objects.hash(entity_id, wkt);
     }
 
     @Override
     public String toString() {
-        return "{" + " entity_id='" + getEntity_id() + "'" + ", question_code='" + getQuestion_code() + "'" + ", wkt='"
+        return "{" + " entity_id='" + getEntity_id() + "'" + ", wkt='"
                 + getWkt() + "'" + "}";
     }
 

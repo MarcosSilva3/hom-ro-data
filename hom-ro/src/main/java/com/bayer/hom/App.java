@@ -16,12 +16,21 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import com.bettercloud.vault.Vault;
+import com.bettercloud.vault.VaultConfig;
+import com.bettercloud.vault.VaultException;
+import com.bettercloud.vault.response.AuthResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.http.client.ClientProtocolException;
+import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 /**
@@ -38,17 +47,20 @@ public class App {
 
         final String country = "Romania";
         final String db_filename = "/mnt/hom-ro-result-2021-10-13-19_24_59-Domino.db";
-        final String question_code = "PLTDT";
         final String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
         final String fileNameTimeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new java.util.Date());
 
-        Map<String, HOMResult> hHOMResult = new HashMap<>();
+        Map<String, String> hAWS = new HashMap<>();
         Map<String, GSMData> hGSMData = new HashMap<>();
         Map<String, HybridData> hHybridData = new HashMap<>();
         final SQLiteDB db = new SQLiteDB(db_filename);
-        hHOMResult = db.getHOMResult();
         hHybridData = db.getHybridData();
         hGSMData = db.getGSMData(country);
+        try {
+            hAWS = getAWSCredentials();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Table<String, Integer, HOMResult> tHOMResult = HashBasedTable.create();
         tHOMResult = db.getHOMResultTable();
@@ -59,7 +71,7 @@ public class App {
         for (final Entry<String, GSMData> entry : hGSMData.entrySet()) {
             final GSMData g = entry.getValue();
             final String entity_id = g.getEntityid();
-            final ScoutWkt wkt = new ScoutWkt(entity_id, question_code, token);
+            final ScoutWkt wkt = new ScoutWkt(entity_id, token);
             g.setWkt(wkt.getWkt());
             hGSMData.put(entry.getKey(), g);
         }
@@ -197,6 +209,45 @@ public class App {
 
     }
 
+    public static Map<String, String> getAWSCredentials()
+            throws VaultException, JsonMappingException, JsonProcessingException {
+        Map<String, String> result = new HashMap<>();
+        Map<String, String> hAWS = new HashMap<>();
+        final String vault_address = System.getenv("VAULT_URL");
+        final String role_id = System.getenv("MO_VAULT_APP_ROLE_ID");
+        final String secret_id = System.getenv("MO_VAULT_APP_ROLE_SECRET_ID");
+        // final String secrets_path = System.getenv("VAULT_PATH_LOC360_AWS_PROD");
+        final String secrets_path = System.getenv("VAULT_PATH_LOC360_AWS_NP");
+
+        final Integer engineVersion = 1;
+
+        final VaultConfig config = new VaultConfig().address(vault_address).build();
+        final Vault vault = new Vault(config, engineVersion);
+        final AuthResponse response = vault.auth().loginByAppRole(role_id, secret_id);
+        final String clientAuthToken = response.getAuthClientToken();
+        config.token(clientAuthToken);
+        result = new HashMap<>(vault.logical().read(secrets_path).getData());
+
+        final String jsonString = result.get("data");
+        JsonNode jn = new ObjectMapper().readTree(jsonString);
+        final String AccessKeyId = jn.get("AccessKeyId").textValue();
+        final String SecretAccessKey = jn.get("SecretAccessKey").textValue();
+
+        hAWS.put("AccessKeyId", AccessKeyId);
+        hAWS.put("SecretAccessKey", SecretAccessKey);
+
+        System.out.println("AccessKeyId: " + AccessKeyId);
+        System.out.println("SecretAccessKey: " + SecretAccessKey);
+
+        return hAWS;
+    }
+
+    /**
+     * 
+     * @param lCSWRows
+     * @param fileNameTimeStamp
+     * @throws IOException
+     */
     public static void generateCSV(final List<CSWOutput> lCSWRows, String fileNameTimeStamp) throws IOException {
         final String csv_file = "hom_output_" + fileNameTimeStamp + ".csv";
         final FileWriter out = new FileWriter(csv_file);
