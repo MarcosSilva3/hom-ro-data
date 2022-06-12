@@ -30,13 +30,11 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.25.2</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
       <version>4.5.13</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
     <dependency>
       <groupId>com.googlecode.json-simple</groupId>
       <artifactId>json-simple</artifactId>
@@ -61,6 +59,11 @@
       <groupId>com.bettercloud</groupId>
       <artifactId>vault-java-driver</artifactId>
       <version>5.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>com.amazonaws</groupId>
+      <artifactId>aws-java-sdk</artifactId>
+      <version>1.12.238</version>
     </dependency>
   </dependencies>
 

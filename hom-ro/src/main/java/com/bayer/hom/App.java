@@ -1,13 +1,10 @@
 package com.bayer.hom;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +13,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.bettercloud.vault.Vault;
 import com.bettercloud.vault.VaultConfig;
 import com.bettercloud.vault.VaultException;
@@ -30,7 +33,6 @@ import com.google.common.collect.Table;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.http.client.ClientProtocolException;
-import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 /**
@@ -76,13 +78,12 @@ public class App {
             hGSMData.put(entry.getKey(), g);
         }
 
-        // for (Entry<String, GSMData> entry : hGSMData.entrySet()) {
-        // System.out.println(entry.getKey() + " => " + entry.getValue());
-        // }
-
         final List<CSWOutput> lCSWRows = new ArrayList<>();
-
+        Map<String, Boolean> hVisited = new HashMap<>();
         for (final Table.Cell<String, Integer, HOMResult> cell : tHOMResult.cellSet()) {
+            if (hVisited.containsKey(cell.getRowKey())) {
+                continue;
+            }
             if (hGSMData.containsKey(cell.getRowKey())) {
                 final GSMData g = hGSMData.get(cell.getRowKey());
                 final HOMResult r1 = tHOMResult.get(cell.getRowKey(), 1);
@@ -200,15 +201,39 @@ public class App {
                         harvest_type, estimated_number_of_trucks, field_moisture, moisture_collected_date, field_lat,
                         field_lon, wkt, model_timestamp);
 
-                System.out.println(csw_out);
+                // System.out.println(csw_out);
                 lCSWRows.add(csw_out);
+                hVisited.put(cell.getRowKey(), true);
             }
         }
 
         generateCSV(lCSWRows, fileNameTimeStamp);
-
+        saveResultsInCSW(fileNameTimeStamp, hAWS);
     }
 
+    /**
+     * 
+     * @param fileNameTimeStamp
+     * @param hAWS
+     */
+    public static void saveResultsInCSW(String fileNameTimeStamp, Map<String, String> hAWS) {
+        AWSCredentials credentials = new BasicAWSCredentials(hAWS.get("AccessKeyId"), hAWS.get("SecretAccessKey"));
+        AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_1).build();
+
+        final String csv_file = "hom_output_" + fileNameTimeStamp + ".csv";
+        String bucketName = "bayer.loc360-prod.use1.envmt.gsm";
+        String key = "csw/hom/" + csv_file;
+        s3client.putObject(bucketName, key, new File(csv_file));
+    }
+
+    /**
+     * 
+     * @return
+     * @throws VaultException
+     * @throws JsonMappingException
+     * @throws JsonProcessingException
+     */
     public static Map<String, String> getAWSCredentials()
             throws VaultException, JsonMappingException, JsonProcessingException {
         Map<String, String> result = new HashMap<>();
@@ -216,8 +241,8 @@ public class App {
         final String vault_address = System.getenv("VAULT_URL");
         final String role_id = System.getenv("MO_VAULT_APP_ROLE_ID");
         final String secret_id = System.getenv("MO_VAULT_APP_ROLE_SECRET_ID");
-        // final String secrets_path = System.getenv("VAULT_PATH_LOC360_AWS_PROD");
-        final String secrets_path = System.getenv("VAULT_PATH_LOC360_AWS_NP");
+        final String secrets_path = System.getenv("VAULT_PATH_LOC360_AWS_PROD");
+        // final String secrets_path = System.getenv("VAULT_PATH_LOC360_AWS_NP");
 
         final Integer engineVersion = 1;
 
@@ -232,13 +257,8 @@ public class App {
         JsonNode jn = new ObjectMapper().readTree(jsonString);
         final String AccessKeyId = jn.get("AccessKeyId").textValue();
         final String SecretAccessKey = jn.get("SecretAccessKey").textValue();
-
         hAWS.put("AccessKeyId", AccessKeyId);
         hAWS.put("SecretAccessKey", SecretAccessKey);
-
-        System.out.println("AccessKeyId: " + AccessKeyId);
-        System.out.println("SecretAccessKey: " + SecretAccessKey);
-
         return hAWS;
     }
 
