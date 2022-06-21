@@ -1,4 +1,4 @@
-# Harvest Optimizatino Model (HOM) - CSW output
+# Harvest Optimization Model (HOM) - CSW output
 
 This repository shows an example of how to save HOM results in CSW, starting from how to get AWS credentials in *Vault*, to saving the csv file with the output in an S3 bucket provided by Location 360.
 
