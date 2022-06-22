@@ -9,6 +9,7 @@ public class Contract {
     private String fieldNumber;
     private String growerName;
     private String acronym;
+    private String trackingNumber;
     private String lastHarvestReceiptDate;
     private String contractLineDeleteFlag;
     private double harvestedFemaleArea;
@@ -17,15 +18,14 @@ public class Contract {
     public Contract() {
     }
 
-    public Contract(String contractNumber, String plantNumber, String year, String fieldNumber, String growerName,
-            String acronym, String lastHarvestReceiptDate, String contractLineDeleteFlag, double harvestedFemaleArea,
-            double moisturePercentage) {
+    public Contract(String contractNumber, String plantNumber, String year, String fieldNumber, String growerName, String acronym, String trackingNumber, String lastHarvestReceiptDate, String contractLineDeleteFlag, double harvestedFemaleArea, double moisturePercentage) {
         this.contractNumber = contractNumber;
         this.plantNumber = plantNumber;
         this.year = year;
         this.fieldNumber = fieldNumber;
         this.growerName = growerName;
         this.acronym = acronym;
+        this.trackingNumber = trackingNumber;
         this.lastHarvestReceiptDate = lastHarvestReceiptDate;
         this.contractLineDeleteFlag = contractLineDeleteFlag;
         this.harvestedFemaleArea = harvestedFemaleArea;
@@ -78,6 +78,14 @@ public class Contract {
 
     public void setAcronym(String acronym) {
         this.acronym = acronym;
+    }
+
+    public String getTrackingNumber() {
+        return this.trackingNumber;
+    }
+
+    public void setTrackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
     }
 
     public String getLastHarvestReceiptDate() {
@@ -142,6 +150,11 @@ public class Contract {
         return this;
     }
 
+    public Contract trackingNumber(String trackingNumber) {
+        this.trackingNumber = trackingNumber;
+        return this;
+    }
+
     public Contract lastHarvestReceiptDate(String lastHarvestReceiptDate) {
         this.lastHarvestReceiptDate = lastHarvestReceiptDate;
         return this;
@@ -170,30 +183,29 @@ public class Contract {
             return false;
         }
         Contract contract = (Contract) o;
-        return Objects.equals(contractNumber, contract.contractNumber)
-                && Objects.equals(plantNumber, contract.plantNumber) && Objects.equals(year, contract.year)
-                && Objects.equals(fieldNumber, contract.fieldNumber) && Objects.equals(growerName, contract.growerName)
-                && Objects.equals(acronym, contract.acronym)
-                && Objects.equals(lastHarvestReceiptDate, contract.lastHarvestReceiptDate)
-                && Objects.equals(contractLineDeleteFlag, contract.contractLineDeleteFlag)
-                && harvestedFemaleArea == contract.harvestedFemaleArea
-                && moisturePercentage == contract.moisturePercentage;
+        return Objects.equals(contractNumber, contract.contractNumber) && Objects.equals(plantNumber, contract.plantNumber) && Objects.equals(year, contract.year) && Objects.equals(fieldNumber, contract.fieldNumber) && Objects.equals(growerName, contract.growerName) && Objects.equals(acronym, contract.acronym) && Objects.equals(trackingNumber, contract.trackingNumber) && Objects.equals(lastHarvestReceiptDate, contract.lastHarvestReceiptDate) && Objects.equals(contractLineDeleteFlag, contract.contractLineDeleteFlag) && harvestedFemaleArea == contract.harvestedFemaleArea && moisturePercentage == contract.moisturePercentage;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(contractNumber, plantNumber, year, fieldNumber, growerName, acronym, lastHarvestReceiptDate,
-                contractLineDeleteFlag, harvestedFemaleArea, moisturePercentage);
+        return Objects.hash(contractNumber, plantNumber, year, fieldNumber, growerName, acronym, trackingNumber, lastHarvestReceiptDate, contractLineDeleteFlag, harvestedFemaleArea, moisturePercentage);
     }
 
     @Override
     public String toString() {
-        return "{" + " contractNumber='" + getContractNumber() + "'" + ", plantNumber='" + getPlantNumber() + "'"
-                + ", year='" + getYear() + "'" + ", fieldNumber='" + getFieldNumber() + "'" + ", growerName='"
-                + getGrowerName() + "'" + ", acronym='" + getAcronym() + "'" + ", lastHarvestReceiptDate='"
-                + getLastHarvestReceiptDate() + "'" + ", contractLineDeleteFlag='" + getContractLineDeleteFlag() + "'"
-                + ", harvestedFemaleArea='" + getHarvestedFemaleArea() + "'" + ", moisturePercentage='"
-                + getMoisturePercentage() + "'" + "}";
+        return "{" +
+            " contractNumber='" + getContractNumber() + "'" +
+            ", plantNumber='" + getPlantNumber() + "'" +
+            ", year='" + getYear() + "'" +
+            ", fieldNumber='" + getFieldNumber() + "'" +
+            ", growerName='" + getGrowerName() + "'" +
+            ", acronym='" + getAcronym() + "'" +
+            ", trackingNumber='" + getTrackingNumber() + "'" +
+            ", lastHarvestReceiptDate='" + getLastHarvestReceiptDate() + "'" +
+            ", contractLineDeleteFlag='" + getContractLineDeleteFlag() + "'" +
+            ", harvestedFemaleArea='" + getHarvestedFemaleArea() + "'" +
+            ", moisturePercentage='" + getMoisturePercentage() + "'" +
+            "}";
     }
 
 }

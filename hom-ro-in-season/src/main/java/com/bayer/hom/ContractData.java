@@ -98,6 +98,7 @@ public class ContractData {
                 final String contractNumber = (String) contract.get("contractNumber");
                 final String growerName = (String) contractHeader.get("growerName");
                 final String acronym = (String) contractLineItems.get("acronym");
+                final String trackingNumber = (String) contractLineItems.get("trackingNumber");
                 final String lastHarvestReceiptDate = (String) contractLineItems.get("lastHarvestReceiptDate");
                 final String contractLineDeleteFlag = (String) contractLineItems.get("contractLineDeleteFlag");
 
@@ -121,8 +122,8 @@ public class ContractData {
                 }
 
                 this.contract = new Contract(contractNumber, plantNumber, Integer.toString(year), fieldNumber,
-                        growerName, acronym, lastHarvestReceiptDate, contractLineDeleteFlag, harvestedFemaleArea,
-                        moisturePercentage);
+                        growerName, acronym, trackingNumber, lastHarvestReceiptDate, contractLineDeleteFlag,
+                        harvestedFemaleArea, moisturePercentage);
                 slf4jLogger.debug("{}_{} contract: {}", this.plantNumber, this.fieldNumber, this.contract);
                 hFieldOK.put(this.plantNumber + "_" + this.fieldNumber, true);
             }
