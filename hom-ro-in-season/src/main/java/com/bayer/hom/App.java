@@ -1,5 +1,6 @@
 package com.bayer.hom;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -7,6 +8,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,7 +42,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -87,6 +91,7 @@ public class App {
         Map<String, ScoutWkt> hFieldsScout = new HashMap<>();
         Map<String, FieldManualPlan> hFieldsManualPlan = new HashMap<>();
         List<FieldHOM> lFieldsHOM = new ArrayList<>();
+        List<Site> lSite = new ArrayList<>();
 
         final List<String> lSites = new ArrayList<>();
 
@@ -131,6 +136,21 @@ public class App {
         lFieldsHOM = generateFieldsHOM(hFieldsManualPlan, hFieldsGSM, hFieldContract, hFieldsScout, hFieldsPFO,
                 hProducts);
 
+        // Get list of site capacity per day.
+        lSite = generateSiteCapHOM(hom_parameters);
+
+        // Generate json
+        HOMInput hom_input = new HOMInput(lSite, lFieldsHOM, hom_parameters.getHom_day_one(),
+                hom_parameters.getHom_user(), hom_parameters.getHom_region(), hom_parameters.getHom_method(),
+                hom_parameters.getHom_tabu_size(), hom_parameters.getHom_max_iter(), hom_parameters.getHom_max_days(),
+                hom_parameters.getHom_picker_cap());
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        String hom_input_json = ow.writeValueAsString(hom_input);
+        BufferedWriter out = new BufferedWriter(new FileWriter("hom_input.json"));
+        out.write(hom_input_json);
+        out.close();
+
+        // Check the data
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
             slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
         }
@@ -162,6 +182,64 @@ public class App {
         }
         slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
 
+    }
+
+    /**
+     * Generate site capacity for each day.
+     * 
+     * @param hom_parameters
+     * @return
+     * @throws java.text.ParseException
+     */
+    public static List<Site> generateSiteCapHOM(HOMParameters hom_parameters) throws java.text.ParseException {
+        List<Site> lSite = new ArrayList<>();
+        final int max_hys = 7;
+        final double site_cap_saturday = 1000.;
+        final double site_cap_sunday = 0.;
+        final double site_cap = 1500.0;
+        final String hom_day_one = hom_parameters.getHom_day_one();
+        final int hom_max_days = hom_parameters.getHom_max_days();
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date startDate = formatter.parse(hom_day_one);
+        LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate end = start.plusDays(hom_max_days);
+
+        for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1)) {
+
+            DayOfWeek dow = date.getDayOfWeek();
+            String day_of_week = dow.toString();
+            String site_name = "sinesti";
+            int sitekey = 1299;
+            int caphy_bulk = 0;
+            int caphy_ear = max_hys;
+            int caphy_only_ear = max_hys;
+            double capton_ear = site_cap;
+            double capton_bulk = 0.;
+            double capton_only_ear = site_cap;
+            int captrucks_ear = 100;
+            int captrucks_bulk = 0;
+            int captrucks_only_ear = 100;
+
+            if (dow == DayOfWeek.SATURDAY) {
+                capton_ear = site_cap_saturday;
+            }
+
+            if (dow == DayOfWeek.SUNDAY) {
+                capton_ear = site_cap_sunday;
+                caphy_ear = 0;
+                caphy_only_ear = 0;
+                captrucks_ear = 0;
+                captrucks_only_ear = 0;
+            }
+
+            Site s = new Site(site_name, sitekey, caphy_bulk, caphy_ear, caphy_only_ear, capton_ear, capton_bulk,
+                    capton_only_ear, captrucks_ear, captrucks_bulk, captrucks_only_ear, date.toString(), day_of_week);
+
+            lSite.add(s);
+            slf4jLogger.debug("[Site HOM] Site cap. {}", s);
+        }
+        return lSite;
     }
 
     /**
@@ -255,8 +333,7 @@ public class App {
             String cluster = field_manual_plan.getPicker_group();
             String twstart = field_manual_plan.getHarvest_window_start();
             String twend = field_manual_plan.getHarvest_window_end();
-            double area = contains_contract_data ? field_contract.getHarvestedFemaleArea()
-                    : field_manual_plan.getActive_ha();
+            double area = contains_gsm_data ? field_gsm.getFf_area() : field_manual_plan.getActive_ha();
             double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
 
             double tonha = field_manual_plan.getYield_ton_ha();
@@ -295,6 +372,14 @@ public class App {
         String env_client_id = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID";
         String env_client_secret = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET";
         String manual_plan_excel_path = "/mnt/Corn Harvesting plan RO 2022 v4.xlsx";
+        String hom_day_one = "2022-08-01";
+        String hom_user = "Domino";
+        int hom_tabu_size = 1;
+        int hom_max_iter = 2;
+        int hom_picker_cap = 45;
+        String hom_region = "romania";
+        int hom_max_days = 130;
+        String hom_method = "ear+bulk";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -348,8 +433,42 @@ public class App {
             manual_plan_excel_path = (String) o.get("manual_plan_excel_path");
         }
 
+        if (o.get("hom_day_one") != null) {
+            hom_day_one = (String) o.get("hom_day_one");
+        }
+
+        if (o.get("hom_user") != null) {
+            hom_user = (String) o.get("hom_user");
+        }
+
+        if (o.get("hom_tabu_size") != null) {
+            hom_tabu_size = ((Number) o.get("hom_tabu_size")).intValue();
+        }
+
+        if (o.get("hom_max_iter") != null) {
+            hom_max_iter = ((Number) o.get("hom_max_iter")).intValue();
+        }
+
+        if (o.get("hom_picker_cap") != null) {
+            hom_picker_cap = ((Number) o.get("hom_picker_cap")).intValue();
+        }
+
+        if (o.get("hom_region") != null) {
+            hom_region = (String) o.get("hom_region");
+        }
+
+        if (o.get("hom_max_days") != null) {
+            hom_max_days = ((Number) o.get("hom_max_days")).intValue();
+        }
+
+        if (o.get("hom_method") != null) {
+            hom_method = (String) o.get("hom_method");
+        }
+
         HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
-                project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path);
+                project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
+                hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
+                hom_method);
         return p;
     }
 

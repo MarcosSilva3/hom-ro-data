@@ -15,13 +15,23 @@ public class HOMParameters {
     private String env_client_id;
     private String env_client_secret;
     private String manual_plan_excel_path;
+    private String hom_day_one;
+    private String hom_user;
+    private int hom_tabu_size;
+    private int hom_max_iter;
+    private int hom_picker_cap;
+    private String hom_region;
+    private int hom_max_days;
+    private String hom_method;
 
     public HOMParameters() {
     }
 
     public HOMParameters(String log_config_file, String country, int year, int year_for_contract, String season,
             String private_key_file, String project_id, String regionCode, String cropCycleCode, String env_client_id,
-            String env_client_secret, String manual_plan_excel_path) {
+            String env_client_secret, String manual_plan_excel_path, String hom_day_one, String hom_user,
+            int hom_tabu_size, int hom_max_iter, int hom_picker_cap, String hom_region, int hom_max_days,
+            String hom_method) {
         this.log_config_file = log_config_file;
         this.country = country;
         this.year = year;
@@ -34,6 +44,14 @@ public class HOMParameters {
         this.env_client_id = env_client_id;
         this.env_client_secret = env_client_secret;
         this.manual_plan_excel_path = manual_plan_excel_path;
+        this.hom_day_one = hom_day_one;
+        this.hom_user = hom_user;
+        this.hom_tabu_size = hom_tabu_size;
+        this.hom_max_iter = hom_max_iter;
+        this.hom_picker_cap = hom_picker_cap;
+        this.hom_region = hom_region;
+        this.hom_max_days = hom_max_days;
+        this.hom_method = hom_method;
     }
 
     public String getLog_config_file() {
@@ -132,6 +150,70 @@ public class HOMParameters {
         this.manual_plan_excel_path = manual_plan_excel_path;
     }
 
+    public String getHom_day_one() {
+        return this.hom_day_one;
+    }
+
+    public void setHom_day_one(String hom_day_one) {
+        this.hom_day_one = hom_day_one;
+    }
+
+    public String getHom_user() {
+        return this.hom_user;
+    }
+
+    public void setHom_user(String hom_user) {
+        this.hom_user = hom_user;
+    }
+
+    public int getHom_tabu_size() {
+        return this.hom_tabu_size;
+    }
+
+    public void setHom_tabu_size(int hom_tabu_size) {
+        this.hom_tabu_size = hom_tabu_size;
+    }
+
+    public int getHom_max_iter() {
+        return this.hom_max_iter;
+    }
+
+    public void setHom_max_iter(int hom_max_iter) {
+        this.hom_max_iter = hom_max_iter;
+    }
+
+    public int getHom_picker_cap() {
+        return this.hom_picker_cap;
+    }
+
+    public void setHom_picker_cap(int hom_picker_cap) {
+        this.hom_picker_cap = hom_picker_cap;
+    }
+
+    public String getHom_region() {
+        return this.hom_region;
+    }
+
+    public void setHom_region(String hom_region) {
+        this.hom_region = hom_region;
+    }
+
+    public int getHom_max_days() {
+        return this.hom_max_days;
+    }
+
+    public void setHom_max_days(int hom_max_days) {
+        this.hom_max_days = hom_max_days;
+    }
+
+    public String getHom_method() {
+        return this.hom_method;
+    }
+
+    public void setHom_method(String hom_method) {
+        this.hom_method = hom_method;
+    }
+
     public HOMParameters log_config_file(String log_config_file) {
         this.log_config_file = log_config_file;
         return this;
@@ -192,6 +274,46 @@ public class HOMParameters {
         return this;
     }
 
+    public HOMParameters hom_day_one(String hom_day_one) {
+        this.hom_day_one = hom_day_one;
+        return this;
+    }
+
+    public HOMParameters hom_user(String hom_user) {
+        this.hom_user = hom_user;
+        return this;
+    }
+
+    public HOMParameters hom_tabu_size(int hom_tabu_size) {
+        this.hom_tabu_size = hom_tabu_size;
+        return this;
+    }
+
+    public HOMParameters hom_max_iter(int hom_max_iter) {
+        this.hom_max_iter = hom_max_iter;
+        return this;
+    }
+
+    public HOMParameters hom_picker_cap(int hom_picker_cap) {
+        this.hom_picker_cap = hom_picker_cap;
+        return this;
+    }
+
+    public HOMParameters hom_region(String hom_region) {
+        this.hom_region = hom_region;
+        return this;
+    }
+
+    public HOMParameters hom_max_days(int hom_max_days) {
+        this.hom_max_days = hom_max_days;
+        return this;
+    }
+
+    public HOMParameters hom_method(String hom_method) {
+        this.hom_method = hom_method;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -209,13 +331,19 @@ public class HOMParameters {
                 && Objects.equals(cropCycleCode, hOMParameters.cropCycleCode)
                 && Objects.equals(env_client_id, hOMParameters.env_client_id)
                 && Objects.equals(env_client_secret, hOMParameters.env_client_secret)
-                && Objects.equals(manual_plan_excel_path, hOMParameters.manual_plan_excel_path);
+                && Objects.equals(manual_plan_excel_path, hOMParameters.manual_plan_excel_path)
+                && Objects.equals(hom_day_one, hOMParameters.hom_day_one)
+                && Objects.equals(hom_user, hOMParameters.hom_user) && hom_tabu_size == hOMParameters.hom_tabu_size
+                && hom_max_iter == hOMParameters.hom_max_iter && hom_picker_cap == hOMParameters.hom_picker_cap
+                && Objects.equals(hom_region, hOMParameters.hom_region) && hom_max_days == hOMParameters.hom_max_days
+                && Objects.equals(hom_method, hOMParameters.hom_method);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(log_config_file, country, year, year_for_contract, season, private_key_file, project_id,
-                regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path);
+                regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path, hom_day_one,
+                hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days, hom_method);
     }
 
     @Override
@@ -225,7 +353,11 @@ public class HOMParameters {
                 + "'" + ", private_key_file='" + getPrivate_key_file() + "'" + ", project_id='" + getProject_id() + "'"
                 + ", regionCode='" + getRegionCode() + "'" + ", cropCycleCode='" + getCropCycleCode() + "'"
                 + ", env_client_id='" + getEnv_client_id() + "'" + ", env_client_secret='" + getEnv_client_secret()
-                + "'" + ", manual_plan_excel_path='" + getManual_plan_excel_path() + "'" + "}";
+                + "'" + ", manual_plan_excel_path='" + getManual_plan_excel_path() + "'" + ", hom_day_one='"
+                + getHom_day_one() + "'" + ", hom_user='" + getHom_user() + "'" + ", hom_tabu_size='"
+                + getHom_tabu_size() + "'" + ", hom_max_iter='" + getHom_max_iter() + "'" + ", hom_picker_cap='"
+                + getHom_picker_cap() + "'" + ", hom_region='" + getHom_region() + "'" + ", hom_max_days='"
+                + getHom_max_days() + "'" + ", hom_method='" + getHom_method() + "'" + "}";
     }
 
 }

@@ -12,7 +12,9 @@ com/bayer/hom/PFOData.class
 com/bayer/hom/ProductCharacterization.class
 com/bayer/hom/ContractData.class
 com/bayer/hom/HOMParameters.class
+com/bayer/hom/Site.class
 com/bayer/hom/FieldHOM.class
 com/bayer/hom/ManualPlanExcel.class
 com/bayer/hom/CSWOutput.class
+com/bayer/hom/HOMInput.class
 com/bayer/hom/HybridData.class
