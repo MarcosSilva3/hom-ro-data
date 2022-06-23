@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +54,9 @@ public class App {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
 
     public static void main(String[] args) throws InterruptedException, Exception {
-        final String log_config_file = "logback-hom-ro-in-season.xml";
+        HOMParameters hom_parameters = readConfigFile("hom-config.json");
+
+        final String log_config_file = hom_parameters.getLog_config_file();
         final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
         loggerContext.reset();
         final ch.qos.logback.classic.joran.JoranConfigurator configurator = new ch.qos.logback.classic.joran.JoranConfigurator();
@@ -63,22 +66,24 @@ public class App {
         configStream.close();
 
         final Map<String, String> env = System.getenv();
-        final String client_id = env.get("ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID");
-        final String client_secret = env.get("ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET");
-        final String country = "Romania";
-        final int year = 2022;
-        final int year_for_contract = 2022;
-        final String season = "Spring";
-        final String private_key_file = "private_key.json";
-        final String project_id = "location360-datasets";
+        final String client_id = env.get(hom_parameters.getEnv_client_id());
+        final String client_secret = env.get(hom_parameters.getEnv_client_secret());
+        final String country = hom_parameters.getCountry();
+        final int year = hom_parameters.getYear();
+        final int year_for_contract = hom_parameters.getYear_for_contract();
+        final String season = hom_parameters.getSeason();
+        final String regionCode = hom_parameters.getRegionCode();
+        final String cropCycleCode = hom_parameters.getCropCycleCode();
+        final String private_key_file = hom_parameters.getPrivate_key_file();
+        final String project_id = hom_parameters.getProject_id();
         final String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
         final String fileNameTimeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new java.util.Date());
         final String token = new ClientToken(client_id, client_secret, log_config_file).getToken();
 
         Map<String, String> hAWS = new HashMap<>();
         Map<String, GSMData> hFieldsGSM = new HashMap<>();
-        final Map<String, HybridData> hHybridData = new HashMap<>();
         final Map<String, Contract> hFieldContract = new HashMap<>();
+        Map<String, ProductCharacterization> hProducts = new HashMap<>();
 
         final List<String> lSites = new ArrayList<>();
 
@@ -105,6 +110,9 @@ public class App {
             hFieldContract.put(entry.getKey(), contract_data.getContract());
         }
 
+        // Get product characterization data
+        hProducts = (new ProductCharacterizationData(token, log_config_file, regionCode, cropCycleCode)).getHProducts();
+
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
             slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
         }
@@ -120,6 +128,89 @@ public class App {
         }
         slf4jLogger.debug("[Contract] Total number of fields: {}", hFieldContract.size());
 
+        for (final Entry<String, ProductCharacterization> entry : hProducts.entrySet()) {
+            slf4jLogger.debug("[ProductCharacterization] {} => {}}", entry.getKey(), entry.getValue());
+        }
+        slf4jLogger.debug("[Product Characterization] Total number of products: {}", hProducts.size());
+
+    }
+
+    /**
+     * Read parameters file for HOM.
+     * 
+     * @param filename
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ParseException
+     */
+    public static HOMParameters readConfigFile(String filename)
+            throws FileNotFoundException, IOException, ParseException {
+        final JSONParser parser = new JSONParser();
+        final JSONObject o = (JSONObject) parser.parse(new FileReader(filename));
+        String log_config_file = "logback-hom-ro-in-season.xml";
+        String country = "Romania";
+        int year = 2022;
+        int year_for_contract = 2022;
+        String season = "Spring";
+        String private_key_file = "private_key.json";
+        String project_id = "location360-datasets";
+        String regionCode = "EME";
+        String cropCycleCode = "2022_EME";
+        String env_client_id = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID";
+        String env_client_secret = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET";
+
+        if (o.get("log_config_file") != null) {
+            log_config_file = (String) o.get("log_config_file");
+        }
+
+        if (o.get("country") != null) {
+            country = (String) o.get("country");
+        }
+
+        if (o.get("year") != null) {
+            year = ((Long) o.get("year")).intValue();
+        }
+
+        if (o.get("year_for_contract") != null) {
+            year_for_contract = ((Long) o.get("year_for_contract")).intValue();
+        }
+
+        if (o.get("season") != null) {
+            season = (String) o.get("season");
+        }
+
+        if (o.get("private_key_file") != null) {
+            private_key_file = (String) o.get("private_key_file");
+        }
+
+        if (o.get("project_id") != null) {
+            project_id = (String) o.get("project_id");
+        }
+
+        if (o.get("regionCode") != null) {
+            regionCode = (String) o.get("regionCode");
+        }
+
+        if (o.get("cropCycleCode") != null) {
+            cropCycleCode = (String) o.get("cropCycleCode");
+        }
+
+        if (o.get("cropCycleCode") != null) {
+            cropCycleCode = (String) o.get("cropCycleCode");
+        }
+
+        if (o.get("env_client_id") != null) {
+            env_client_id = (String) o.get("env_client_id");
+        }
+
+        if (o.get("env_client_secret") != null) {
+            env_client_secret = (String) o.get("env_client_secret");
+        }
+
+        HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
+                project_id, regionCode, cropCycleCode, env_client_id, env_client_secret);
+        return p;
     }
 
     /**

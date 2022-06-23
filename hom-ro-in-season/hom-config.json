@@ -1,0 +1,13 @@
+{
+    "log_config_file" : "logback-hom-ro-in-season.xml",
+    "country" : "Romania",
+    "year" : 2022,
+    "year_for_contract" : 2022,
+    "season" : "Spring",
+    "private_key_file" : "private_key.json",
+    "project_id" : "location360-datasets",
+    "regionCode" : "EME",
+    "cropCycleCode" : "2022_EME",
+    "env_client_id" : "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID",
+    "env_client_secret" : "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET"
+}
