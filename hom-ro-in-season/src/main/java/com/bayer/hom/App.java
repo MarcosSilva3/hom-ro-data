@@ -84,6 +84,9 @@ public class App {
         Map<String, GSMData> hFieldsGSM = new HashMap<>();
         final Map<String, Contract> hFieldContract = new HashMap<>();
         Map<String, ProductCharacterization> hProducts = new HashMap<>();
+        Map<String, ScoutWkt> hFieldsScout = new HashMap<>();
+        Map<String, FieldManualPlan> hFieldsManualPlan = new HashMap<>();
+        List<FieldHOM> lFieldsHOM = new ArrayList<>();
 
         final List<String> lSites = new ArrayList<>();
 
@@ -110,12 +113,23 @@ public class App {
             hFieldContract.put(entry.getKey(), contract_data.getContract());
         }
 
+        // Get wkt for each entity_id.
+        for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
+            final GSMData g = entry.getValue();
+            final String entity_id = g.getEntityid();
+            final ScoutWkt wkt = new ScoutWkt(entity_id, token);
+            hFieldsScout.put(entity_id, wkt);
+        }
+
         // Get product characterization data
         hProducts = (new ProductCharacterizationData(token, log_config_file, regionCode, cropCycleCode)).getHProducts();
 
         // Read fields from manual plan in Excel
-        Map<String, FieldManualPlan> hFieldsManualPlan = (new ManualPlanExcel(
-                hom_parameters.getManual_plan_excel_path())).getHFields();
+        hFieldsManualPlan = (new ManualPlanExcel(hom_parameters.getManual_plan_excel_path())).getHFields();
+
+        // Get the list of fields to be included in the optimzation.
+        lFieldsHOM = generateFieldsHOM(hFieldsManualPlan, hFieldsGSM, hFieldContract, hFieldsScout, hFieldsPFO,
+                hProducts);
 
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
             slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
@@ -138,10 +152,122 @@ public class App {
         slf4jLogger.debug("[Product Characterization] Total number of products: {}", hProducts.size());
 
         for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
-            slf4jLogger.debug("[Manual Plan Excel] {} => {}}", entry.getKey(), entry.getValue());
+            slf4jLogger.debug("[Manual Plan Excel] {} => {}", entry.getKey(), entry.getValue());
         }
         slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}", hFieldsManualPlan.size());
 
+        // Fields to be included in the optimization
+        for (FieldHOM f : lFieldsHOM) {
+            slf4jLogger.debug("[Fields HOM-OPT] {}", f);
+        }
+        slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
+
+    }
+
+    /**
+     * Create list of fields to be included in the optimization.
+     * 
+     * @param hFieldsManualPlan
+     * @param hFieldsGSM
+     * @param hFieldContract
+     * @param hFieldsScout
+     * @param hFieldsPFO
+     * @param hProducts
+     * @return
+     */
+    public static List<FieldHOM> generateFieldsHOM(Map<String, FieldManualPlan> hFieldsManualPlan,
+            Map<String, GSMData> hFieldsGSM, Map<String, Contract> hFieldContract, Map<String, ScoutWkt> hFieldsScout,
+            Map<String, FieldPFO> hFieldsPFO, Map<String, ProductCharacterization> hProducts) {
+        List<FieldHOM> lFieldsHOM = new ArrayList<>();
+
+        for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
+            String lot = entry.getKey();
+            FieldManualPlan field_manual_plan = entry.getValue();
+            GSMData field_gsm = new GSMData();
+            Contract field_contract = new Contract();
+            ScoutWkt field_scout = new ScoutWkt();
+            FieldPFO field_pfo = new FieldPFO();
+            ProductCharacterization product = new ProductCharacterization();
+            String entityid = null;
+            String abc = "B";
+
+            boolean contains_gsm_data = false;
+            boolean contains_contract_data = false;
+            boolean contains_scout_data = false;
+            boolean contains_product_data = false;
+            boolean contains_pfo_data = false;
+
+            String hybrid = field_manual_plan.getHybrid().toUpperCase().replaceAll("\\s+", "").replaceAll("STE", "");
+            double latitude = 0.0;
+            double longitude = 0.0;
+            int lowest_harvest_moisture = 28;
+            int highest_harvest_moisture = 33;
+            int sitekey = 0;
+
+            if (hFieldsGSM.containsKey(lot)) {
+                field_gsm = hFieldsGSM.get(lot);
+                entityid = field_gsm.getEntityid();
+                latitude = field_gsm.getLat();
+                longitude = field_gsm.getLon();
+                sitekey = Integer.parseInt(field_gsm.getSite_key());
+                contains_gsm_data = true;
+            } else {
+                slf4jLogger.error("[Fields HOM] Field {} not found in GSM output", lot);
+            }
+
+            if (entityid != null && !entityid.isEmpty() && hFieldContract.containsKey(entityid)) {
+                field_contract = hFieldContract.get(entityid);
+                contains_contract_data = true;
+            } else {
+                slf4jLogger.error("[Fields HOM] Field {} not found in Contract", lot);
+            }
+
+            if (entityid != null && !entityid.isEmpty() && hFieldsScout.containsKey(entityid)) {
+                field_scout = hFieldsScout.get(entityid);
+                if (latitude == 0. || longitude == 0.) {
+                    latitude = field_scout.getLat();
+                    longitude = field_scout.getLon();
+                }
+                contains_scout_data = true;
+            } else {
+                slf4jLogger.error("[Fields HOM] Field {} not found in Contract", lot);
+            }
+
+            if (entityid != null && !entityid.isEmpty() && hFieldsPFO.containsKey(entityid)) {
+                field_pfo = hFieldsPFO.get(entityid);
+                if (sitekey == 0) {
+                    sitekey = Integer.parseInt(field_pfo.getPlant());
+                    contains_pfo_data = true;
+                }
+                contains_scout_data = true;
+            } else {
+                slf4jLogger.error("[Fields HOM] Field {} not found in PFO", lot);
+            }
+
+            if (hProducts.containsKey(hybrid)) {
+                product = hProducts.get(hybrid);
+                lowest_harvest_moisture = product.getLowest_rec();
+                highest_harvest_moisture = product.getHighest_rec();
+                abc = product.getLowestHarvestMoisture();
+            }
+
+            String region = field_manual_plan.getRegion();
+            String cluster = field_manual_plan.getPicker_group();
+            String twstart = field_manual_plan.getHarvest_window_start();
+            String twend = field_manual_plan.getHarvest_window_end();
+            double area = contains_contract_data ? field_contract.getHarvestedFemaleArea()
+                    : field_manual_plan.getActive_ha();
+            double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
+
+            double tonha = field_manual_plan.getYield_ton_ha();
+            double kg = tonha * area;
+
+            String harv_type = "ear";
+            FieldHOM f = new FieldHOM(lot, hybrid, sitekey, region, cluster, twstart, twend, area, drydown_rate,
+                    latitude, longitude, lowest_harvest_moisture, highest_harvest_moisture, tonha, kg, abc, harv_type);
+            lFieldsHOM.add(f);
+        }
+        return lFieldsHOM;
     }
 
     /**

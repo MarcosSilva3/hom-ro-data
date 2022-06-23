@@ -4,28 +4,33 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URLEncoder;
-import java.util.Objects;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Iterator;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.core.spi.LogbackLock;
 
 public class ScoutWkt {
+    private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
     private String entity_id;
     private String token;
     private String wkt;
+    private double lat;
+    private double lon;
 
     public ScoutWkt() {
     }
 
-    public ScoutWkt(String entity_id, String token)
-            throws ClientProtocolException, IOException, ParseException {
+    public ScoutWkt(String entity_id, String token) throws ClientProtocolException, IOException, ParseException {
         this.entity_id = entity_id;
         this.token = token;
         getWkData();
@@ -52,63 +57,111 @@ public class ScoutWkt {
                 result.append(line);
             }
 
-            if (result.toString().indexOf("pfo_geom_wkt") > -1) {
-                JsonNode jn = new ObjectMapper().readTree(result.toString());
-                this.wkt = jn.get("features").get(0).get("properties").get("pfo_geom_wkt").textValue();
-            }
+            slf4jLogger.debug("[Scout Wkt] Start of entity_id: {}", entity_id);
+            final Object obj = new JSONParser().parse(result.toString());
+            final JSONObject jsonObject = (JSONObject) obj;
+            if (jsonObject.containsKey("features")) {
+                final JSONArray features = (JSONArray) jsonObject.get("features");
+                final Iterator i = features.iterator();
+                final JSONObject feature = (JSONObject) i.next();
+                if (feature.containsKey("geometry") && feature.containsKey("properties")) {
+                    final JSONObject geometry = (JSONObject) feature.get("geometry");
+                    final JSONObject properties = (JSONObject) feature.get("properties");
+                    try {
+                        if (geometry.containsKey("coordinates") && (geometry.get("coordinates") != null)) {
 
+                            final JSONArray coordinates = (JSONArray) geometry.get("coordinates");
+                            if (coordinates.size() == 2) {
+                                this.lat = ((Number) coordinates.get(0)).doubleValue();
+                                this.lon = ((Number) coordinates.get(1)).doubleValue();
+                                this.wkt = (String) properties.get("pfo_geom_wkt");
+                                slf4jLogger.debug("[Scout Wkt] {} => lat: {}, lon: {}, wkt: {}", entity_id, lat, lon,
+                                        wkt);
+                            }
+                        } else {
+                            slf4jLogger.error("[Scout Wkt] entity_id {} with error in coordinates", entity_id);
+                        }
+                    } catch (Exception ex) {
+                        slf4jLogger.error("[Scout Wkt] entity_id {} with error in coordinates", entity_id);
+                    }
+                }
+            } else {
+                slf4jLogger.error("[Scout Wkt] entity_id {} without features in JSON returned", entity_id);
+            }
         } else {
-            System.out.println("Error: " + response.getStatusLine());
-            System.out.println(response.getEntity().getContent());
+            slf4jLogger.error("[Scout Wkt] request error for entity_id {} => {}, {}", entity_id,
+                    response.getStatusLine(), response.getEntity().getContent());
         }
     }
 
+    /**
+     * @return String return the entity_id
+     */
     public String getEntity_id() {
-        return this.entity_id;
+        return entity_id;
     }
 
+    /**
+     * @param entity_id the entity_id to set
+     */
     public void setEntity_id(String entity_id) {
         this.entity_id = entity_id;
     }
 
-    public String getWkt() {
-        return this.wkt;
+    /**
+     * @return String return the token
+     */
+    public String getToken() {
+        return token;
     }
 
+    /**
+     * @param token the token to set
+     */
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    /**
+     * @return String return the wkt
+     */
+    public String getWkt() {
+        return wkt;
+    }
+
+    /**
+     * @param wkt the wkt to set
+     */
     public void setWkt(String wkt) {
         this.wkt = wkt;
     }
 
-    public ScoutWkt entity_id(String entity_id) {
-        this.entity_id = entity_id;
-        return this;
+    /**
+     * @return double return the lat
+     */
+    public double getLat() {
+        return lat;
     }
 
-    public ScoutWkt wkt(String wkt) {
-        this.wkt = wkt;
-        return this;
+    /**
+     * @param lat the lat to set
+     */
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == this)
-            return true;
-        if (!(o instanceof ScoutWkt)) {
-            return false;
-        }
-        ScoutWkt scoutWkt = (ScoutWkt) o;
-        return Objects.equals(entity_id, scoutWkt.entity_id) && Objects.equals(wkt, scoutWkt.wkt);
+    /**
+     * @return double return the lon
+     */
+    public double getLon() {
+        return lon;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(entity_id, wkt);
-    }
-
-    @Override
-    public String toString() {
-        return "{" + " entity_id='" + getEntity_id() + "'" + ", wkt='"
-                + getWkt() + "'" + "}";
+    /**
+     * @param lon the lon to set
+     */
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 
 }
