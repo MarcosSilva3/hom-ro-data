@@ -14,13 +14,14 @@ public class HOMParameters {
     private String cropCycleCode;
     private String env_client_id;
     private String env_client_secret;
+    private String manual_plan_excel_path;
 
     public HOMParameters() {
     }
 
     public HOMParameters(String log_config_file, String country, int year, int year_for_contract, String season,
             String private_key_file, String project_id, String regionCode, String cropCycleCode, String env_client_id,
-            String env_client_secret) {
+            String env_client_secret, String manual_plan_excel_path) {
         this.log_config_file = log_config_file;
         this.country = country;
         this.year = year;
@@ -32,6 +33,7 @@ public class HOMParameters {
         this.cropCycleCode = cropCycleCode;
         this.env_client_id = env_client_id;
         this.env_client_secret = env_client_secret;
+        this.manual_plan_excel_path = manual_plan_excel_path;
     }
 
     public String getLog_config_file() {
@@ -122,6 +124,14 @@ public class HOMParameters {
         this.env_client_secret = env_client_secret;
     }
 
+    public String getManual_plan_excel_path() {
+        return this.manual_plan_excel_path;
+    }
+
+    public void setManual_plan_excel_path(String manual_plan_excel_path) {
+        this.manual_plan_excel_path = manual_plan_excel_path;
+    }
+
     public HOMParameters log_config_file(String log_config_file) {
         this.log_config_file = log_config_file;
         return this;
@@ -177,6 +187,11 @@ public class HOMParameters {
         return this;
     }
 
+    public HOMParameters manual_plan_excel_path(String manual_plan_excel_path) {
+        this.manual_plan_excel_path = manual_plan_excel_path;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -193,13 +208,14 @@ public class HOMParameters {
                 && Objects.equals(regionCode, hOMParameters.regionCode)
                 && Objects.equals(cropCycleCode, hOMParameters.cropCycleCode)
                 && Objects.equals(env_client_id, hOMParameters.env_client_id)
-                && Objects.equals(env_client_secret, hOMParameters.env_client_secret);
+                && Objects.equals(env_client_secret, hOMParameters.env_client_secret)
+                && Objects.equals(manual_plan_excel_path, hOMParameters.manual_plan_excel_path);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(log_config_file, country, year, year_for_contract, season, private_key_file, project_id,
-                regionCode, cropCycleCode, env_client_id, env_client_secret);
+                regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path);
     }
 
     @Override
@@ -209,7 +225,7 @@ public class HOMParameters {
                 + "'" + ", private_key_file='" + getPrivate_key_file() + "'" + ", project_id='" + getProject_id() + "'"
                 + ", regionCode='" + getRegionCode() + "'" + ", cropCycleCode='" + getCropCycleCode() + "'"
                 + ", env_client_id='" + getEnv_client_id() + "'" + ", env_client_secret='" + getEnv_client_secret()
-                + "'" + "}";
+                + "'" + ", manual_plan_excel_path='" + getManual_plan_excel_path() + "'" + "}";
     }
 
 }

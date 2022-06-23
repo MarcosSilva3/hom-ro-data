@@ -113,6 +113,10 @@ public class App {
         // Get product characterization data
         hProducts = (new ProductCharacterizationData(token, log_config_file, regionCode, cropCycleCode)).getHProducts();
 
+        // Read fields from manual plan in Excel
+        Map<String, FieldManualPlan> hFieldsManualPlan = (new ManualPlanExcel(
+                hom_parameters.getManual_plan_excel_path())).getHFields();
+
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
             slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
         }
@@ -129,9 +133,14 @@ public class App {
         slf4jLogger.debug("[Contract] Total number of fields: {}", hFieldContract.size());
 
         for (final Entry<String, ProductCharacterization> entry : hProducts.entrySet()) {
-            slf4jLogger.debug("[ProductCharacterization] {} => {}}", entry.getKey(), entry.getValue());
+            slf4jLogger.debug("[Product Characterization] {} => {}}", entry.getKey(), entry.getValue());
         }
         slf4jLogger.debug("[Product Characterization] Total number of products: {}", hProducts.size());
+
+        for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
+            slf4jLogger.debug("[Manual Plan Excel] {} => {}}", entry.getKey(), entry.getValue());
+        }
+        slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}", hFieldsManualPlan.size());
 
     }
 
@@ -159,6 +168,7 @@ public class App {
         String cropCycleCode = "2022_EME";
         String env_client_id = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID";
         String env_client_secret = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET";
+        String manual_plan_excel_path = "/mnt/Corn Harvesting plan RO 2022 v4.xlsx";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -208,8 +218,12 @@ public class App {
             env_client_secret = (String) o.get("env_client_secret");
         }
 
+        if (o.get("manual_plan_excel_path") != null) {
+            manual_plan_excel_path = (String) o.get("manual_plan_excel_path");
+        }
+
         HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
-                project_id, regionCode, cropCycleCode, env_client_id, env_client_secret);
+                project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path);
         return p;
     }
 

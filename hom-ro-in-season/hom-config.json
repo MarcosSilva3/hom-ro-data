@@ -9,5 +9,6 @@
     "regionCode" : "EME",
     "cropCycleCode" : "2022_EME",
     "env_client_id" : "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID",
-    "env_client_secret" : "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET"
+    "env_client_secret" : "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET",
+    "manual_plan_excel_path" : "/mnt/Corn Harvesting plan RO 2022 v4.xlsx"
 }
