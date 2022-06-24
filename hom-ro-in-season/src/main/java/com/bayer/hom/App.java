@@ -858,21 +858,21 @@ public class App {
         final JSONArray a = (JSONArray) parser.parse(new FileReader(hom_result_file_path));
         for (final Object o : a) {
             final JSONObject result = (JSONObject) o;
-            final String field = (String) result.get("Field");
+            final String field = (String) result.get("field");
             final int part = Integer.parseInt(field.substring(Math.max(field.length() - 2, 0)));
-            final String picker = (String) result.get("Picker");
-            final String variety = (String) result.get("Variety");
-            final String harv_date = (String) result.get("Harv.Date");
-            final double total_area = Double.parseDouble((String) result.get("Total.Area"));
-            final double area_harv = Double.parseDouble((String) result.get("Area.Harv"));
-            final double total_tonrw = Double.parseDouble((String) result.get("Total.TonRW"));
-            final double tonrw_harv = Double.parseDouble((String) result.get("TonRW.Harv"));
-            final double lat = Double.parseDouble((String) result.get("Latitude"));
-            final double lon = Double.parseDouble((String) result.get("Longitude"));
+            final String picker = (String) result.get("picker");
+            final String variety = (String) result.get("variety");
+            final String harv_date = (String) result.get("harv_date");
+            final double total_area = Double.parseDouble((String) result.get("total_area"));
+            final double area_harv = Double.parseDouble((String) result.get("area_harv"));
+            final double total_tonrw = Double.parseDouble((String) result.get("total_tonrw"));
+            final double tonrw_harv = Double.parseDouble((String) result.get("tonrw_harv"));
+            final double lat = Double.parseDouble((String) result.get("latitude"));
+            final double lon = Double.parseDouble((String) result.get("longitude"));
             final String grower = "NA";
-            final double moisture = Double.parseDouble((String) result.get("Moisture"));
-            final String tracking_number = (String) result.get("Field2");
-            final int lateness = Integer.parseInt((String) result.get("Lateness"));
+            final double moisture = Double.parseDouble((String) result.get("moisture"));
+            final String tracking_number = (String) result.get("field2");
+            final int lateness = Integer.parseInt((String) result.get("lateness"));
             final HOMResult r = new HOMResult(field, picker, variety, harv_date, total_area, area_harv, total_tonrw,
                     tonrw_harv, lat, lon, grower, moisture, tracking_number, lateness);
             hResult.put(tracking_number, part, r);
