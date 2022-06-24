@@ -331,8 +331,10 @@ public class App {
 
             String region = field_manual_plan.getRegion();
             String cluster = field_manual_plan.getPicker_group();
-            String twstart = field_manual_plan.getHarvest_window_start();
-            String twend = field_manual_plan.getHarvest_window_end();
+            String twstart = contains_gsm_data ? field_gsm.getMax_mst_harvest_date()
+                    : field_manual_plan.getHarvest_window_start();
+            String twend = contains_gsm_data ? field_gsm.getMin_mst_harvest_date()
+                    : field_manual_plan.getHarvest_window_end();
             double area = contains_gsm_data ? field_gsm.getFf_area() : field_manual_plan.getActive_ha();
             double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
 

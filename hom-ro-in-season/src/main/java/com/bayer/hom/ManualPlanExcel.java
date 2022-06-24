@@ -4,11 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -52,9 +56,9 @@ public class ManualPlanExcel {
                 double active_ha = getNumericValue(row.getCell(23));
                 double yield_ton_ha = getNumericValue(row.getCell(43));
                 String picker_group = getStringValue(row.getCell(42));
-                String harvest_date = getStringValue(row.getCell(46));
-                String harvest_window_start = getStringValue(row.getCell(47));
-                String harvest_window_end = getStringValue(row.getCell(48));
+                String harvest_date = getDateValue(row.getCell(46));
+                String harvest_window_start = getDateValue(row.getCell(47));
+                String harvest_window_end = getDateValue(row.getCell(48));
                 FieldManualPlan f = new FieldManualPlan(region, seed_plant, dh_qualifyed, grower, tracking_number,
                         hybrid, suspect, suspect_comments, husking_difficulty, female, male, active_ha, yield_ton_ha,
                         picker_group, harvest_date, harvest_window_start, harvest_window_end);
@@ -67,6 +71,19 @@ public class ManualPlanExcel {
                 slf4jLogger.debug("[Manual Plan Excel] Field {}", f);
             }
         }
+    }
+
+    private String getDateValue(Cell cell) {
+        String date = null;
+
+        if (cell == null || cell.getCellType() == CellType.BLANK) {
+            // This cell is empty
+        } else {
+            if (DateUtil.isCellDateFormatted(cell)) {
+                date = new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue());
+            }
+        }
+        return date;
     }
 
     /**
