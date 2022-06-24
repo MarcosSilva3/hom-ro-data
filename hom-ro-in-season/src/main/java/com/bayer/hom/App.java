@@ -153,6 +153,13 @@ public class App {
         // solve model
         SolveModel solve_model = new SolveModel(hom_input_json, hom_parameters);
         solve_model.submitJob();
+        String status = solve_model.getJobStatus();
+        while (!status.equalsIgnoreCase("finished")) {
+            status = solve_model.getJobStatus();
+            slf4jLogger.debug("[HOM Solve Model] status {}", status);
+            // check status at every 5 seconds.
+            TimeUnit.SECONDS.sleep(5);
+        }
 
         // Check the data
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
