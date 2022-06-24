@@ -150,6 +150,10 @@ public class App {
         out.write(hom_input_json);
         out.close();
 
+        // solve model
+        SolveModel solve_model = new SolveModel(hom_input_json, hom_parameters);
+        solve_model.submitJob();
+
         // Check the data
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
             slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
@@ -398,6 +402,8 @@ public class App {
         String hom_region = "romania";
         int hom_max_days = 130;
         String hom_method = "ear+bulk";
+        String clientIdEngine = "HOM_ENGINE_CLIENT_ID";
+        String clientSecretEngine = "HOM_ENGINE_CLIENT_SECRET";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -483,10 +489,18 @@ public class App {
             hom_method = (String) o.get("hom_method");
         }
 
+        if (o.get("clientIdEngine") != null) {
+            clientIdEngine = (String) o.get("clientIdEngine");
+        }
+
+        if (o.get("clientSecretEngine") != null) {
+            clientSecretEngine = (String) o.get("clientSecretEngine");
+        }
+
         HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
                 project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
                 hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
-                hom_method);
+                hom_method, clientIdEngine, clientSecretEngine);
         return p;
     }
 

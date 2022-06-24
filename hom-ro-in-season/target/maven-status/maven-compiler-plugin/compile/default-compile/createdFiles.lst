@@ -7,6 +7,7 @@ com/bayer/hom/App.class
 com/bayer/hom/ClientToken.class
 com/bayer/hom/GSMData.class
 com/bayer/hom/FieldPFO.class
+com/bayer/hom/SolveModel.class
 com/bayer/hom/ScoutWkt.class
 com/bayer/hom/PFOData.class
 com/bayer/hom/ProductCharacterization.class

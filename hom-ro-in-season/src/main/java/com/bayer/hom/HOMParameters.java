@@ -23,6 +23,8 @@ public class HOMParameters {
     private String hom_region;
     private int hom_max_days;
     private String hom_method;
+    private String clientIdEngine;
+    private String clientSecretEngine;
 
     public HOMParameters() {
     }
@@ -31,7 +33,7 @@ public class HOMParameters {
             String private_key_file, String project_id, String regionCode, String cropCycleCode, String env_client_id,
             String env_client_secret, String manual_plan_excel_path, String hom_day_one, String hom_user,
             int hom_tabu_size, int hom_max_iter, int hom_picker_cap, String hom_region, int hom_max_days,
-            String hom_method) {
+            String hom_method, String clientIdEngine, String clientSecretEngine) {
         this.log_config_file = log_config_file;
         this.country = country;
         this.year = year;
@@ -52,6 +54,8 @@ public class HOMParameters {
         this.hom_region = hom_region;
         this.hom_max_days = hom_max_days;
         this.hom_method = hom_method;
+        this.clientIdEngine = clientIdEngine;
+        this.clientSecretEngine = clientSecretEngine;
     }
 
     public String getLog_config_file() {
@@ -214,6 +218,22 @@ public class HOMParameters {
         this.hom_method = hom_method;
     }
 
+    public String getClientIdEngine() {
+        return this.clientIdEngine;
+    }
+
+    public void setClientIdEngine(String clientIdEngine) {
+        this.clientIdEngine = clientIdEngine;
+    }
+
+    public String getClientSecretEngine() {
+        return this.clientSecretEngine;
+    }
+
+    public void setClientSecretEngine(String clientSecretEngine) {
+        this.clientSecretEngine = clientSecretEngine;
+    }
+
     public HOMParameters log_config_file(String log_config_file) {
         this.log_config_file = log_config_file;
         return this;
@@ -314,6 +334,16 @@ public class HOMParameters {
         return this;
     }
 
+    public HOMParameters clientIdEngine(String clientIdEngine) {
+        this.clientIdEngine = clientIdEngine;
+        return this;
+    }
+
+    public HOMParameters clientSecretEngine(String clientSecretEngine) {
+        this.clientSecretEngine = clientSecretEngine;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -336,14 +366,17 @@ public class HOMParameters {
                 && Objects.equals(hom_user, hOMParameters.hom_user) && hom_tabu_size == hOMParameters.hom_tabu_size
                 && hom_max_iter == hOMParameters.hom_max_iter && hom_picker_cap == hOMParameters.hom_picker_cap
                 && Objects.equals(hom_region, hOMParameters.hom_region) && hom_max_days == hOMParameters.hom_max_days
-                && Objects.equals(hom_method, hOMParameters.hom_method);
+                && Objects.equals(hom_method, hOMParameters.hom_method)
+                && Objects.equals(clientIdEngine, hOMParameters.clientIdEngine)
+                && Objects.equals(clientSecretEngine, hOMParameters.clientSecretEngine);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(log_config_file, country, year, year_for_contract, season, private_key_file, project_id,
                 regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path, hom_day_one,
-                hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days, hom_method);
+                hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days, hom_method,
+                clientIdEngine, clientSecretEngine);
     }
 
     @Override
@@ -357,7 +390,8 @@ public class HOMParameters {
                 + getHom_day_one() + "'" + ", hom_user='" + getHom_user() + "'" + ", hom_tabu_size='"
                 + getHom_tabu_size() + "'" + ", hom_max_iter='" + getHom_max_iter() + "'" + ", hom_picker_cap='"
                 + getHom_picker_cap() + "'" + ", hom_region='" + getHom_region() + "'" + ", hom_max_days='"
-                + getHom_max_days() + "'" + ", hom_method='" + getHom_method() + "'" + "}";
+                + getHom_max_days() + "'" + ", hom_method='" + getHom_method() + "'" + ", clientIdEngine='"
+                + getClientIdEngine() + "'" + ", clientSecretEngine='" + getClientSecretEngine() + "'" + "}";
     }
 
 }

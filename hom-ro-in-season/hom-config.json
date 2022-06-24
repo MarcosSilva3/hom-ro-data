@@ -18,5 +18,7 @@
     "hom_picker_cap" : 45,
     "hom_region" : "romania",
     "hom_max_days" : 130,
-    "hom_method" : "ear+bulk"
+    "hom_method" : "ear+bulk",
+    "clientIdEngine" : "HOM_ENGINE_CLIENT_ID",
+    "clientSecretEngine" : "HOM_ENGINE_CLIENT_SECRET"
 }
