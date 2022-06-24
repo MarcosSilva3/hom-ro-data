@@ -163,7 +163,144 @@ public class App {
         }
 
         // Download results from AWS S3
-        get_hom_results_s3(hom_parameters, solve_model);
+        String result_file_path = get_hom_results_s3(hom_parameters, solve_model);
+
+        // Save the results in CSW
+        Table<String, Integer, HOMResult> tHOMResult = HashBasedTable.create();
+        tHOMResult = getHOMResultTable(result_file_path);
+        try {
+            hAWS = getAWSCredentials();
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+        final List<CSWOutput> lCSWRows = new ArrayList<>();
+        Map<String, Boolean> hVisited = new HashMap<>();
+        for (final Table.Cell<String, Integer, HOMResult> cell : tHOMResult.cellSet()) {
+            if (hVisited.containsKey(cell.getRowKey())) {
+                continue;
+            }
+            if (hFieldsGSM.containsKey(cell.getRowKey())) {
+                final GSMData g = hFieldsGSM.get(cell.getRowKey());
+                final HOMResult r1 = tHOMResult.get(cell.getRowKey(), 1);
+
+                final String plant = g.getSite_key();
+                final int _crop_year = g.getYear();
+                final int global_fiscal_year = g.getYear();
+                final String crop_code = "corn";
+                final String field = g.getTracking_number();
+                final String field_name = g.getPfo_name();
+                final String feature_id = g.getEntityid();
+
+                String grower_name = "";
+                if (hFieldContract.containsKey(feature_id)) {
+                    grower_name = hFieldContract.get(feature_id).getGrowerName();
+                }
+
+                final String hybrid = g.getVariety();
+                final String field_supervisor = "";
+                final String environment = "";
+                final String seedsman_area = "";
+                final String picker = r1.getPicker();
+                final double total_area = r1.getTotal_area();
+                final double total_weight = r1.getTotal_tonrw();
+
+                final String harvest_date_01 = r1.getHarv_date();
+                final double harvest_date_01_area = r1.getArea_harv();
+                final double harvest_date_01_weight = r1.getTonrw_harv();
+                final double harvest_moisture_01 = r1.getMoisture();
+
+                String harvest_date_02 = "";
+                double harvest_date_02_area = 0.0;
+                double harvest_date_02_weight = 0.0;
+                double harvest_moisture_02 = 0.0;
+
+                if (tHOMResult.contains(cell.getRowKey(), 2)) {
+                    final HOMResult r2 = tHOMResult.get(cell.getRowKey(), 2);
+                    harvest_date_02 = r2.getHarv_date();
+                    harvest_date_02_area = r2.getArea_harv();
+                    harvest_date_02_weight = r2.getTonrw_harv();
+                    harvest_moisture_02 = r2.getMoisture();
+                }
+
+                String harvest_date_03 = "";
+                double harvest_date_03_area = 0.0;
+                double harvest_date_03_weight = 0.0;
+                double harvest_moisture_03 = 0.0;
+
+                if (tHOMResult.contains(cell.getRowKey(), 3)) {
+                    final HOMResult r3 = tHOMResult.get(cell.getRowKey(), 3);
+                    harvest_date_03 = r3.getHarv_date();
+                    harvest_date_03_area = r3.getArea_harv();
+                    harvest_date_03_weight = r3.getTonrw_harv();
+                    harvest_moisture_03 = r3.getMoisture();
+                }
+
+                String harvest_date_04 = "";
+                double harvest_date_04_area = 0.0;
+                double harvest_date_04_weight = 0.0;
+                double harvest_moisture_04 = 0.0;
+
+                if (tHOMResult.contains(cell.getRowKey(), 4)) {
+                    final HOMResult r4 = tHOMResult.get(cell.getRowKey(), 4);
+                    harvest_date_04 = r4.getHarv_date();
+                    harvest_date_04_area = r4.getArea_harv();
+                    harvest_date_04_weight = r4.getTonrw_harv();
+                    harvest_moisture_04 = r4.getMoisture();
+                }
+
+                String harvest_date_05 = "";
+                double harvest_date_05_area = 0.0;
+                double harvest_date_05_weight = 0.0;
+                double harvest_moisture_05 = 0.0;
+
+                if (tHOMResult.contains(cell.getRowKey(), 5)) {
+                    final HOMResult r5 = tHOMResult.get(cell.getRowKey(), 5);
+                    harvest_date_05 = r5.getHarv_date();
+                    harvest_date_05_area = r5.getArea_harv();
+                    harvest_date_05_weight = r5.getTonrw_harv();
+                    harvest_moisture_05 = r5.getMoisture();
+                }
+
+                final double drydown_rate = g.getDrydown_rate();
+                double optimal_harvest_moisture_range_min = 28;
+                double optimal_harvest_moisture_range_max = 35;
+
+                if (hProducts.containsKey(g.getVariety())) {
+                    optimal_harvest_moisture_range_min = hProducts.get(g.getVariety()).getLowest_rec();
+                    optimal_harvest_moisture_range_max = hProducts.get(g.getVariety()).getHighest_rec();
+                }
+
+                int lateness = r1.getLateness();
+                final String hybrid_drying_sensitivity_classification = "B";
+                final String harvest_type = "ear";
+                final int estimated_number_of_trucks = (int) (r1.getTonrw_harv() / 23.0);
+                final double field_moisture = g.getMst();
+                final String moisture_collected_date = g.getMst_date();
+                final double field_lat = r1.getLat();
+                final double field_lon = r1.getLon();
+                final String wkt = g.getWkt();
+                final String model_timestamp = timeStamp;
+
+                final CSWOutput csw_out = new CSWOutput(country, plant, _crop_year, global_fiscal_year, crop_code,
+                        season, field, field_name, grower_name, feature_id, hybrid, field_supervisor, environment,
+                        seedsman_area, picker, total_area, total_weight, harvest_date_01, harvest_date_02,
+                        harvest_date_03, harvest_date_04, harvest_date_05, harvest_date_01_area, harvest_date_02_area,
+                        harvest_date_03_area, harvest_date_04_area, harvest_date_05_area, harvest_date_01_weight,
+                        harvest_date_02_weight, harvest_date_03_weight, harvest_date_04_weight, harvest_date_05_weight,
+                        harvest_moisture_01, harvest_moisture_02, harvest_moisture_03, harvest_moisture_04,
+                        harvest_moisture_05, drydown_rate, optimal_harvest_moisture_range_min,
+                        optimal_harvest_moisture_range_max, lateness, hybrid_drying_sensitivity_classification,
+                        harvest_type, estimated_number_of_trucks, field_moisture, moisture_collected_date, field_lat,
+                        field_lon, wkt, model_timestamp);
+
+                slf4jLogger.debug("[HOM-Output] {}", csw_out);
+                lCSWRows.add(csw_out);
+                hVisited.put(cell.getRowKey(), true);
+            }
+        }
+        generateCSV(lCSWRows, fileNameTimeStamp);
+        saveResultsInCSW(fileNameTimeStamp, hAWS);
 
         // Check the data
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
@@ -204,24 +341,28 @@ public class App {
      * 
      * @param hom_parameters
      * @param model
+     * @return result file path in JSON format
      * @throws IOException
      */
-    public static void get_hom_results_s3(HOMParameters hom_parameters, SolveModel model) throws IOException {
+    public static String get_hom_results_s3(HOMParameters hom_parameters, SolveModel model) throws IOException {
         final Map<String, String> env = System.getenv();
         String AccessKeyId = env.get("AWS_ID_PH");
         String SecretAccessKey = env.get("AWS_PWD_PH");
         String timestamp = model.getTimestamp();
         String user = model.getUser();
         int jobid = model.getJobid();
-        String result_file = "hom-result-" + timestamp + "-jobid-" + Integer.toString(jobid) + "-" + user + ".csv";
+        String result_file = "hom-result-" + timestamp + "-jobid-" + Integer.toString(jobid) + "-" + user + ".json";
         AWSCredentials credentials = new BasicAWSCredentials(AccessKeyId, SecretAccessKey);
         AmazonS3 s3client = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_1).build();
+                .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_2).build();
         String bucketName = hom_parameters.getAwsBucketName(); // s3://romania-models/harvest-opt/output/archive/json/
         String key = "harvest-opt/output/archive/json/" + result_file;
+        slf4jLogger.debug("[AWS] Result key: {}", key);
         S3Object s3object = s3client.getObject(bucketName, key);
         S3ObjectInputStream inputStream = s3object.getObjectContent();
         FileUtils.copyInputStreamToFile(inputStream, new File("/mnt/" + result_file));
+        String result_file_path = "/mnt/" + result_file;
+        return result_file_path;
     }
 
     /**
