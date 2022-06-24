@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class HOMInput {
     private List<Site> site;
-    private List<FieldHOM> lFieldsHOM;
+    private List<FieldHOM> fields;
     private String day_one;
     private String user;
     private String region;
@@ -18,10 +18,10 @@ public class HOMInput {
     public HOMInput() {
     }
 
-    public HOMInput(List<Site> site, List<FieldHOM> lFieldsHOM, String day_one, String user, String region,
-            String method, int tabu_size, int max_iter, int max_days, int picker_cap) {
+    public HOMInput(List<Site> site, List<FieldHOM> fields, String day_one, String user, String region, String method,
+            int tabu_size, int max_iter, int max_days, int picker_cap) {
         this.site = site;
-        this.lFieldsHOM = lFieldsHOM;
+        this.fields = fields;
         this.day_one = day_one;
         this.user = user;
         this.region = region;
@@ -40,12 +40,12 @@ public class HOMInput {
         this.site = site;
     }
 
-    public List<FieldHOM> getLFieldsHOM() {
-        return this.lFieldsHOM;
+    public List<FieldHOM> getFields() {
+        return this.fields;
     }
 
-    public void setLFieldsHOM(List<FieldHOM> lFieldsHOM) {
-        this.lFieldsHOM = lFieldsHOM;
+    public void setFields(List<FieldHOM> fields) {
+        this.fields = fields;
     }
 
     public String getDay_one() {
@@ -117,8 +117,8 @@ public class HOMInput {
         return this;
     }
 
-    public HOMInput lFieldsHOM(List<FieldHOM> lFieldsHOM) {
-        this.lFieldsHOM = lFieldsHOM;
+    public HOMInput fields(List<FieldHOM> fields) {
+        this.fields = fields;
         return this;
     }
 
@@ -170,7 +170,7 @@ public class HOMInput {
             return false;
         }
         HOMInput hOMInput = (HOMInput) o;
-        return Objects.equals(site, hOMInput.site) && Objects.equals(lFieldsHOM, hOMInput.lFieldsHOM)
+        return Objects.equals(site, hOMInput.site) && Objects.equals(fields, hOMInput.fields)
                 && Objects.equals(day_one, hOMInput.day_one) && Objects.equals(user, hOMInput.user)
                 && Objects.equals(region, hOMInput.region) && Objects.equals(method, hOMInput.method)
                 && tabu_size == hOMInput.tabu_size && max_iter == hOMInput.max_iter && max_days == hOMInput.max_days
@@ -179,15 +179,15 @@ public class HOMInput {
 
     @Override
     public int hashCode() {
-        return Objects.hash(site, lFieldsHOM, day_one, user, region, method, tabu_size, max_iter, max_days, picker_cap);
+        return Objects.hash(site, fields, day_one, user, region, method, tabu_size, max_iter, max_days, picker_cap);
     }
 
     @Override
     public String toString() {
-        return "{" + " site='" + getSite() + "'" + ", lFieldsHOM='" + getLFieldsHOM() + "'" + ", day_one='"
-                + getDay_one() + "'" + ", user='" + getUser() + "'" + ", region='" + getRegion() + "'" + ", method='"
-                + getMethod() + "'" + ", tabu_size='" + getTabu_size() + "'" + ", max_iter='" + getMax_iter() + "'"
-                + ", max_days='" + getMax_days() + "'" + ", picker_cap='" + getPicker_cap() + "'" + "}";
+        return "{" + " site='" + getSite() + "'" + ", fields='" + getFields() + "'" + ", day_one='" + getDay_one() + "'"
+                + ", user='" + getUser() + "'" + ", region='" + getRegion() + "'" + ", method='" + getMethod() + "'"
+                + ", tabu_size='" + getTabu_size() + "'" + ", max_iter='" + getMax_iter() + "'" + ", max_days='"
+                + getMax_days() + "'" + ", picker_cap='" + getPicker_cap() + "'" + "}";
     }
 
 }

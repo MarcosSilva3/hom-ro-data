@@ -227,6 +227,7 @@ public class App {
 
             if (dow == DayOfWeek.SUNDAY) {
                 capton_ear = site_cap_sunday;
+                capton_only_ear = site_cap_sunday;
                 caphy_ear = 0;
                 caphy_only_ear = 0;
                 captrucks_ear = 0;
@@ -342,7 +343,9 @@ public class App {
             String twstart = field_manual_plan.getHarvest_window_start();
             String twend = field_manual_plan.getHarvest_window_end();
 
-            double area = contains_gsm_data ? field_gsm.getFf_area() : field_manual_plan.getActive_ha();
+            // double area = contains_gsm_data ? field_gsm.getFf_area() : field_manual_plan.getActive_ha();
+            // use manual plan in Excel for now since looks like we have some issues with the area.
+            double area = field_manual_plan.getActive_ha();
             double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
 
             double tonha = field_manual_plan.getYield_ton_ha();
