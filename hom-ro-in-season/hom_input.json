@@ -2091,24 +2091,6 @@
     "abc" : "B",
     "harv_type" : "ear"
   }, {
-    "lot" : "222PXA",
-    "hybrid" : "DKC3972",
-    "sitekey" : 1299,
-    "region" : "South-East",
-    "cluster" : "GR3",
-    "twstart" : "2022-09-03",
-    "twend" : "2022-09-11",
-    "area" : 0.0,
-    "drydown_rate" : 1.0,
-    "latitude" : 44.318975282261036,
-    "longitude" : 27.548250833178898,
-    "lowest_harvest_moisture" : 28,
-    "highest_harvest_moisture" : 33,
-    "tonha" : 5.7,
-    "kg" : 0.0,
-    "abc" : "B",
-    "harv_type" : "ear"
-  }, {
     "lot" : "222Q9A",
     "hybrid" : "DKC4717",
     "sitekey" : 1299,
