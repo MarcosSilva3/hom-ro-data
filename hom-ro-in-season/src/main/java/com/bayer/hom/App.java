@@ -276,7 +276,10 @@ public class App {
                 final String harvest_type = "ear";
                 final int estimated_number_of_trucks = (int) (r1.getTonrw_harv() / 23.0);
                 final double field_moisture = g.getMst();
-                final String moisture_collected_date = g.getMst_date();
+                String moisture_collected_date = g.getMst_date() != null ? g.getMst_date() : "";
+                if(moisture_collected_date.equalsIgnoreCase("null")) {
+                    moisture_collected_date = "";
+                }
                 final double field_lat = r1.getLat();
                 final double field_lon = r1.getLon();
                 final String wkt = g.getWkt();
