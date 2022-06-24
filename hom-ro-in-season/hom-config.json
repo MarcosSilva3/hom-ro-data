@@ -20,5 +20,6 @@
     "hom_max_days" : 130,
     "hom_method" : "ear+bulk",
     "clientIdEngine" : "HOM_ENGINE_CLIENT_ID",
-    "clientSecretEngine" : "HOM_ENGINE_CLIENT_SECRET"
+    "clientSecretEngine" : "HOM_ENGINE_CLIENT_SECRET", 
+    "awsBucketName" : "romania-models"
 }

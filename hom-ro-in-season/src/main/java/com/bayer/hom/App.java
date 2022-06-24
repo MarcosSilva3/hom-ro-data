@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -49,6 +50,8 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 /**
  * Romania in-season
@@ -156,10 +159,11 @@ public class App {
         String status = solve_model.getJobStatus();
         while (!status.equalsIgnoreCase("finished")) {
             status = solve_model.getJobStatus();
-            slf4jLogger.debug("[HOM Solve Model] status {}", status);
-            // check status at every 5 seconds.
             TimeUnit.SECONDS.sleep(5);
         }
+
+        // Download results from AWS S3
+        get_hom_results_s3(hom_parameters, solve_model);
 
         // Check the data
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
@@ -193,6 +197,31 @@ public class App {
         }
         slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
 
+    }
+
+    /**
+     * Download result file in JSON format from AWS S3
+     * 
+     * @param hom_parameters
+     * @param model
+     * @throws IOException
+     */
+    public static void get_hom_results_s3(HOMParameters hom_parameters, SolveModel model) throws IOException {
+        final Map<String, String> env = System.getenv();
+        String AccessKeyId = env.get("AWS_ID_PH");
+        String SecretAccessKey = env.get("AWS_PWD_PH");
+        String timestamp = model.getTimestamp();
+        String user = model.getUser();
+        int jobid = model.getJobid();
+        String result_file = "hom-result-" + timestamp + "-jobid-" + Integer.toString(jobid) + "-" + user + ".csv";
+        AWSCredentials credentials = new BasicAWSCredentials(AccessKeyId, SecretAccessKey);
+        AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+                .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_1).build();
+        String bucketName = hom_parameters.getAwsBucketName(); // s3://romania-models/harvest-opt/output/archive/json/
+        String key = "harvest-opt/output/archive/json/" + result_file;
+        S3Object s3object = s3client.getObject(bucketName, key);
+        S3ObjectInputStream inputStream = s3object.getObjectContent();
+        FileUtils.copyInputStreamToFile(inputStream, new File("/mnt/" + result_file));
     }
 
     /**
@@ -411,6 +440,7 @@ public class App {
         String hom_method = "ear+bulk";
         String clientIdEngine = "HOM_ENGINE_CLIENT_ID";
         String clientSecretEngine = "HOM_ENGINE_CLIENT_SECRET";
+        String awsBucketName = "romania-models";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -504,10 +534,14 @@ public class App {
             clientSecretEngine = (String) o.get("clientSecretEngine");
         }
 
+        if (o.get("awsBucketName") != null) {
+            awsBucketName = (String) o.get("awsBucketName");
+        }
+
         HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
                 project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
                 hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
-                hom_method, clientIdEngine, clientSecretEngine);
+                hom_method, clientIdEngine, clientSecretEngine, awsBucketName);
         return p;
     }
 

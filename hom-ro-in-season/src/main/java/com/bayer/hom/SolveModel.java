@@ -109,7 +109,7 @@ public class SolveModel {
             Object obj = new JSONParser().parse(result.toString());
             JSONObject jo = (JSONObject) obj;
             this.status = (String) jo.get("state");
-            slf4jLogger.debug("[HOM Solve Model] Job status. Response: {}, status {}", result.toString(), this.status);
+            slf4jLogger.debug("[HOM Solve Model] Job ID: {}, Status: {}", this.jobid, result.toString());
 
         } else {
             slf4jLogger.error("[HOM Solve Model] Error in getting job status: {} {}", response.getStatusLine(),
