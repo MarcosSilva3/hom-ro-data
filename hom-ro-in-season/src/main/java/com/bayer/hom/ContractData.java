@@ -33,8 +33,28 @@ public class ContractData {
     private String token;
     private Contract contract;
     private String log_config_file;
+    private Map<String, Contract> hContracts;
 
     public ContractData() {
+    }
+
+    public ContractData(final String plantNumber, final int year, final String token, final String log_config_file)
+            throws IOException, ParseException, JoranException {
+        hContracts = new HashMap<>();
+        this.plantNumber = plantNumber;
+        this.year = year;
+        this.token = token;
+        this.log_config_file = log_config_file;
+
+        LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+        loggerContext.reset();
+        ch.qos.logback.classic.joran.JoranConfigurator configurator = new ch.qos.logback.classic.joran.JoranConfigurator();
+        InputStream configStream = org.apache.commons.io.FileUtils.openInputStream(new File(log_config_file));
+        configurator.setContext(loggerContext);
+        configurator.doConfigure(configStream); // loads logback file
+        configStream.close();
+
+        getContractData();
     }
 
     public ContractData(final String plantNumber, final String fieldNumber, final int year, final String token,
@@ -53,10 +73,10 @@ public class ContractData {
         configurator.doConfigure(configStream); // loads logback file
         configStream.close();
 
-        getContractData();
+        getContractDataByField();
     }
 
-    public void getContractData() throws IOException, ParseException {
+    public void getContractDataByField() throws IOException, ParseException {
         final String url = "https://product360.ag/production-contracts/v2?plantNumber=" + this.plantNumber
                 + "&fieldNumber=" + this.fieldNumber + "&year=" + Integer.toString(this.year);
 
@@ -126,6 +146,7 @@ public class ContractData {
                         harvestedFemaleArea, moisturePercentage);
                 slf4jLogger.debug("{}_{} contract: {}", this.plantNumber, this.fieldNumber, this.contract);
                 hFieldOK.put(this.plantNumber + "_" + this.fieldNumber, true);
+                hContracts.put(trackingNumber, this.contract);
             }
 
         } else {
@@ -134,14 +155,85 @@ public class ContractData {
         }
     }
 
-    public ContractData(String plantNumber, String fieldNumber, int year, String token, Contract contract,
-            String log_config_file) {
-        this.plantNumber = plantNumber;
-        this.fieldNumber = fieldNumber;
-        this.year = year;
-        this.token = token;
-        this.contract = contract;
-        this.log_config_file = log_config_file;
+    public void getContractData() throws IOException, ParseException {
+        final String url = "https://product360.ag/production-contracts/v2?plantNumber=" + this.plantNumber + "&year="
+                + Integer.toString(this.year) + "&pageSize=500&showDeleted=False";
+
+        slf4jLogger.debug("[Contracts API] plantNumber {} => url: {}", this.plantNumber, url);
+
+        final HttpGet get = new HttpGet(url);
+        get.setHeader("Authorization", "Bearer " + token);
+        final HttpClient client = HttpClientBuilder.create().build();
+        final HttpResponse response = client.execute(get);
+        final int responseCode = response.getStatusLine().getStatusCode();
+
+        if (responseCode == 200) {
+            final BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            final StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+            final Object obj = new JSONParser().parse(result.toString());
+            final JSONObject jsonObject = (JSONObject) obj;
+            final JSONArray features = (JSONArray) jsonObject.get("contracts");
+            final Iterator i = features.iterator();
+            Map<String, Boolean> hFieldOK = new HashMap<>();
+            while (i.hasNext()) {
+                final JSONObject contract = (JSONObject) i.next();
+                final JSONObject contractHeader = (JSONObject) contract.get("contractHeader");
+                final JSONArray contractLineItemsArray = (JSONArray) contract.get("contractLineItems");
+                this.fieldNumber = (String) contractHeader.get("fieldNumber");
+                if (contractLineItemsArray.isEmpty()) {
+                    if (!hFieldOK.containsKey(this.plantNumber + "_" + this.fieldNumber)) {
+                        slf4jLogger.error("[Contracts API] {} without contract data", this.plantNumber);
+                    }
+                    continue;
+                }
+                final JSONObject contractLineItems = (JSONObject) contractLineItemsArray.get(0);
+                final JSONObject growingArea = (JSONObject) contractLineItems.get("growingArea");
+                final JSONObject yield = (JSONObject) contractLineItems.get("yield");
+
+                final String contractNumber = (String) contract.get("contractNumber");
+                final String growerName = (String) contractHeader.get("growerName");
+                final String acronym = (String) contractLineItems.get("acronym");
+                final String trackingNumber = (String) contractLineItems.get("trackingNumber");
+                final String lastHarvestReceiptDate = (String) contractLineItems.get("lastHarvestReceiptDate");
+                final String contractLineDeleteFlag = (String) contractLineItems.get("contractLineDeleteFlag");
+
+                // Formula provided by Dustin
+                // femaleFertileArea + femaleSterileArea - discardFertileNonpayArea -
+                // discardFertilePayArea - discardSterileNonpayArea - discardSterilePayArea
+                final double femaleFertileArea = ((Number) growingArea.get("femaleFertileArea")).doubleValue();
+                final double femaleSterileArea = ((Number) growingArea.get("femaleSterileArea")).doubleValue();
+                final double discardFertileNonpayArea = ((Number) growingArea.get("discardFertileNonpayArea"))
+                        .doubleValue();
+                final double discardFertilePayArea = ((Number) growingArea.get("discardFertilePayArea")).doubleValue();
+                final double discardSterileNonpayArea = ((Number) growingArea.get("discardSterileNonpayArea"))
+                        .doubleValue();
+                final double discardSterilePayArea = ((Number) growingArea.get("discardSterilePayArea")).doubleValue();
+                final double harvestedFemaleArea = femaleFertileArea + femaleSterileArea - discardFertileNonpayArea
+                        - discardFertilePayArea - discardSterileNonpayArea - discardSterilePayArea;
+
+                double moisturePercentage = 0.0;
+                if (yield.get("moisturePercentage") != null) {
+                    moisturePercentage = ((Number) yield.get("moisturePercentage")).doubleValue();
+                }
+
+                this.contract = new Contract(contractNumber, plantNumber, Integer.toString(year), fieldNumber,
+                        growerName, acronym, trackingNumber, lastHarvestReceiptDate, contractLineDeleteFlag,
+                        harvestedFemaleArea, moisturePercentage);
+                slf4jLogger.debug("[Contracts API] {}_{} contract: {}", this.plantNumber, this.fieldNumber,
+                        this.contract);
+                hFieldOK.put(this.plantNumber + "_" + this.fieldNumber, true);
+                hContracts.put(trackingNumber, this.contract);
+            }
+
+        } else {
+            slf4jLogger.error("[Contracts API] Error: " + response.getStatusLine());
+            slf4jLogger.error(response.getEntity().getContent().toString());
+        }
     }
 
     public String getPlantNumber() {
@@ -192,6 +284,14 @@ public class ContractData {
         this.log_config_file = log_config_file;
     }
 
+    public Map<String, Contract> getHContracts() {
+        return this.hContracts;
+    }
+
+    public void setHContracts(Map<String, Contract> hContracts) {
+        this.hContracts = hContracts;
+    }
+
     public ContractData plantNumber(String plantNumber) {
         this.plantNumber = plantNumber;
         return this;
@@ -222,6 +322,11 @@ public class ContractData {
         return this;
     }
 
+    public ContractData hContracts(Map<String, Contract> hContracts) {
+        this.hContracts = hContracts;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -233,19 +338,20 @@ public class ContractData {
         return Objects.equals(plantNumber, contractData.plantNumber)
                 && Objects.equals(fieldNumber, contractData.fieldNumber) && year == contractData.year
                 && Objects.equals(token, contractData.token) && Objects.equals(contract, contractData.contract)
-                && Objects.equals(log_config_file, contractData.log_config_file);
+                && Objects.equals(log_config_file, contractData.log_config_file)
+                && Objects.equals(hContracts, contractData.hContracts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(plantNumber, fieldNumber, year, token, contract, log_config_file);
+        return Objects.hash(plantNumber, fieldNumber, year, token, contract, log_config_file, hContracts);
     }
 
     @Override
     public String toString() {
         return "{" + " plantNumber='" + getPlantNumber() + "'" + ", fieldNumber='" + getFieldNumber() + "'" + ", year='"
                 + getYear() + "'" + ", token='" + getToken() + "'" + ", contract='" + getContract() + "'"
-                + ", log_config_file='" + getLog_config_file() + "'" + "}";
+                + ", log_config_file='" + getLog_config_file() + "'" + ", hContracts='" + getHContracts() + "'" + "}";
     }
 
 }

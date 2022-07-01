@@ -26,6 +26,7 @@ public class HOMParameters {
     private String clientIdEngine;
     private String clientSecretEngine;
     private String awsBucketName;
+    private String plantNumber;
 
     public HOMParameters() {
     }
@@ -34,7 +35,8 @@ public class HOMParameters {
             String private_key_file, String project_id, String regionCode, String cropCycleCode, String env_client_id,
             String env_client_secret, String manual_plan_excel_path, String hom_day_one, String hom_user,
             int hom_tabu_size, int hom_max_iter, int hom_picker_cap, String hom_region, int hom_max_days,
-            String hom_method, String clientIdEngine, String clientSecretEngine, String awsBucketName) {
+            String hom_method, String clientIdEngine, String clientSecretEngine, String awsBucketName,
+            String plantNumber) {
         this.log_config_file = log_config_file;
         this.country = country;
         this.year = year;
@@ -58,6 +60,7 @@ public class HOMParameters {
         this.clientIdEngine = clientIdEngine;
         this.clientSecretEngine = clientSecretEngine;
         this.awsBucketName = awsBucketName;
+        this.plantNumber = plantNumber;
     }
 
     public String getLog_config_file() {
@@ -244,6 +247,14 @@ public class HOMParameters {
         this.awsBucketName = awsBucketName;
     }
 
+    public String getPlantNumber() {
+        return this.plantNumber;
+    }
+
+    public void setPlantNumber(String plantNumber) {
+        this.plantNumber = plantNumber;
+    }
+
     public HOMParameters log_config_file(String log_config_file) {
         this.log_config_file = log_config_file;
         return this;
@@ -359,6 +370,11 @@ public class HOMParameters {
         return this;
     }
 
+    public HOMParameters plantNumber(String plantNumber) {
+        this.plantNumber = plantNumber;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -384,7 +400,8 @@ public class HOMParameters {
                 && Objects.equals(hom_method, hOMParameters.hom_method)
                 && Objects.equals(clientIdEngine, hOMParameters.clientIdEngine)
                 && Objects.equals(clientSecretEngine, hOMParameters.clientSecretEngine)
-                && Objects.equals(awsBucketName, hOMParameters.awsBucketName);
+                && Objects.equals(awsBucketName, hOMParameters.awsBucketName)
+                && Objects.equals(plantNumber, hOMParameters.plantNumber);
     }
 
     @Override
@@ -392,7 +409,7 @@ public class HOMParameters {
         return Objects.hash(log_config_file, country, year, year_for_contract, season, private_key_file, project_id,
                 regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path, hom_day_one,
                 hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days, hom_method,
-                clientIdEngine, clientSecretEngine, awsBucketName);
+                clientIdEngine, clientSecretEngine, awsBucketName, plantNumber);
     }
 
     @Override
@@ -408,7 +425,7 @@ public class HOMParameters {
                 + getHom_picker_cap() + "'" + ", hom_region='" + getHom_region() + "'" + ", hom_max_days='"
                 + getHom_max_days() + "'" + ", hom_method='" + getHom_method() + "'" + ", clientIdEngine='"
                 + getClientIdEngine() + "'" + ", clientSecretEngine='" + getClientSecretEngine() + "'"
-                + ", awsBucketName='" + getAwsBucketName() + "'" + "}";
+                + ", awsBucketName='" + getAwsBucketName() + "'" + ", plantNumber='" + getPlantNumber() + "'" + "}";
     }
 
 }

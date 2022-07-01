@@ -21,5 +21,6 @@
     "hom_method" : "ear+bulk",
     "clientIdEngine" : "HOM_ENGINE_CLIENT_ID",
     "clientSecretEngine" : "HOM_ENGINE_CLIENT_SECRET", 
-    "awsBucketName" : "romania-models"
+    "awsBucketName" : "romania-models",
+    "plantNumber" : "1299"
 }

@@ -89,7 +89,7 @@ public class App {
 
         Map<String, String> hAWS = new HashMap<>();
         Map<String, GSMData> hFieldsGSM = new HashMap<>();
-        final Map<String, Contract> hFieldContract = new HashMap<>();
+        Map<String, Contract> hFieldContract = new HashMap<>();
         Map<String, ProductCharacterization> hProducts = new HashMap<>();
         Map<String, ScoutData> hFieldsScout = new HashMap<>();
         Map<String, FieldManualPlan> hFieldsManualPlan = new HashMap<>();
@@ -106,6 +106,11 @@ public class App {
         final BQData bq = new BQData(private_key_file, project_id);
         hFieldsGSM = bq.getGSMData(country, year);
 
+        final ContractData contract_data = new ContractData(hom_parameters.getPlantNumber(), year, token,
+                log_config_file);
+        hFieldContract = contract_data.getHContracts();
+
+        /*
         for (final Entry<String, FieldPFO> entry : hFieldsPFO.entrySet()) {
             final String plantNumber = entry.getValue().getPlant();
             int iFieldNumber = 0;
@@ -120,6 +125,7 @@ public class App {
                     log_config_file);
             hFieldContract.put(entry.getKey(), contract_data.getContract());
         }
+        */
 
         // Get wkt for each entity_id.
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
@@ -193,8 +199,8 @@ public class App {
                 final String feature_id = g.getEntityid();
 
                 String grower_name = "";
-                if (hFieldContract.containsKey(feature_id)) {
-                    grower_name = hFieldContract.get(feature_id).getGrowerName();
+                if (hFieldContract.containsKey(cell.getRowKey())) {
+                    grower_name = hFieldContract.get(cell.getRowKey()).getGrowerName();
                 }
 
                 final String hybrid = g.getVariety();
@@ -478,8 +484,8 @@ public class App {
                 slf4jLogger.error("[Fields HOM] Field {} not found in GSM output", lot);
             }
 
-            if (entityid != null && !entityid.isEmpty() && hFieldContract.containsKey(entityid)) {
-                field_contract = hFieldContract.get(entityid);
+            if (entityid != null && !entityid.isEmpty() && hFieldContract.containsKey(lot)) {
+                field_contract = hFieldContract.get(lot);
                 contains_contract_data = true;
             } else {
                 slf4jLogger.error("[Fields HOM] Field {} not found in Contract", lot);
@@ -540,7 +546,7 @@ public class App {
 
             double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
             double tonha = field_manual_plan.getYield_ton_ha();
-            if(contains_scout_data && field_scout.getYield() > 0) {
+            if (contains_scout_data && field_scout.getYield() > 0) {
                 tonha = field_scout.getYield();
             }
             double kg = tonha * area;
@@ -588,6 +594,7 @@ public class App {
         String clientIdEngine = "HOM_ENGINE_CLIENT_ID";
         String clientSecretEngine = "HOM_ENGINE_CLIENT_SECRET";
         String awsBucketName = "romania-models";
+        String plantNumber = "1299";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -685,10 +692,14 @@ public class App {
             awsBucketName = (String) o.get("awsBucketName");
         }
 
+        if (o.get("plantNumber") != null) {
+            plantNumber = (String) o.get("plantNumber");
+        }
+
         HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
                 project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
                 hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
-                hom_method, clientIdEngine, clientSecretEngine, awsBucketName);
+                hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber);
         return p;
     }
 
