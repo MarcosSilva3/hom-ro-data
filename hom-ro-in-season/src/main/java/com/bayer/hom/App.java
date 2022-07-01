@@ -83,6 +83,7 @@ public class App {
         final String cropCycleCode = hom_parameters.getCropCycleCode();
         final String private_key_file = hom_parameters.getPrivate_key_file();
         final String project_id = hom_parameters.getProject_id();
+        final String plantNumber = hom_parameters.getPlantNumber();
         final String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date());
         final String fileNameTimeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(new java.util.Date());
         final String token = new ClientToken(client_id, client_secret, log_config_file).getToken();
@@ -98,7 +99,7 @@ public class App {
 
         final List<String> lSites = new ArrayList<>();
 
-        lSites.add("1299");
+        lSites.add(plantNumber);
 
         final PFOData pfo = new PFOData(lSites, token, year, season);
         final Map<String, FieldPFO> hFieldsPFO = pfo.getHFieldsPFO();
@@ -106,26 +107,9 @@ public class App {
         final BQData bq = new BQData(private_key_file, project_id);
         hFieldsGSM = bq.getGSMData(country, year);
 
-        final ContractData contract_data = new ContractData(hom_parameters.getPlantNumber(), year, token,
+        final ContractData contract_data = new ContractData(plantNumber, year, token,
                 log_config_file);
         hFieldContract = contract_data.getHContracts();
-
-        /*
-        for (final Entry<String, FieldPFO> entry : hFieldsPFO.entrySet()) {
-            final String plantNumber = entry.getValue().getPlant();
-            int iFieldNumber = 0;
-            if (isNumeric(entry.getValue().getField())) {
-                iFieldNumber = Integer.parseInt(entry.getValue().getField());
-            } else {
-                slf4jLogger.error("Invalid field number for field {} and site {}", entry.getKey(), plantNumber);
-                continue;
-            }
-            final String fieldNumber = String.format("%05d", iFieldNumber);
-            final ContractData contract_data = new ContractData(plantNumber, fieldNumber, year_for_contract, token,
-                    log_config_file);
-            hFieldContract.put(entry.getKey(), contract_data.getContract());
-        }
-        */
 
         // Get wkt for each entity_id.
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
