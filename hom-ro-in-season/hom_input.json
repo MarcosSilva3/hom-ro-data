@@ -1834,8 +1834,8 @@
     "longitude" : 27.523516862674263,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.4,
-    "kg" : 12.600000000000001,
+    "tonha" : 8.38,
+    "kg" : 12.57,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -1852,8 +1852,8 @@
     "longitude" : 27.44260826003161,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 580.0,
+    "tonha" : 9.6,
+    "kg" : 768.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -1870,8 +1870,8 @@
     "longitude" : 27.638023995104252,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 271.8,
+    "tonha" : 8.0,
+    "kg" : 288.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -1906,8 +1906,8 @@
     "longitude" : 27.654923910379747,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 6.0,
-    "kg" : 210.0,
+    "tonha" : 7.0,
+    "kg" : 245.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -1942,8 +1942,8 @@
     "longitude" : 27.79274607938332,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 102.9,
+    "tonha" : 10.0,
+    "kg" : 105.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -1960,8 +1960,8 @@
     "longitude" : 27.46481367426793,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 280.5,
+    "tonha" : 9.1,
+    "kg" : 300.3,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -1996,8 +1996,8 @@
     "longitude" : 27.679232333705638,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 328.0,
+    "tonha" : 8.02,
+    "kg" : 328.82,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2014,8 +2014,8 @@
     "longitude" : 27.68136248106552,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 40.77,
+    "tonha" : 7.4,
+    "kg" : 39.96000000000001,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2032,8 +2032,8 @@
     "longitude" : 27.638023995104252,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 120.8,
+    "tonha" : 8.26,
+    "kg" : 132.16,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2068,8 +2068,8 @@
     "longitude" : 27.528395869514817,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.4,
-    "kg" : 222.60000000000002,
+    "tonha" : 8.38,
+    "kg" : 222.07000000000002,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2086,8 +2086,8 @@
     "longitude" : 27.84339229598908,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 267.0,
+    "tonha" : 9.0,
+    "kg" : 270.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2104,8 +2104,8 @@
     "longitude" : 27.87550011425305,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 253.75,
+    "tonha" : 7.4,
+    "kg" : 259.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2122,8 +2122,8 @@
     "longitude" : 28.139290810742413,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 6.0,
-    "kg" : 162.0,
+    "tonha" : 9.8,
+    "kg" : 264.6,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2158,8 +2158,8 @@
     "longitude" : 27.613779437595266,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 68.60000000000001,
+    "tonha" : 10.0,
+    "kg" : 70.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2194,8 +2194,8 @@
     "longitude" : 27.79274607938332,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 44.1,
+    "tonha" : 9.2,
+    "kg" : 41.4,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2212,8 +2212,8 @@
     "longitude" : 27.611518426878142,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 685.3000000000001,
+    "tonha" : 8.68,
+    "kg" : 668.36,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2248,8 +2248,8 @@
     "longitude" : 27.523516862674263,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.4,
-    "kg" : 29.400000000000002,
+    "tonha" : 8.38,
+    "kg" : 29.330000000000002,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2266,8 +2266,8 @@
     "longitude" : 27.868841423382978,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 136.0,
+    "tonha" : 9.0,
+    "kg" : 153.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2284,8 +2284,8 @@
     "longitude" : 27.63905256202371,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 459.0,
+    "tonha" : 6.0,
+    "kg" : 324.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2320,8 +2320,8 @@
     "longitude" : 27.68913086632542,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 471.70000000000005,
+    "tonha" : 8.68,
+    "kg" : 460.03999999999996,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2356,8 +2356,8 @@
     "longitude" : 27.644734318017267,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 64.0,
+    "tonha" : 8.4,
+    "kg" : 67.2,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2410,8 +2410,8 @@
     "longitude" : 27.46481367426793,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 144.5,
+    "tonha" : 8.8,
+    "kg" : 149.60000000000002,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2428,8 +2428,8 @@
     "longitude" : 27.623858532277985,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 42.0,
+    "tonha" : 6.8,
+    "kg" : 40.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2446,8 +2446,8 @@
     "longitude" : 27.593965670675807,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 110.5,
+    "tonha" : 6.2,
+    "kg" : 80.60000000000001,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2464,8 +2464,8 @@
     "longitude" : 27.721890854123,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 105.0,
+    "tonha" : 8.0,
+    "kg" : 120.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2500,8 +2500,8 @@
     "longitude" : 27.84339229598908,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 528.5,
+    "tonha" : 8.0,
+    "kg" : 560.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2518,8 +2518,8 @@
     "longitude" : 27.794776742945608,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 290.4,
+    "tonha" : 6.5,
+    "kg" : 235.95,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2536,8 +2536,8 @@
     "longitude" : 27.830892992749014,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 126.0,
+    "tonha" : 8.0,
+    "kg" : 144.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2554,8 +2554,8 @@
     "longitude" : 27.79277168785609,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 117.60000000000001,
+    "tonha" : 9.6,
+    "kg" : 115.19999999999999,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2572,8 +2572,8 @@
     "longitude" : 27.464813673274932,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 70.0,
+    "tonha" : 9.1,
+    "kg" : 91.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2590,8 +2590,8 @@
     "longitude" : 27.679232333705638,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 760.0,
+    "tonha" : 8.02,
+    "kg" : 761.9,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2644,8 +2644,8 @@
     "longitude" : 27.613779437595266,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 254.8,
+    "tonha" : 7.8,
+    "kg" : 202.79999999999998,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2662,8 +2662,8 @@
     "longitude" : 27.60253454725132,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 399.5,
+    "tonha" : 6.6,
+    "kg" : 310.2,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2680,8 +2680,8 @@
     "longitude" : 27.49362639413363,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 5.7,
-    "kg" : 285.0,
+    "tonha" : 6.78,
+    "kg" : 339.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2698,8 +2698,8 @@
     "longitude" : 27.644734318017267,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 104.0,
+    "tonha" : 6.0,
+    "kg" : 78.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2752,8 +2752,8 @@
     "longitude" : 27.436678365494362,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 266.0,
+    "tonha" : 10.76,
+    "kg" : 408.88,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2770,8 +2770,8 @@
     "longitude" : 23.765333677465843,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 347.1,
+    "tonha" : 8.68,
+    "kg" : 338.52,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2788,8 +2788,8 @@
     "longitude" : 27.558353731725077,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 6.0,
-    "kg" : 72.0,
+    "tonha" : 7.98,
+    "kg" : 95.76,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2806,8 +2806,8 @@
     "longitude" : 27.804597896593428,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 53.400000000000006,
+    "tonha" : 6.4,
+    "kg" : 38.400000000000006,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2842,8 +2842,8 @@
     "longitude" : 27.681698686734553,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 340.0,
+    "tonha" : 8.56,
+    "kg" : 342.40000000000003,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2860,8 +2860,8 @@
     "longitude" : 27.656398812974054,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 96.0,
+    "tonha" : 8.4,
+    "kg" : 100.80000000000001,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2878,8 +2878,8 @@
     "longitude" : 27.804597896593428,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 124.60000000000001,
+    "tonha" : 8.68,
+    "kg" : 121.52,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2914,8 +2914,8 @@
     "longitude" : 27.704612423624862,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 147.0,
+    "tonha" : 8.0,
+    "kg" : 168.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2968,8 +2968,8 @@
     "longitude" : 27.621607265956666,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 120.0,
+    "tonha" : 6.4,
+    "kg" : 96.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -2986,8 +2986,8 @@
     "longitude" : 27.721890854123,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 385.0,
+    "tonha" : 8.0,
+    "kg" : 440.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3004,8 +3004,8 @@
     "longitude" : 26.41435058298181,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 784.0,
+    "tonha" : 6.98,
+    "kg" : 781.76,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3022,8 +3022,8 @@
     "longitude" : 27.76609733237122,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 170.0,
+    "tonha" : 8.56,
+    "kg" : 171.20000000000002,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3058,8 +3058,8 @@
     "longitude" : 27.868841423382978,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 304.0,
+    "tonha" : 9.0,
+    "kg" : 342.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3076,8 +3076,8 @@
     "longitude" : 27.63215113715837,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.4,
-    "kg" : 184.8,
+    "tonha" : 8.46,
+    "kg" : 186.12,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3130,8 +3130,8 @@
     "longitude" : 27.464813673274932,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 280.0,
+    "tonha" : 7.6,
+    "kg" : 304.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3148,8 +3148,8 @@
     "longitude" : 27.68913086632542,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 195.8,
+    "tonha" : 2.4,
+    "kg" : 52.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3166,8 +3166,8 @@
     "longitude" : 28.039713555672712,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 133.0,
+    "tonha" : 6.88,
+    "kg" : 130.72,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3184,8 +3184,8 @@
     "longitude" : 27.6302998136444,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 430.34999999999997,
+    "tonha" : 7.5,
+    "kg" : 427.5,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3202,8 +3202,8 @@
     "longitude" : 27.631247742234503,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 140.0,
+    "tonha" : 10.0,
+    "kg" : 200.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3220,8 +3220,8 @@
     "longitude" : 28.055240700546822,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 210.0,
+    "tonha" : 8.0,
+    "kg" : 240.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3256,8 +3256,8 @@
     "longitude" : 27.528395869514817,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.4,
-    "kg" : 96.60000000000001,
+    "tonha" : 8.38,
+    "kg" : 96.37,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3274,8 +3274,8 @@
     "longitude" : 27.80016882624113,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 280.0,
+    "tonha" : 6.8,
+    "kg" : 272.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3292,8 +3292,8 @@
     "longitude" : 27.436678365494362,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 63.0,
+    "tonha" : 7.8,
+    "kg" : 70.2,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3328,8 +3328,8 @@
     "longitude" : 26.44166396947288,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 420.0,
+    "tonha" : 6.98,
+    "kg" : 418.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3364,8 +3364,8 @@
     "longitude" : 27.80659598369461,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 168.0,
+    "tonha" : 9.3,
+    "kg" : 195.3,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3382,8 +3382,8 @@
     "longitude" : 27.56759743803129,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 140.0,
+    "tonha" : 6.48,
+    "kg" : 129.60000000000002,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3400,8 +3400,8 @@
     "longitude" : 27.830892992749014,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 301.0,
+    "tonha" : 6.78,
+    "kg" : 291.54,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3418,8 +3418,8 @@
     "longitude" : 27.80259035190498,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 324.65,
+    "tonha" : 6.4,
+    "kg" : 275.2,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3436,8 +3436,8 @@
     "longitude" : 27.80016882766491,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 224.0,
+    "tonha" : 6.8,
+    "kg" : 217.6,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3454,8 +3454,8 @@
     "longitude" : 27.436678365494362,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 42.5,
+    "tonha" : 9.0,
+    "kg" : 45.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3472,8 +3472,8 @@
     "longitude" : 27.656398812974054,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 224.0,
+    "tonha" : 8.02,
+    "kg" : 224.56,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3544,8 +3544,8 @@
     "longitude" : 28.21662024890637,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 320.0,
+    "tonha" : 7.98,
+    "kg" : 319.20000000000005,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3562,8 +3562,8 @@
     "longitude" : 23.765333677465843,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 818.8000000000001,
+    "tonha" : 8.68,
+    "kg" : 798.56,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3616,8 +3616,8 @@
     "longitude" : 27.5506607487651,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 160.0,
+    "tonha" : 7.4,
+    "kg" : 148.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3634,8 +3634,8 @@
     "longitude" : 27.812702489913654,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 460.55,
+    "tonha" : 6.0,
+    "kg" : 366.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3652,8 +3652,8 @@
     "longitude" : 27.607690481410604,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 84.0,
+    "tonha" : 7.8,
+    "kg" : 93.6,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3778,8 +3778,8 @@
     "longitude" : 27.63686164751863,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 45.3,
+    "tonha" : 6.8,
+    "kg" : 40.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3796,8 +3796,8 @@
     "longitude" : 27.544769298704985,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 329.0,
+    "tonha" : 8.0,
+    "kg" : 376.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3814,8 +3814,8 @@
     "longitude" : 27.913878774389897,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 124.60000000000001,
+    "tonha" : 8.7,
+    "kg" : 121.79999999999998,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3832,8 +3832,8 @@
     "longitude" : 27.629454053025842,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 56.0,
+    "tonha" : 5.6,
+    "kg" : 44.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3850,8 +3850,8 @@
     "longitude" : 28.21662024890637,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 80.0,
+    "tonha" : 7.98,
+    "kg" : 79.80000000000001,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3886,8 +3886,8 @@
     "longitude" : 27.624181179941893,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 133.0,
+    "tonha" : 10.0,
+    "kg" : 190.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3904,8 +3904,8 @@
     "longitude" : 27.43720202088781,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 29.400000000000002,
+    "tonha" : 10.0,
+    "kg" : 30.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3922,8 +3922,8 @@
     "longitude" : 27.78912946436731,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 312.8,
+    "tonha" : 6.5,
+    "kg" : 254.15,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3940,8 +3940,8 @@
     "longitude" : 27.90795730422533,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 40.0,
+    "tonha" : 9.8,
+    "kg" : 49.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -3958,8 +3958,8 @@
     "longitude" : 27.612514759657174,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.4,
-    "kg" : 65.8,
+    "tonha" : 6.0,
+    "kg" : 42.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4012,8 +4012,8 @@
     "longitude" : 27.704612423624862,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 553.0,
+    "tonha" : 8.0,
+    "kg" : 632.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4030,8 +4030,8 @@
     "longitude" : 27.56759743803129,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 350.0,
+    "tonha" : 6.8,
+    "kg" : 340.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4066,8 +4066,8 @@
     "longitude" : 27.436678365494362,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 68.0,
+    "tonha" : 9.0,
+    "kg" : 72.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4084,8 +4084,8 @@
     "longitude" : 27.631247742234503,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 336.0,
+    "tonha" : 6.98,
+    "kg" : 335.04,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4102,8 +4102,8 @@
     "longitude" : 27.912637235376586,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 62.300000000000004,
+    "tonha" : 9.6,
+    "kg" : 67.2,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4120,8 +4120,8 @@
     "longitude" : 27.43720202088781,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 112.0,
+    "tonha" : 8.4,
+    "kg" : 117.60000000000001,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4138,8 +4138,8 @@
     "longitude" : 27.840429214388127,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 248.0,
+    "tonha" : 8.72,
+    "kg" : 270.32,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4192,8 +4192,8 @@
     "longitude" : 27.817614516011748,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 271.8,
+    "tonha" : 8.4,
+    "kg" : 302.40000000000003,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4210,8 +4210,8 @@
     "longitude" : 27.818665274345456,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 252.0,
+    "tonha" : 7.5,
+    "kg" : 270.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4228,8 +4228,8 @@
     "longitude" : 28.089418753503075,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 536.0,
+    "tonha" : 7.0,
+    "kg" : 469.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4246,8 +4246,8 @@
     "longitude" : 27.480554877322106,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 297.25,
+    "tonha" : 7.5,
+    "kg" : 307.5,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4264,8 +4264,8 @@
     "longitude" : 28.576609185299894,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 266.0,
+    "tonha" : 6.8,
+    "kg" : 258.4,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4282,8 +4282,8 @@
     "longitude" : 27.426925072477907,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 21.0,
+    "tonha" : 8.9,
+    "kg" : 26.700000000000003,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4300,8 +4300,8 @@
     "longitude" : 27.427013328273247,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 455.0,
+    "tonha" : 6.78,
+    "kg" : 440.7,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4318,8 +4318,8 @@
     "longitude" : 27.77513450559648,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 594.5,
+    "tonha" : 8.64,
+    "kg" : 708.48,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4354,8 +4354,8 @@
     "longitude" : 28.197474967016372,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 113.25,
+    "tonha" : 7.56,
+    "kg" : 113.39999999999999,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4372,8 +4372,8 @@
     "longitude" : 27.6810928231025,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 173.65,
+    "tonha" : 5.0,
+    "kg" : 115.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4390,8 +4390,8 @@
     "longitude" : 27.893169444239724,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 40.0,
+    "tonha" : 9.0,
+    "kg" : 45.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4408,8 +4408,8 @@
     "longitude" : 27.799288126671104,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 133.0,
+    "tonha" : 7.4,
+    "kg" : 140.6,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4426,8 +4426,8 @@
     "longitude" : 27.812813907868108,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 175.0,
+    "tonha" : 1.0,
+    "kg" : 25.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4444,8 +4444,8 @@
     "longitude" : 27.6789286649007,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 340.0,
+    "tonha" : 8.8,
+    "kg" : 352.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4462,8 +4462,8 @@
     "longitude" : 27.43720202088781,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 127.4,
+    "tonha" : 10.0,
+    "kg" : 130.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4516,8 +4516,8 @@
     "longitude" : 27.544769298704985,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 756.0,
+    "tonha" : 6.98,
+    "kg" : 753.84,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4534,8 +4534,8 @@
     "longitude" : 28.089418753503075,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 224.0,
+    "tonha" : 9.0,
+    "kg" : 252.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4552,8 +4552,8 @@
     "longitude" : 27.611639550684576,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.4,
-    "kg" : 150.4,
+    "tonha" : 6.0,
+    "kg" : 96.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4588,8 +4588,8 @@
     "longitude" : 27.84339229598908,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 226.5,
+    "tonha" : 8.0,
+    "kg" : 240.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4606,8 +4606,8 @@
     "longitude" : 27.607690481410604,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 196.0,
+    "tonha" : 6.8,
+    "kg" : 190.4,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4624,8 +4624,8 @@
     "longitude" : 26.40808864705084,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 5.7,
-    "kg" : 313.5,
+    "tonha" : 5.58,
+    "kg" : 306.9,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4642,8 +4642,8 @@
     "longitude" : 27.427013328273247,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 210.0,
+    "tonha" : 8.0,
+    "kg" : 240.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4660,8 +4660,8 @@
     "longitude" : 27.832648691527012,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 5.7,
-    "kg" : 513.0,
+    "tonha" : 8.2,
+    "kg" : 737.9999999999999,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4696,8 +4696,8 @@
     "longitude" : 27.63215113715837,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.4,
-    "kg" : 42.0,
+    "tonha" : 2.2,
+    "kg" : 11.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4714,8 +4714,8 @@
     "longitude" : 27.43720202088781,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 39.2,
+    "tonha" : 10.0,
+    "kg" : 40.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4732,8 +4732,8 @@
     "longitude" : 27.83287457984817,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 200.0,
+    "tonha" : 7.3,
+    "kg" : 182.5,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4750,8 +4750,8 @@
     "longitude" : 27.875045066011065,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 166.75,
+    "tonha" : 7.5,
+    "kg" : 172.5,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4768,8 +4768,8 @@
     "longitude" : 27.793906074503703,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 137.6,
+    "tonha" : 6.5,
+    "kg" : 111.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4786,8 +4786,8 @@
     "longitude" : 27.66197344358039,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 296.0,
+    "tonha" : 7.4,
+    "kg" : 273.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4804,8 +4804,8 @@
     "longitude" : 27.9079585726199,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 80.0,
+    "tonha" : 10.0,
+    "kg" : 100.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4822,8 +4822,8 @@
     "longitude" : 27.912637235376586,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 76.5,
+    "tonha" : 8.56,
+    "kg" : 77.04,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4840,8 +4840,8 @@
     "longitude" : 27.797681831448212,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 189.0,
+    "tonha" : 8.76,
+    "kg" : 236.51999999999998,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4894,8 +4894,8 @@
     "longitude" : 27.639235431118816,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 234.04999999999998,
+    "tonha" : 5.4,
+    "kg" : 167.4,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4912,8 +4912,8 @@
     "longitude" : 26.40808864705084,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 5.7,
-    "kg" : 228.0,
+    "tonha" : 5.58,
+    "kg" : 223.2,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4930,8 +4930,8 @@
     "longitude" : 27.672107654772585,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 168.0,
+    "tonha" : 6.0,
+    "kg" : 144.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4966,8 +4966,8 @@
     "longitude" : 27.81200261303316,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 314.5,
+    "tonha" : 8.44,
+    "kg" : 312.28,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -4984,8 +4984,8 @@
     "longitude" : 28.062467218055744,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 6.0,
-    "kg" : 300.0,
+    "tonha" : 6.02,
+    "kg" : 301.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5002,8 +5002,8 @@
     "longitude" : 27.62253291621005,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 175.0,
+    "tonha" : 7.68,
+    "kg" : 192.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5020,8 +5020,8 @@
     "longitude" : 26.44166396947288,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 105.0,
+    "tonha" : 6.98,
+    "kg" : 104.7,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5038,8 +5038,8 @@
     "longitude" : 27.65420004333287,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 5.7,
-    "kg" : 228.0,
+    "tonha" : 9.6,
+    "kg" : 384.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5056,8 +5056,8 @@
     "longitude" : 27.688624539362394,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 166.1,
+    "tonha" : 6.0,
+    "kg" : 132.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5074,8 +5074,8 @@
     "longitude" : 27.426924441956164,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 84.0,
+    "tonha" : 7.8,
+    "kg" : 93.6,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5110,8 +5110,8 @@
     "longitude" : 26.41435058298181,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 336.0,
+    "tonha" : 6.98,
+    "kg" : 335.04,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5128,8 +5128,8 @@
     "longitude" : 27.722376121418918,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 249.15,
+    "tonha" : 7.6,
+    "kg" : 250.79999999999998,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5146,8 +5146,8 @@
     "longitude" : 27.68417019320373,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 128.35,
+    "tonha" : 5.0,
+    "kg" : 85.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5200,8 +5200,8 @@
     "longitude" : 28.576609185299894,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 112.0,
+    "tonha" : 6.8,
+    "kg" : 108.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5218,8 +5218,8 @@
     "longitude" : 27.63215113715837,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 391.0,
+    "tonha" : 8.56,
+    "kg" : 393.76000000000005,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5236,8 +5236,8 @@
     "longitude" : 27.43720202088781,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 9.8,
-    "kg" : 19.6,
+    "tonha" : 9.22,
+    "kg" : 18.44,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5254,8 +5254,8 @@
     "longitude" : 27.64793990996119,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 6.0,
-    "kg" : 210.0,
+    "tonha" : 8.4,
+    "kg" : 294.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5272,8 +5272,8 @@
     "longitude" : 27.668361514969398,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 805.0,
+    "tonha" : 6.98,
+    "kg" : 802.7,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5290,8 +5290,8 @@
     "longitude" : 27.87152928348077,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 116.0,
+    "tonha" : 8.4,
+    "kg" : 134.4,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5308,8 +5308,8 @@
     "longitude" : 27.63494598499562,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 135.9,
+    "tonha" : 6.78,
+    "kg" : 122.04,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5326,8 +5326,8 @@
     "longitude" : 27.6302998136444,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 385.0,
+    "tonha" : 6.8,
+    "kg" : 374.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5362,8 +5362,8 @@
     "longitude" : 28.05704594528708,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 413.25,
+    "tonha" : 3.6,
+    "kg" : 205.20000000000002,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5380,8 +5380,8 @@
     "longitude" : 27.63197615531692,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 498.3,
+    "tonha" : 5.6,
+    "kg" : 369.59999999999997,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5398,8 +5398,8 @@
     "longitude" : 28.263066709642853,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 360.0,
+    "tonha" : 7.98,
+    "kg" : 359.1,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5416,8 +5416,8 @@
     "longitude" : 27.611518426878142,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 106.80000000000001,
+    "tonha" : 2.6,
+    "kg" : 31.200000000000003,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5434,8 +5434,8 @@
     "longitude" : 27.527836672524423,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 445.0,
+    "tonha" : 8.94,
+    "kg" : 447.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5488,8 +5488,8 @@
     "longitude" : 27.629454053025842,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 226.5,
+    "tonha" : 7.5,
+    "kg" : 225.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5524,8 +5524,8 @@
     "longitude" : 28.202295980956567,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 264.25,
+    "tonha" : 4.0,
+    "kg" : 140.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5542,8 +5542,8 @@
     "longitude" : 27.309221229932856,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 380.625,
+    "tonha" : 7.4,
+    "kg" : 388.5,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5560,8 +5560,8 @@
     "longitude" : 27.668361514969398,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 210.0,
+    "tonha" : 8.4,
+    "kg" : 252.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5578,8 +5578,8 @@
     "longitude" : 27.890032269627994,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.25,
-    "kg" : 101.5,
+    "tonha" : 8.4,
+    "kg" : 117.60000000000001,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5614,8 +5614,8 @@
     "longitude" : 27.639235431118816,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.55,
-    "kg" : 37.75,
+    "tonha" : 7.6,
+    "kg" : 38.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5632,8 +5632,8 @@
     "longitude" : 27.672187123567948,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 672.0,
+    "tonha" : 6.0,
+    "kg" : 576.0,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5650,8 +5650,8 @@
     "longitude" : 27.80767647047796,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 7.0,
-    "kg" : 301.0,
+    "tonha" : 7.6,
+    "kg" : 326.8,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5668,8 +5668,8 @@
     "longitude" : 27.81200261303316,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.5,
-    "kg" : 578.0,
+    "tonha" : 8.44,
+    "kg" : 573.92,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5686,8 +5686,8 @@
     "longitude" : 27.61533431197223,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.9,
-    "kg" : 338.2,
+    "tonha" : 8.68,
+    "kg" : 329.84,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5704,8 +5704,8 @@
     "longitude" : 28.263066709642853,
     "lowest_harvest_moisture" : 28,
     "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 160.0,
+    "tonha" : 7.98,
+    "kg" : 159.60000000000002,
     "abc" : "B",
     "harv_type" : "ear"
   }, {

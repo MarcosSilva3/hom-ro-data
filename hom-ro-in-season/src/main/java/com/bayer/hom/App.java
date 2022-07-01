@@ -539,9 +539,11 @@ public class App {
             }
 
             double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
-            double tonha = contains_scout_data ? field_scout.getYield() : field_manual_plan.getYield_ton_ha();
+            double tonha = field_manual_plan.getYield_ton_ha();
+            if(contains_scout_data && field_scout.getYield() > 0) {
+                tonha = field_scout.getYield();
+            }
             double kg = tonha * area;
-
             String harv_type = "ear";
             FieldHOM f = new FieldHOM(lot, hybrid, sitekey, region, cluster, twstart, twend, area, drydown_rate,
                     latitude, longitude, lowest_harvest_moisture, highest_harvest_moisture, tonha, kg, abc, harv_type);
