@@ -137,7 +137,7 @@ public class ScoutData {
                 if (feature.containsKey("properties")) {
                     final JSONObject properties = (JSONObject) feature.get("properties");
                     try {
-                        this.yield = Double.parseDouble((String) properties.get("pfo_geom_wkt"));
+                        this.yield = 2.0 * Double.parseDouble((String) properties.get("pfo_geom_wkt"));
                     } catch (Exception ex) {
                         slf4jLogger.error("[Scout Yield] entity_id {} with error in coordinates", entity_id);
                     }

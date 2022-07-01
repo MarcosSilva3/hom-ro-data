@@ -502,7 +502,6 @@ public class App {
                     sitekey = Integer.parseInt(field_pfo.getPlant());
                     contains_pfo_data = true;
                 }
-                contains_scout_data = true;
             } else {
                 slf4jLogger.error("[Fields HOM] Field {} not found in PFO", lot);
             }
@@ -540,8 +539,7 @@ public class App {
             }
 
             double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
-
-            double tonha = field_manual_plan.getYield_ton_ha();
+            double tonha = contains_scout_data ? field_scout.getYield() : field_manual_plan.getYield_ton_ha();
             double kg = tonha * area;
 
             String harv_type = "ear";
