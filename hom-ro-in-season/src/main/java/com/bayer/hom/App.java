@@ -277,7 +277,7 @@ public class App {
                 final int estimated_number_of_trucks = (int) (r1.getTonrw_harv() / 23.0);
                 final double field_moisture = g.getMst();
                 String moisture_collected_date = g.getMst_date() != null ? g.getMst_date() : "";
-                if(moisture_collected_date.equalsIgnoreCase("null")) {
+                if (moisture_collected_date.equalsIgnoreCase("null")) {
                     moisture_collected_date = "";
                 }
                 final double field_lat = r1.getLat();
@@ -532,7 +532,10 @@ public class App {
             // use manual plan in Excel for now since looks like we have some issues with
             // the area.
             double area = field_manual_plan.getActive_ha();
-            if (area <= 0) {
+            if (area <= 0 || (latitude == 0.0 && longitude == 0.0)) {
+                slf4jLogger.error(
+                        "[Fields HOM] Field {} removed from the optimization due to missing data (lat, lon, area, ....)",
+                        lot);
                 continue;
             }
 
