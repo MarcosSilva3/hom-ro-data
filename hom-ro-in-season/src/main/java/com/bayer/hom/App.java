@@ -91,7 +91,7 @@ public class App {
         Map<String, GSMData> hFieldsGSM = new HashMap<>();
         final Map<String, Contract> hFieldContract = new HashMap<>();
         Map<String, ProductCharacterization> hProducts = new HashMap<>();
-        Map<String, ScoutWkt> hFieldsScout = new HashMap<>();
+        Map<String, ScoutData> hFieldsScout = new HashMap<>();
         Map<String, FieldManualPlan> hFieldsManualPlan = new HashMap<>();
         List<FieldHOM> lFieldsHOM = new ArrayList<>();
         List<Site> lSite = new ArrayList<>();
@@ -125,7 +125,7 @@ public class App {
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
             final GSMData g = entry.getValue();
             final String entity_id = g.getEntityid();
-            final ScoutWkt wkt = new ScoutWkt(entity_id, token);
+            final ScoutData wkt = new ScoutData(entity_id, token);
             hFieldsScout.put(entity_id, wkt);
         }
 
@@ -439,7 +439,7 @@ public class App {
      * @return
      */
     public static List<FieldHOM> generateFieldsHOM(Map<String, FieldManualPlan> hFieldsManualPlan,
-            Map<String, GSMData> hFieldsGSM, Map<String, Contract> hFieldContract, Map<String, ScoutWkt> hFieldsScout,
+            Map<String, GSMData> hFieldsGSM, Map<String, Contract> hFieldContract, Map<String, ScoutData> hFieldsScout,
             Map<String, FieldPFO> hFieldsPFO, Map<String, ProductCharacterization> hProducts) {
         List<FieldHOM> lFieldsHOM = new ArrayList<>();
 
@@ -448,7 +448,7 @@ public class App {
             FieldManualPlan field_manual_plan = entry.getValue();
             GSMData field_gsm = new GSMData();
             Contract field_contract = new Contract();
-            ScoutWkt field_scout = new ScoutWkt();
+            ScoutData field_scout = new ScoutData();
             FieldPFO field_pfo = new FieldPFO();
             ProductCharacterization product = new ProductCharacterization();
             String entityid = null;

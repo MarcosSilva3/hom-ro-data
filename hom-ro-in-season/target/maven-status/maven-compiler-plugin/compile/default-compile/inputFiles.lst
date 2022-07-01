@@ -9,7 +9,6 @@
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ProductCharacterization.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/FieldPFO.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/BQData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ScoutWkt.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/HOMResult.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/GSMData.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/HOMInput.java
@@ -18,4 +17,5 @@
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ProductCharacterizationData.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ManualPlanExcel.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/FieldHOM.java
+/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ScoutData.java
 /repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/HOMParameters.java

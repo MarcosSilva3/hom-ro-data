@@ -1,5 +1,7 @@
 package com.bayer.hom;
 
+import java.util.Objects;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,21 +21,23 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.core.spi.LogbackLock;
 
-public class ScoutWkt {
+public class ScoutData {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
     private String entity_id;
     private String token;
     private String wkt;
     private double lat;
     private double lon;
+    private double yield;
 
-    public ScoutWkt() {
+    public ScoutData() {
     }
 
-    public ScoutWkt(String entity_id, String token) throws ClientProtocolException, IOException, ParseException {
+    public ScoutData(String entity_id, String token) throws ClientProtocolException, IOException, ParseException {
         this.entity_id = entity_id;
         this.token = token;
         getWkData();
+        getYieldData();
     }
 
     public void getWkData() throws ClientProtocolException, IOException, ParseException {
@@ -95,73 +99,158 @@ public class ScoutWkt {
     }
 
     /**
-     * @return String return the entity_id
+     * UOM is T/ha of DS then to translate it in RW we can just multiply by 2
+     * (Vincent Garat)
+     * 
+     * @return the estimated yield
+     * @throws ClientProtocolException
+     * @throws IOException
+     * @throws ParseException
      */
-    public String getEntity_id() {
-        return entity_id;
+    public void getYieldData() throws ClientProtocolException, IOException, ParseException {
+        this.yield = 0.0;
+        String url = "https://geoserver-core-api.location360.ag/geoserver/ows?service=WFS&version=2.0.0&request=GetFeature&typeNames=velocity-scout:scout_points&srsname=EPSG:4326&outputFormat=application/json&cql_filter=";
+        String tmp = "entity_id='" + entity_id
+                + "' and question_code='ESTYIELD' and answered_date_time_utc >= '2021-06-01'";
+        url += URLEncoder.encode(tmp, "UTF-8");
+        HttpGet get = new HttpGet(url);
+        get.setHeader("Authorization", "Bearer " + token);
+        HttpClient client = HttpClientBuilder.create().build();
+        HttpResponse response = client.execute(get);
+        int responseCode = response.getStatusLine().getStatusCode();
+
+        if (responseCode == 200) {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+                result.append(line);
+            }
+
+            slf4jLogger.debug("[Scout Yield] Start of entity_id: {}", entity_id);
+            final Object obj = new JSONParser().parse(result.toString());
+            final JSONObject jsonObject = (JSONObject) obj;
+            if (jsonObject.containsKey("features")) {
+                final JSONArray features = (JSONArray) jsonObject.get("features");
+                final Iterator i = features.iterator();
+                final JSONObject feature = (JSONObject) i.next();
+                if (feature.containsKey("properties")) {
+                    final JSONObject properties = (JSONObject) feature.get("properties");
+                    try {
+                        this.yield = Double.parseDouble((String) properties.get("pfo_geom_wkt"));
+                    } catch (Exception ex) {
+                        slf4jLogger.error("[Scout Yield] entity_id {} with error in coordinates", entity_id);
+                    }
+                }
+            } else {
+                slf4jLogger.error("[Scout Yield] entity_id {} without features in JSON returned", entity_id);
+            }
+        } else {
+            slf4jLogger.error("[Scout Yield] request error for entity_id {} => {}, {}", entity_id,
+                    response.getStatusLine(), response.getEntity().getContent());
+        }
     }
 
-    /**
-     * @param entity_id the entity_id to set
-     */
+    public String getEntity_id() {
+        return this.entity_id;
+    }
+
     public void setEntity_id(String entity_id) {
         this.entity_id = entity_id;
     }
 
-    /**
-     * @return String return the token
-     */
     public String getToken() {
-        return token;
+        return this.token;
     }
 
-    /**
-     * @param token the token to set
-     */
     public void setToken(String token) {
         this.token = token;
     }
 
-    /**
-     * @return String return the wkt
-     */
     public String getWkt() {
-        return wkt;
+        return this.wkt;
     }
 
-    /**
-     * @param wkt the wkt to set
-     */
     public void setWkt(String wkt) {
         this.wkt = wkt;
     }
 
-    /**
-     * @return double return the lat
-     */
     public double getLat() {
-        return lat;
+        return this.lat;
     }
 
-    /**
-     * @param lat the lat to set
-     */
     public void setLat(double lat) {
         this.lat = lat;
     }
 
-    /**
-     * @return double return the lon
-     */
     public double getLon() {
-        return lon;
+        return this.lon;
     }
 
-    /**
-     * @param lon the lon to set
-     */
     public void setLon(double lon) {
         this.lon = lon;
+    }
+
+    public double getYield() {
+        return this.yield;
+    }
+
+    public void setYield(double yield) {
+        this.yield = yield;
+    }
+
+    public ScoutData entity_id(String entity_id) {
+        this.entity_id = entity_id;
+        return this;
+    }
+
+    public ScoutData token(String token) {
+        this.token = token;
+        return this;
+    }
+
+    public ScoutData wkt(String wkt) {
+        this.wkt = wkt;
+        return this;
+    }
+
+    public ScoutData lat(double lat) {
+        this.lat = lat;
+        return this;
+    }
+
+    public ScoutData lon(double lon) {
+        this.lon = lon;
+        return this;
+    }
+
+    public ScoutData yield(double yield) {
+        this.yield = yield;
+        return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof ScoutData)) {
+            return false;
+        }
+        ScoutData scoutData = (ScoutData) o;
+        return Objects.equals(entity_id, scoutData.entity_id) && Objects.equals(token, scoutData.token)
+                && Objects.equals(wkt, scoutData.wkt) && lat == scoutData.lat && lon == scoutData.lon
+                && yield == scoutData.yield;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(entity_id, token, wkt, lat, lon, yield);
+    }
+
+    @Override
+    public String toString() {
+        return "{" + " entity_id='" + getEntity_id() + "'" + ", token='" + getToken() + "'" + ", wkt='" + getWkt() + "'"
+                + ", lat='" + getLat() + "'" + ", lon='" + getLon() + "'" + ", yield='" + getYield() + "'" + "}";
     }
 
 }
