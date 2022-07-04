@@ -22,5 +22,37 @@
     "clientIdEngine" : "HOM_ENGINE_CLIENT_ID",
     "clientSecretEngine" : "HOM_ENGINE_CLIENT_SECRET", 
     "awsBucketName" : "romania-models",
-    "plantNumber" : "1299"
+    "plantNumber" : "1299",
+    "pickers" : [
+        {
+            "id" : "GR1",
+            "type" : "picker",
+            "harvest_capacity" : 45.0
+        },
+        {
+            "id" : "GR2",
+            "type" : "picker",
+            "harvest_capacity" : 45.0
+        },
+        {
+            "id" : "GR3",
+            "type" : "picker",
+            "harvest_capacity" : 30.0
+        },
+        {
+            "id" : "GR4",
+            "type" : "picker",
+            "harvest_capacity" : 30.0
+        },
+        {
+            "id" : "GR5",
+            "type" : "picker",
+            "harvest_capacity" : 30.0
+        },
+        {
+            "id" : "GR6",
+            "type" : "combine",
+            "harvest_capacity" : 20.0
+        }
+    ]
 }

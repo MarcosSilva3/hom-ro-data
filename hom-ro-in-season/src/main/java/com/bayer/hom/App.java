@@ -14,9 +14,9 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
@@ -60,8 +60,8 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 public class App {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
 
-    public static void main(String[] args) throws InterruptedException, Exception {
-        HOMParameters hom_parameters = readConfigFile("hom-config.json");
+    public static void main(final String[] args) throws InterruptedException, Exception {
+        final HOMParameters hom_parameters = readConfigFile("hom-config.json");
 
         final String log_config_file = hom_parameters.getLog_config_file();
         final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -92,10 +92,11 @@ public class App {
         Map<String, GSMData> hFieldsGSM = new HashMap<>();
         Map<String, Contract> hFieldContract = new HashMap<>();
         Map<String, ProductCharacterization> hProducts = new HashMap<>();
-        Map<String, ScoutData> hFieldsScout = new HashMap<>();
+        final Map<String, ScoutData> hFieldsScout = new HashMap<>();
         Map<String, FieldManualPlan> hFieldsManualPlan = new HashMap<>();
         List<FieldHOM> lFieldsHOM = new ArrayList<>();
         List<Site> lSite = new ArrayList<>();
+        final List<Picker> lPickers = new ArrayList<>();
 
         final List<String> lSites = new ArrayList<>();
 
@@ -107,8 +108,7 @@ public class App {
         final BQData bq = new BQData(private_key_file, project_id);
         hFieldsGSM = bq.getGSMData(country, year);
 
-        final ContractData contract_data = new ContractData(plantNumber, year, token,
-                log_config_file);
+        final ContractData contract_data = new ContractData(plantNumber, year_for_contract, token, log_config_file);
         hFieldContract = contract_data.getHContracts();
 
         // Get wkt for each entity_id.
@@ -133,18 +133,18 @@ public class App {
         lSite = generateSiteCapHOM(hom_parameters);
 
         // Generate json
-        HOMInput hom_input = new HOMInput(lSite, lFieldsHOM, hom_parameters.getHom_day_one(),
+        final HOMInput hom_input = new HOMInput(lSite, lFieldsHOM, hom_parameters.getHom_day_one(),
                 hom_parameters.getHom_user(), hom_parameters.getHom_region(), hom_parameters.getHom_method(),
                 hom_parameters.getHom_tabu_size(), hom_parameters.getHom_max_iter(), hom_parameters.getHom_max_days(),
-                hom_parameters.getHom_picker_cap());
-        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String hom_input_json = ow.writeValueAsString(hom_input);
-        BufferedWriter out = new BufferedWriter(new FileWriter("hom_input.json"));
+                hom_parameters.getHom_picker_cap(), lPickers);
+        final ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        final String hom_input_json = ow.writeValueAsString(hom_input);
+        final BufferedWriter out = new BufferedWriter(new FileWriter("hom_input.json"));
         out.write(hom_input_json);
         out.close();
 
         // solve model
-        SolveModel solve_model = new SolveModel(hom_input_json, hom_parameters);
+        final SolveModel solve_model = new SolveModel(hom_input_json, hom_parameters);
         solve_model.submitJob();
         String status = solve_model.getJobStatus();
         while (!status.equalsIgnoreCase("finished")) {
@@ -153,7 +153,7 @@ public class App {
         }
 
         // Download results from AWS S3
-        String result_file_path = get_hom_results_s3(hom_parameters, solve_model);
+        final String result_file_path = get_hom_results_s3(hom_parameters, solve_model);
 
         // Save the results in CSW
         Table<String, Integer, HOMResult> tHOMResult = HashBasedTable.create();
@@ -165,7 +165,7 @@ public class App {
         }
 
         final List<CSWOutput> lCSWRows = new ArrayList<>();
-        Map<String, Boolean> hVisited = new HashMap<>();
+        final Map<String, Boolean> hVisited = new HashMap<>();
         for (final Table.Cell<String, Integer, HOMResult> cell : tHOMResult.cellSet()) {
             if (hVisited.containsKey(cell.getRowKey())) {
                 continue;
@@ -261,7 +261,7 @@ public class App {
                     optimal_harvest_moisture_range_max = hProducts.get(g.getVariety()).getHighest_rec();
                 }
 
-                int lateness = r1.getLateness();
+                final int lateness = r1.getLateness();
                 final String hybrid_drying_sensitivity_classification = "B";
                 final String harvest_type = "ear";
                 final int estimated_number_of_trucks = (int) (r1.getTonrw_harv() / 23.0);
@@ -322,11 +322,41 @@ public class App {
         slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}", hFieldsManualPlan.size());
 
         // Fields to be included in the optimization
-        for (FieldHOM f : lFieldsHOM) {
+        for (final FieldHOM f : lFieldsHOM) {
             slf4jLogger.debug("[Fields HOM-OPT] {}", f);
         }
         slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
 
+    }
+
+    /**
+     * Read list of pickers in parameters file.
+     * @param filename
+     * @return
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws ParseException
+     */
+    public static List<Picker> readPickerData(final String filename)
+            throws FileNotFoundException, IOException, ParseException {
+        final List<Picker> lPickers = new ArrayList<>();
+        final JSONParser parser = new JSONParser();
+        final JSONObject o = (JSONObject) parser.parse(new FileReader(filename));
+
+        if (o.containsKey("pickers")) {
+            final JSONArray pickers = (JSONArray) o.get("pickers");
+            final Iterator i = pickers.iterator();
+            while (i.hasNext()) {
+                final JSONObject picker = (JSONObject) i.next();
+                final String id = (String) picker.get("id");
+                final String type = (String) picker.get("type");
+                final double harvest_capacity = ((Number) picker.get("harvest_capacity")).doubleValue();
+                lPickers.add(new Picker(id, type, harvest_capacity));
+            }
+        } else {
+            slf4jLogger.error("[Parameters] Pickers not informed in parameters file.");
+        }
+        return lPickers;
     }
 
     /**
@@ -337,24 +367,26 @@ public class App {
      * @return result file path in JSON format
      * @throws IOException
      */
-    public static String get_hom_results_s3(HOMParameters hom_parameters, SolveModel model) throws IOException {
+    public static String get_hom_results_s3(final HOMParameters hom_parameters, final SolveModel model)
+            throws IOException {
         final Map<String, String> env = System.getenv();
-        String AccessKeyId = env.get("AWS_ID_PH");
-        String SecretAccessKey = env.get("AWS_PWD_PH");
-        String timestamp = model.getTimestamp();
-        String user = model.getUser();
-        int jobid = model.getJobid();
-        String result_file = "hom-result-" + timestamp + "-jobid-" + Integer.toString(jobid) + "-" + user + ".json";
-        AWSCredentials credentials = new BasicAWSCredentials(AccessKeyId, SecretAccessKey);
-        AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+        final String AccessKeyId = env.get("AWS_ID_PH");
+        final String SecretAccessKey = env.get("AWS_PWD_PH");
+        final String timestamp = model.getTimestamp();
+        final String user = model.getUser();
+        final int jobid = model.getJobid();
+        final String result_file = "hom-result-" + timestamp + "-jobid-" + Integer.toString(jobid) + "-" + user
+                + ".json";
+        final AWSCredentials credentials = new BasicAWSCredentials(AccessKeyId, SecretAccessKey);
+        final AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_2).build();
-        String bucketName = hom_parameters.getAwsBucketName(); // s3://romania-models/harvest-opt/output/archive/json/
-        String key = "harvest-opt/output/archive/json/" + result_file;
+        final String bucketName = hom_parameters.getAwsBucketName(); // s3://romania-models/harvest-opt/output/archive/json/
+        final String key = "harvest-opt/output/archive/json/" + result_file;
         slf4jLogger.debug("[AWS] Result key: {}", key);
-        S3Object s3object = s3client.getObject(bucketName, key);
-        S3ObjectInputStream inputStream = s3object.getObjectContent();
+        final S3Object s3object = s3client.getObject(bucketName, key);
+        final S3ObjectInputStream inputStream = s3object.getObjectContent();
         FileUtils.copyInputStreamToFile(inputStream, new File("/mnt/" + result_file));
-        String result_file_path = "/mnt/" + result_file;
+        final String result_file_path = "/mnt/" + result_file;
         return result_file_path;
     }
 
@@ -365,8 +397,8 @@ public class App {
      * @return
      * @throws java.text.ParseException
      */
-    public static List<Site> generateSiteCapHOM(HOMParameters hom_parameters) throws java.text.ParseException {
-        List<Site> lSite = new ArrayList<>();
+    public static List<Site> generateSiteCapHOM(final HOMParameters hom_parameters) throws java.text.ParseException {
+        final List<Site> lSite = new ArrayList<>();
         final int max_hys = 7;
         final double site_cap_saturday = 1000.;
         final double site_cap_sunday = 0.;
@@ -374,25 +406,25 @@ public class App {
         final String hom_day_one = hom_parameters.getHom_day_one();
         final int hom_max_days = hom_parameters.getHom_max_days();
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = formatter.parse(hom_day_one);
-        LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        LocalDate end = start.plusDays(hom_max_days);
+        final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        final Date startDate = formatter.parse(hom_day_one);
+        final LocalDate start = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        final LocalDate end = start.plusDays(hom_max_days);
 
         for (LocalDate date = start; date.isBefore(end); date = date.plusDays(1)) {
 
-            DayOfWeek dow = date.getDayOfWeek();
-            String day_of_week = dow.toString();
-            String site_name = "sinesti";
-            int sitekey = 1299;
-            int caphy_bulk = 0;
+            final DayOfWeek dow = date.getDayOfWeek();
+            final String day_of_week = dow.toString();
+            final String site_name = "sinesti";
+            final int sitekey = 1299;
+            final int caphy_bulk = 0;
             int caphy_ear = max_hys;
             int caphy_only_ear = max_hys;
             double capton_ear = site_cap;
-            double capton_bulk = 0.;
+            final double capton_bulk = 0.;
             double capton_only_ear = site_cap;
             int captrucks_ear = 100;
-            int captrucks_bulk = 0;
+            final int captrucks_bulk = 0;
             int captrucks_only_ear = 100;
 
             if (dow == DayOfWeek.SATURDAY) {
@@ -408,7 +440,7 @@ public class App {
                 captrucks_only_ear = 0;
             }
 
-            Site s = new Site(site_name, sitekey, caphy_bulk, caphy_ear, caphy_only_ear, capton_ear, capton_bulk,
+            final Site s = new Site(site_name, sitekey, caphy_bulk, caphy_ear, caphy_only_ear, capton_ear, capton_bulk,
                     capton_only_ear, captrucks_ear, captrucks_bulk, captrucks_only_ear, date.toString(), day_of_week);
 
             lSite.add(s);
@@ -428,14 +460,15 @@ public class App {
      * @param hProducts
      * @return
      */
-    public static List<FieldHOM> generateFieldsHOM(Map<String, FieldManualPlan> hFieldsManualPlan,
-            Map<String, GSMData> hFieldsGSM, Map<String, Contract> hFieldContract, Map<String, ScoutData> hFieldsScout,
-            Map<String, FieldPFO> hFieldsPFO, Map<String, ProductCharacterization> hProducts) {
-        List<FieldHOM> lFieldsHOM = new ArrayList<>();
+    public static List<FieldHOM> generateFieldsHOM(final Map<String, FieldManualPlan> hFieldsManualPlan,
+            final Map<String, GSMData> hFieldsGSM, final Map<String, Contract> hFieldContract,
+            final Map<String, ScoutData> hFieldsScout, final Map<String, FieldPFO> hFieldsPFO,
+            final Map<String, ProductCharacterization> hProducts) {
+        final List<FieldHOM> lFieldsHOM = new ArrayList<>();
 
         for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
-            String lot = entry.getKey();
-            FieldManualPlan field_manual_plan = entry.getValue();
+            final String lot = entry.getKey();
+            final FieldManualPlan field_manual_plan = entry.getValue();
             GSMData field_gsm = new GSMData();
             Contract field_contract = new Contract();
             ScoutData field_scout = new ScoutData();
@@ -447,10 +480,11 @@ public class App {
             boolean contains_gsm_data = false;
             boolean contains_contract_data = false;
             boolean contains_scout_data = false;
-            boolean contains_product_data = false;
+            final boolean contains_product_data = false;
             boolean contains_pfo_data = false;
 
-            String hybrid = field_manual_plan.getHybrid().toUpperCase().replaceAll("\\s+", "").replaceAll("STE", "");
+            final String hybrid = field_manual_plan.getHybrid().toUpperCase().replaceAll("\\s+", "").replaceAll("STE",
+                    "");
             double latitude = 0.0;
             double longitude = 0.0;
             int lowest_harvest_moisture = 28;
@@ -503,8 +537,8 @@ public class App {
                 abc = product.getLowestHarvestMoisture();
             }
 
-            String region = field_manual_plan.getRegion();
-            String cluster = field_manual_plan.getPicker_group();
+            final String region = field_manual_plan.getRegion();
+            final String cluster = field_manual_plan.getPicker_group();
 
             /*
              * String twstart = contains_gsm_data ? field_gsm.getMax_mst_harvest_date() :
@@ -513,14 +547,14 @@ public class App {
              * field_manual_plan.getHarvest_window_end();
              */
             // Use excel for now while we validate GSM output.
-            String twstart = field_manual_plan.getHarvest_window_start();
-            String twend = field_manual_plan.getHarvest_window_end();
+            final String twstart = field_manual_plan.getHarvest_window_start();
+            final String twend = field_manual_plan.getHarvest_window_end();
 
             // double area = contains_gsm_data ? field_gsm.getFf_area() :
             // field_manual_plan.getActive_ha();
             // use manual plan in Excel for now since looks like we have some issues with
             // the area.
-            double area = field_manual_plan.getActive_ha();
+            final double area = field_manual_plan.getActive_ha();
             if (area <= 0 || (latitude == 0.0 && longitude == 0.0)) {
                 slf4jLogger.error(
                         "[Fields HOM] Field {} removed from the optimization due to missing data (lat, lon, area, ....)",
@@ -528,14 +562,14 @@ public class App {
                 continue;
             }
 
-            double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
+            final double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
             double tonha = field_manual_plan.getYield_ton_ha();
             if (contains_scout_data && field_scout.getYield() > 0) {
                 tonha = field_scout.getYield();
             }
-            double kg = tonha * area;
-            String harv_type = "ear";
-            FieldHOM f = new FieldHOM(lot, hybrid, sitekey, region, cluster, twstart, twend, area, drydown_rate,
+            final double kg = tonha * area;
+            final String harv_type = "ear";
+            final FieldHOM f = new FieldHOM(lot, hybrid, sitekey, region, cluster, twstart, twend, area, drydown_rate,
                     latitude, longitude, lowest_harvest_moisture, highest_harvest_moisture, tonha, kg, abc, harv_type);
             lFieldsHOM.add(f);
         }
@@ -551,7 +585,7 @@ public class App {
      * @throws IOException
      * @throws ParseException
      */
-    public static HOMParameters readConfigFile(String filename)
+    public static HOMParameters readConfigFile(final String filename)
             throws FileNotFoundException, IOException, ParseException {
         final JSONParser parser = new JSONParser();
         final JSONObject o = (JSONObject) parser.parse(new FileReader(filename));
@@ -680,10 +714,10 @@ public class App {
             plantNumber = (String) o.get("plantNumber");
         }
 
-        HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
-                project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
-                hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
-                hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber);
+        final HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season,
+                private_key_file, project_id, regionCode, cropCycleCode, env_client_id, env_client_secret,
+                manual_plan_excel_path, hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region,
+                hom_max_days, hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber);
         return p;
     }
 
@@ -692,14 +726,15 @@ public class App {
      * @param fileNameTimeStamp
      * @param hAWS
      */
-    public static void saveResultsInCSW(String fileNameTimeStamp, Map<String, String> hAWS) {
-        AWSCredentials credentials = new BasicAWSCredentials(hAWS.get("AccessKeyId"), hAWS.get("SecretAccessKey"));
-        AmazonS3 s3client = AmazonS3ClientBuilder.standard()
+    public static void saveResultsInCSW(final String fileNameTimeStamp, final Map<String, String> hAWS) {
+        final AWSCredentials credentials = new BasicAWSCredentials(hAWS.get("AccessKeyId"),
+                hAWS.get("SecretAccessKey"));
+        final AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_1).build();
 
         final String csv_file = "hom_output_" + fileNameTimeStamp + ".csv";
-        String bucketName = "bayer.loc360-prod.use1.envmt.gsm";
-        String key = "csw/hom/" + csv_file;
+        final String bucketName = "bayer.loc360-prod.use1.envmt.gsm";
+        final String key = "csw/hom/" + csv_file;
         s3client.putObject(bucketName, key, new File(csv_file));
     }
 
@@ -709,7 +744,7 @@ public class App {
      * @param fileNameTimeStamp
      * @throws IOException
      */
-    public static void generateCSV(final List<CSWOutput> lCSWRows, String fileNameTimeStamp) throws IOException {
+    public static void generateCSV(final List<CSWOutput> lCSWRows, final String fileNameTimeStamp) throws IOException {
         final String csv_file = "hom_output_" + fileNameTimeStamp + ".csv";
         final FileWriter out = new FileWriter(csv_file);
         final String[] HEADERS = { "country", "plant", "crop_year", "global_fiscal_year", "crop_code", "season",

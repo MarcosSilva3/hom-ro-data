@@ -13,13 +13,13 @@ public class HOMInput {
     private int tabu_size;
     private int max_iter;
     private int max_days;
-    private int picker_cap;
+    private List<Picker> pickers;
 
     public HOMInput() {
     }
 
     public HOMInput(List<Site> site, List<FieldHOM> fields, String day_one, String user, String region, String method,
-            int tabu_size, int max_iter, int max_days, int picker_cap) {
+            int tabu_size, int max_iter, int max_days, List<Picker> pickers) {
         this.site = site;
         this.fields = fields;
         this.day_one = day_one;
@@ -29,7 +29,7 @@ public class HOMInput {
         this.tabu_size = tabu_size;
         this.max_iter = max_iter;
         this.max_days = max_days;
-        this.picker_cap = picker_cap;
+        this.pickers = pickers;
     }
 
     public List<Site> getSite() {
@@ -104,12 +104,12 @@ public class HOMInput {
         this.max_days = max_days;
     }
 
-    public int getPicker_cap() {
-        return this.picker_cap;
+    public List<Picker> getPickers() {
+        return this.pickers;
     }
 
-    public void setPicker_cap(int picker_cap) {
-        this.picker_cap = picker_cap;
+    public void setPickers(List<Picker> pickers) {
+        this.pickers = pickers;
     }
 
     public HOMInput site(List<Site> site) {
@@ -157,8 +157,8 @@ public class HOMInput {
         return this;
     }
 
-    public HOMInput picker_cap(int picker_cap) {
-        this.picker_cap = picker_cap;
+    public HOMInput pickers(List<Picker> pickers) {
+        this.pickers = pickers;
         return this;
     }
 
@@ -174,12 +174,12 @@ public class HOMInput {
                 && Objects.equals(day_one, hOMInput.day_one) && Objects.equals(user, hOMInput.user)
                 && Objects.equals(region, hOMInput.region) && Objects.equals(method, hOMInput.method)
                 && tabu_size == hOMInput.tabu_size && max_iter == hOMInput.max_iter && max_days == hOMInput.max_days
-                && picker_cap == hOMInput.picker_cap;
+                && Objects.equals(pickers, hOMInput.pickers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(site, fields, day_one, user, region, method, tabu_size, max_iter, max_days, picker_cap);
+        return Objects.hash(site, fields, day_one, user, region, method, tabu_size, max_iter, max_days, pickers);
     }
 
     @Override
@@ -187,7 +187,7 @@ public class HOMInput {
         return "{" + " site='" + getSite() + "'" + ", fields='" + getFields() + "'" + ", day_one='" + getDay_one() + "'"
                 + ", user='" + getUser() + "'" + ", region='" + getRegion() + "'" + ", method='" + getMethod() + "'"
                 + ", tabu_size='" + getTabu_size() + "'" + ", max_iter='" + getMax_iter() + "'" + ", max_days='"
-                + getMax_days() + "'" + ", picker_cap='" + getPicker_cap() + "'" + "}";
+                + getMax_days() + "'" + ", pickers='" + getPickers() + "'" + "}";
     }
 
 }
