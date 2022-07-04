@@ -27,6 +27,11 @@ public class HOMParameters {
     private String clientSecretEngine;
     private String awsBucketName;
     private String plantNumber;
+    private String env_hom_db_host;
+    private String env_hom_db_port;
+    private String env_hom_db_user;
+    private String env_hom_db_pwd;
+    private String hom_db_name;
 
     public HOMParameters() {
     }
@@ -36,7 +41,8 @@ public class HOMParameters {
             String env_client_secret, String manual_plan_excel_path, String hom_day_one, String hom_user,
             int hom_tabu_size, int hom_max_iter, int hom_picker_cap, String hom_region, int hom_max_days,
             String hom_method, String clientIdEngine, String clientSecretEngine, String awsBucketName,
-            String plantNumber) {
+            String plantNumber, String env_hom_db_host, String env_hom_db_port, String env_hom_db_user,
+            String env_hom_db_pwd, String hom_db_name) {
         this.log_config_file = log_config_file;
         this.country = country;
         this.year = year;
@@ -61,6 +67,11 @@ public class HOMParameters {
         this.clientSecretEngine = clientSecretEngine;
         this.awsBucketName = awsBucketName;
         this.plantNumber = plantNumber;
+        this.env_hom_db_host = env_hom_db_host;
+        this.env_hom_db_port = env_hom_db_port;
+        this.env_hom_db_user = env_hom_db_user;
+        this.env_hom_db_pwd = env_hom_db_pwd;
+        this.hom_db_name = hom_db_name;
     }
 
     public String getLog_config_file() {
@@ -255,6 +266,46 @@ public class HOMParameters {
         this.plantNumber = plantNumber;
     }
 
+    public String getEnv_hom_db_host() {
+        return this.env_hom_db_host;
+    }
+
+    public void setEnv_hom_db_host(String env_hom_db_host) {
+        this.env_hom_db_host = env_hom_db_host;
+    }
+
+    public String getEnv_hom_db_port() {
+        return this.env_hom_db_port;
+    }
+
+    public void setEnv_hom_db_port(String env_hom_db_port) {
+        this.env_hom_db_port = env_hom_db_port;
+    }
+
+    public String getEnv_hom_db_user() {
+        return this.env_hom_db_user;
+    }
+
+    public void setEnv_hom_db_user(String env_hom_db_user) {
+        this.env_hom_db_user = env_hom_db_user;
+    }
+
+    public String getEnv_hom_db_pwd() {
+        return this.env_hom_db_pwd;
+    }
+
+    public void setEnv_hom_db_pwd(String env_hom_db_pwd) {
+        this.env_hom_db_pwd = env_hom_db_pwd;
+    }
+
+    public String getHom_db_name() {
+        return this.hom_db_name;
+    }
+
+    public void setHom_db_name(String hom_db_name) {
+        this.hom_db_name = hom_db_name;
+    }
+
     public HOMParameters log_config_file(String log_config_file) {
         this.log_config_file = log_config_file;
         return this;
@@ -375,6 +426,31 @@ public class HOMParameters {
         return this;
     }
 
+    public HOMParameters env_hom_db_host(String env_hom_db_host) {
+        this.env_hom_db_host = env_hom_db_host;
+        return this;
+    }
+
+    public HOMParameters env_hom_db_port(String env_hom_db_port) {
+        this.env_hom_db_port = env_hom_db_port;
+        return this;
+    }
+
+    public HOMParameters env_hom_db_user(String env_hom_db_user) {
+        this.env_hom_db_user = env_hom_db_user;
+        return this;
+    }
+
+    public HOMParameters env_hom_db_pwd(String env_hom_db_pwd) {
+        this.env_hom_db_pwd = env_hom_db_pwd;
+        return this;
+    }
+
+    public HOMParameters hom_db_name(String hom_db_name) {
+        this.hom_db_name = hom_db_name;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -401,7 +477,12 @@ public class HOMParameters {
                 && Objects.equals(clientIdEngine, hOMParameters.clientIdEngine)
                 && Objects.equals(clientSecretEngine, hOMParameters.clientSecretEngine)
                 && Objects.equals(awsBucketName, hOMParameters.awsBucketName)
-                && Objects.equals(plantNumber, hOMParameters.plantNumber);
+                && Objects.equals(plantNumber, hOMParameters.plantNumber)
+                && Objects.equals(env_hom_db_host, hOMParameters.env_hom_db_host)
+                && Objects.equals(env_hom_db_port, hOMParameters.env_hom_db_port)
+                && Objects.equals(env_hom_db_user, hOMParameters.env_hom_db_user)
+                && Objects.equals(env_hom_db_pwd, hOMParameters.env_hom_db_pwd)
+                && Objects.equals(hom_db_name, hOMParameters.hom_db_name);
     }
 
     @Override
@@ -409,7 +490,8 @@ public class HOMParameters {
         return Objects.hash(log_config_file, country, year, year_for_contract, season, private_key_file, project_id,
                 regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path, hom_day_one,
                 hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days, hom_method,
-                clientIdEngine, clientSecretEngine, awsBucketName, plantNumber);
+                clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host, env_hom_db_port,
+                env_hom_db_user, env_hom_db_pwd, hom_db_name);
     }
 
     @Override
@@ -425,7 +507,10 @@ public class HOMParameters {
                 + getHom_picker_cap() + "'" + ", hom_region='" + getHom_region() + "'" + ", hom_max_days='"
                 + getHom_max_days() + "'" + ", hom_method='" + getHom_method() + "'" + ", clientIdEngine='"
                 + getClientIdEngine() + "'" + ", clientSecretEngine='" + getClientSecretEngine() + "'"
-                + ", awsBucketName='" + getAwsBucketName() + "'" + ", plantNumber='" + getPlantNumber() + "'" + "}";
+                + ", awsBucketName='" + getAwsBucketName() + "'" + ", plantNumber='" + getPlantNumber() + "'"
+                + ", env_hom_db_host='" + getEnv_hom_db_host() + "'" + ", env_hom_db_port='" + getEnv_hom_db_port()
+                + "'" + ", env_hom_db_user='" + getEnv_hom_db_user() + "'" + ", env_hom_db_pwd='" + getEnv_hom_db_pwd()
+                + "'" + ", hom_db_name='" + getHom_db_name() + "'" + "}";
     }
 
 }

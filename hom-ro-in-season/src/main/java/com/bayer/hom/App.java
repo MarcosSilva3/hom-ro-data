@@ -7,6 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -295,41 +300,229 @@ public class App {
         }
         generateCSV(lCSWRows, fileNameTimeStamp);
         saveResultsInCSW(fileNameTimeStamp, hAWS);
+        saveGSMDataInDB(hom_parameters, hFieldsGSM);
 
         // Check the data
-        for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
-            slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
-        }
-        slf4jLogger.debug("[GSM] Total number of fields: {}", hFieldsGSM.size());
-
-        for (final Entry<String, FieldPFO> entry : hFieldsPFO.entrySet()) {
-            slf4jLogger.debug("[PFO] {} => {}}", entry.getKey(), entry.getValue());
-        }
-        slf4jLogger.debug("[PFO] Total number of fields: {}", hFieldsPFO.size());
-
-        for (final Entry<String, Contract> entry : hFieldContract.entrySet()) {
-            slf4jLogger.debug("[Contract] {} => {}}", entry.getKey(), entry.getValue());
-        }
-        slf4jLogger.debug("[Contract] Total number of fields: {}", hFieldContract.size());
-
-        for (final Entry<String, ProductCharacterization> entry : hProducts.entrySet()) {
-            slf4jLogger.debug("[Product Characterization] {} => {}}", entry.getKey(), entry.getValue());
-        }
-        slf4jLogger.debug("[Product Characterization] Total number of products: {}", hProducts.size());
-
-        for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
-            slf4jLogger.debug("[Manual Plan Excel] {} => {}", entry.getKey(), entry.getValue());
-        }
-        slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}", hFieldsManualPlan.size());
-
-        // Fields to be included in the optimization
-        for (final FieldHOM f : lFieldsHOM) {
-            slf4jLogger.debug("[Fields HOM-OPT] {}", f);
-        }
-        slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
+        /*
+         * for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
+         * slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue()); }
+         * slf4jLogger.debug("[GSM] Total number of fields: {}", hFieldsGSM.size());
+         * 
+         * for (final Entry<String, FieldPFO> entry : hFieldsPFO.entrySet()) {
+         * slf4jLogger.debug("[PFO] {} => {}}", entry.getKey(), entry.getValue()); }
+         * slf4jLogger.debug("[PFO] Total number of fields: {}", hFieldsPFO.size());
+         * 
+         * for (final Entry<String, Contract> entry : hFieldContract.entrySet()) {
+         * slf4jLogger.debug("[Contract] {} => {}}", entry.getKey(), entry.getValue());
+         * } slf4jLogger.debug("[Contract] Total number of fields: {}",
+         * hFieldContract.size());
+         * 
+         * for (final Entry<String, ProductCharacterization> entry :
+         * hProducts.entrySet()) {
+         * slf4jLogger.debug("[Product Characterization] {} => {}}", entry.getKey(),
+         * entry.getValue()); }
+         * slf4jLogger.debug("[Product Characterization] Total number of products: {}",
+         * hProducts.size());
+         * 
+         * for (final Entry<String, FieldManualPlan> entry :
+         * hFieldsManualPlan.entrySet()) {
+         * slf4jLogger.debug("[Manual Plan Excel] {} => {}", entry.getKey(),
+         * entry.getValue()); }
+         * slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}",
+         * hFieldsManualPlan.size());
+         * 
+         * // Fields to be included in the optimization for (final FieldHOM f :
+         * lFieldsHOM) { slf4jLogger.debug("[Fields HOM-OPT] {}", f); }
+         * slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}",
+         * lFieldsHOM.size());
+         */
     }
 
-    
+    /**
+     * Insert GSM data in database
+     * 
+     * @param hom_parameters
+     * @param hFieldsGSM
+     */
+    public static void saveGSMDataInDB(final HOMParameters hom_parameters, final Map<String, GSMData> hFieldsGSM) {
+        Connection connection = null;
+        Statement _deleteTableDtataStmt = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL GSM] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL GSM] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            // Clear table data first.
+            _deleteTableDtataStmt = connection.createStatement();
+            String _deleteTableData = "TRUNCATE TABLE GSMData";
+            _deleteTableDtataStmt.executeUpdate(_deleteTableData);
+
+            String query = "INSERT INTO GSMData VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
+                GSMData d = entry.getValue();
+                slf4jLogger.debug("[MySQL GSM] {}", d);
+                String entityid = d.getEntityid();
+                String production_field_id = d.getProduction_field_id();
+                String country = d.getCountry();
+                String site_key = d.getSite_key();
+                String plant = d.getPlant();
+                String field_num = d.getField_num();
+                int planting_area_id = d.getPlanting_area_id();
+                String planting_area_name = d.getPlanting_area_name();
+                String macrozone = d.getMacrozone();
+                String seedsman_area = d.getSeedsman_area();
+                String pfo_name = d.getPfo_name();
+                String user_group = d.getUser_group();
+                String tracking_number = d.getTracking_number();
+                String contract_number = d.getContract_number();
+                int year = d.getYear();
+                String season = d.getSeason();
+
+                String sPlantingDate = d.getPlanting_date();
+                if (sPlantingDate == null || sPlantingDate.equalsIgnoreCase("null")) {
+                    sPlantingDate = "0000-00-00";
+                }
+                Date planting_date = new SimpleDateFormat("yyyy-MM-dd").parse(sPlantingDate);
+
+                String planting_window = d.getPlanting_window();
+                String female_fertile = d.getFemale_fertile();
+                String female_sterile = d.getFemale_sterile();
+                String variety = d.getVariety();
+                double planted_surface = d.getPlanted_surface();
+                double tot_female_area = d.getTot_female_area();
+                double ff_area = d.getFf_area();
+                double fs_area = d.getFs_area();
+                double tot_area = d.getTot_area();
+                String area_uom = d.getArea_uom();
+                String growth_stage = d.getGrowth_stage();
+                double gdu_curr = d.getGdu_curr();
+
+                String sMoist35Date = d.getMoist35_date();
+                if (sMoist35Date == null || sMoist35Date.equalsIgnoreCase("null")) {
+                    sMoist35Date = "0000-00-00";
+                }
+                Date moist35_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMoist35Date);
+
+                double drydown_rate = d.getDrydown_rate();
+                double mst = d.getMst();
+
+                String sMstDate = d.getMst_date();
+                if (sMstDate == null || sMstDate.equalsIgnoreCase("null")) {
+                    sMstDate = "0000-00-00";
+                }
+                Date mst_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMstDate);
+
+                double mst_imputed = d.getMst_imputed();
+                double mst_imputed_field = d.getMst_imputed_field();
+
+                String sOptimalMstHarvestDate = d.getOptimal_mst_harvest_date();
+                if (sOptimalMstHarvestDate == null || sOptimalMstHarvestDate.equalsIgnoreCase("null")) {
+                    sOptimalMstHarvestDate = "0000-00-00";
+                }
+                Date optimal_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sOptimalMstHarvestDate);
+
+                String sMinMstHarvestDate = d.getMin_mst_harvest_date();
+                if (sMinMstHarvestDate == null || sMinMstHarvestDate.equalsIgnoreCase("null")) {
+                    sMinMstHarvestDate = "0000-00-00";
+                }
+                Date min_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMinMstHarvestDate);
+
+                String sMaxMstHarvestDate = d.getMax_mst_harvest_date();
+                if (sMaxMstHarvestDate == null || sMaxMstHarvestDate.equalsIgnoreCase("null")) {
+                    sMaxMstHarvestDate = "0000-00-00";
+                }
+                Date max_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMaxMstHarvestDate);
+
+                double lat = d.getLat();
+                double lon = d.getLon();
+
+                String sReportDate = d.getReport_date();
+                if (sReportDate == null || sReportDate.equalsIgnoreCase("null")) {
+                    sReportDate = "0000-00-00";
+                }
+                Date report_date = new SimpleDateFormat("yyyy-MM-dd").parse(sReportDate);
+
+                String region = d.getRegion();
+                String wkt = d.getWkt();
+
+                prepStmt.setString(1, entityid);
+                prepStmt.setString(2, production_field_id);
+                prepStmt.setString(3, country);
+                prepStmt.setString(4, site_key);
+                prepStmt.setString(5, plant);
+                prepStmt.setString(6, field_num);
+                prepStmt.setInt(7, planting_area_id);
+                prepStmt.setString(8, planting_area_name);
+                prepStmt.setString(9, macrozone);
+                prepStmt.setString(10, seedsman_area);
+                prepStmt.setString(11, pfo_name);
+                prepStmt.setString(12, user_group);
+                prepStmt.setString(13, tracking_number);
+                prepStmt.setString(14, contract_number);
+                prepStmt.setInt(15, year);
+                prepStmt.setString(16, season);
+                prepStmt.setDate(17, new java.sql.Date(planting_date.getTime()));
+                prepStmt.setString(18, planting_window);
+                prepStmt.setString(19, female_fertile);
+                prepStmt.setString(20, female_sterile);
+                prepStmt.setString(21, variety);
+                prepStmt.setDouble(22, planted_surface);
+                prepStmt.setDouble(23, tot_female_area);
+                prepStmt.setDouble(24, ff_area);
+                prepStmt.setDouble(25, fs_area);
+                prepStmt.setDouble(26, tot_area);
+                prepStmt.setString(27, area_uom);
+                prepStmt.setString(28, growth_stage);
+                prepStmt.setDouble(29, gdu_curr);
+                prepStmt.setDate(30, new java.sql.Date(moist35_date.getTime()));
+                prepStmt.setDouble(31, drydown_rate);
+                prepStmt.setDouble(32, mst);
+                prepStmt.setDate(33, new java.sql.Date(mst_date.getTime()));
+                prepStmt.setDouble(34, mst_imputed);
+                prepStmt.setDouble(35, mst_imputed_field);
+                prepStmt.setDate(36, new java.sql.Date(optimal_mst_harvest_date.getTime()));
+                prepStmt.setDate(37, new java.sql.Date(min_mst_harvest_date.getTime()));
+                prepStmt.setDate(38, new java.sql.Date(max_mst_harvest_date.getTime()));
+                prepStmt.setDouble(39, lat);
+                prepStmt.setDouble(40, lon);
+                prepStmt.setDate(41, new java.sql.Date(report_date.getTime()));
+                prepStmt.setString(42, region);
+                prepStmt.setString(43, wkt);
+                prepStmt.addBatch();
+            }
+
+            int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL GSM] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL GSM] Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+    }
 
     /**
      * Read list of pickers in parameters file.
@@ -617,6 +810,12 @@ public class App {
         String awsBucketName = "romania-models";
         String plantNumber = "1299";
 
+        String env_hom_db_host = "HOM_DB_HOST";
+        String env_hom_db_port = "HOM_DB_PORT";
+        String env_hom_db_user = "HOM_DB_USER";
+        String env_hom_db_pwd = "HOM_DB_PWD";
+        String hom_db_name = "hom_romania";
+
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
         }
@@ -717,10 +916,31 @@ public class App {
             plantNumber = (String) o.get("plantNumber");
         }
 
+        if (o.get("env_hom_db_host") != null) {
+            env_hom_db_host = (String) o.get("env_hom_db_host");
+        }
+
+        if (o.get("env_hom_db_port") != null) {
+            env_hom_db_port = (String) o.get("env_hom_db_port");
+        }
+
+        if (o.get("env_hom_db_user") != null) {
+            env_hom_db_user = (String) o.get("env_hom_db_user");
+        }
+
+        if (o.get("env_hom_db_pwd") != null) {
+            env_hom_db_pwd = (String) o.get("env_hom_db_pwd");
+        }
+
+        if (o.get("hom_db_name") != null) {
+            hom_db_name = (String) o.get("hom_db_name");
+        }
+
         final HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season,
                 private_key_file, project_id, regionCode, cropCycleCode, env_client_id, env_client_secret,
                 manual_plan_excel_path, hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region,
-                hom_max_days, hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber);
+                hom_max_days, hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber,
+                env_hom_db_host, env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name);
         return p;
     }
 
