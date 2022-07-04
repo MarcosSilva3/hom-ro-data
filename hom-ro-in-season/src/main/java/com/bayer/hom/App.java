@@ -96,7 +96,8 @@ public class App {
         Map<String, FieldManualPlan> hFieldsManualPlan = new HashMap<>();
         List<FieldHOM> lFieldsHOM = new ArrayList<>();
         List<Site> lSite = new ArrayList<>();
-        final List<Picker> lPickers = new ArrayList<>();
+        List<Picker> lPickers = new ArrayList<>();
+        lPickers = readPickerData("hom-config.json");
 
         final List<String> lSites = new ArrayList<>();
 
@@ -136,7 +137,7 @@ public class App {
         final HOMInput hom_input = new HOMInput(lSite, lFieldsHOM, hom_parameters.getHom_day_one(),
                 hom_parameters.getHom_user(), hom_parameters.getHom_region(), hom_parameters.getHom_method(),
                 hom_parameters.getHom_tabu_size(), hom_parameters.getHom_max_iter(), hom_parameters.getHom_max_days(),
-                hom_parameters.getHom_picker_cap(), lPickers);
+                lPickers);
         final ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         final String hom_input_json = ow.writeValueAsString(hom_input);
         final BufferedWriter out = new BufferedWriter(new FileWriter("hom_input.json"));
@@ -326,11 +327,11 @@ public class App {
             slf4jLogger.debug("[Fields HOM-OPT] {}", f);
         }
         slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
-
     }
 
     /**
      * Read list of pickers in parameters file.
+     * 
      * @param filename
      * @return
      * @throws FileNotFoundException

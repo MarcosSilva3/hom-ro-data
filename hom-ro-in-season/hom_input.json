@@ -5734,5 +5734,29 @@
   "tabu_size" : 1,
   "max_iter" : 2,
   "max_days" : 130,
-  "picker_cap" : 45
+  "pickers" : [ {
+    "id" : "GR1",
+    "type" : "picker",
+    "harvest_capacity" : 45.0
+  }, {
+    "id" : "GR2",
+    "type" : "picker",
+    "harvest_capacity" : 45.0
+  }, {
+    "id" : "GR3",
+    "type" : "picker",
+    "harvest_capacity" : 30.0
+  }, {
+    "id" : "GR4",
+    "type" : "picker",
+    "harvest_capacity" : 30.0
+  }, {
+    "id" : "GR5",
+    "type" : "picker",
+    "harvest_capacity" : 30.0
+  }, {
+    "id" : "GR6",
+    "type" : "combine",
+    "harvest_capacity" : 20.0
+  } ]
 }
