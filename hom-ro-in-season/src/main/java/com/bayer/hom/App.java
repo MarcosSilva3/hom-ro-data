@@ -301,6 +301,7 @@ public class App {
         generateCSV(lCSWRows, fileNameTimeStamp);
         saveResultsInCSW(fileNameTimeStamp, hAWS);
         saveGSMDataInDB(hom_parameters, hFieldsGSM);
+        saveContractDataInDB(hom_parameters, hFieldContract);
 
         // Check the data
         /*
@@ -336,6 +337,92 @@ public class App {
          * slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}",
          * lFieldsHOM.size());
          */
+    }
+
+    /**
+     * Add contract data in MySQL database
+     * 
+     * @param hom_parameters
+     * @param hFieldContract
+     */
+    public static void saveContractDataInDB(final HOMParameters hom_parameters,
+            final Map<String, Contract> hFieldContract) {
+        Connection connection = null;
+        Statement _deleteTableDtataStmt = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL Contract] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL Contract] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            // Clear table data first.
+            _deleteTableDtataStmt = connection.createStatement();
+            String _deleteTableData = "TRUNCATE TABLE Contract";
+            _deleteTableDtataStmt.executeUpdate(_deleteTableData);
+
+            String query = "INSERT INTO Contract VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            for (final Entry<String, Contract> entry : hFieldContract.entrySet()) {
+                Contract d = entry.getValue();
+                slf4jLogger.debug("[MySQL Contract] {}", d);
+                String contractNumber = d.getContractNumber();
+                String plantNumber = d.getPlantNumber();
+                String year = d.getYear();
+                String fieldNumber = d.getFieldNumber();
+                String growerName = d.getGrowerName();
+                String acronym = d.getAcronym();
+                String trackingNumber = d.getTrackingNumber();
+                String lastHarvestReceiptDate = d.getLastHarvestReceiptDate();
+                if (lastHarvestReceiptDate == null || lastHarvestReceiptDate.equalsIgnoreCase("null")) {
+                    lastHarvestReceiptDate = "";
+                }
+                String contractLineDeleteFlag = d.getContractLineDeleteFlag();
+                double harvestedFemaleArea = d.getHarvestedFemaleArea();
+                double moisturePercentage = d.getMoisturePercentage();
+
+                prepStmt.setString(1, contractNumber);
+                prepStmt.setString(2, plantNumber);
+                prepStmt.setString(3, year);
+                prepStmt.setString(4, fieldNumber);
+                prepStmt.setString(5, growerName);
+                prepStmt.setString(6, acronym);
+                prepStmt.setString(7, trackingNumber);
+                prepStmt.setString(8, lastHarvestReceiptDate);
+                prepStmt.setString(9, contractLineDeleteFlag);
+                prepStmt.setDouble(10, harvestedFemaleArea);
+                prepStmt.setDouble(11, moisturePercentage);
+                prepStmt.addBatch();
+            }
+
+            int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL Contract] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL Contract] Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
     }
 
     /**
