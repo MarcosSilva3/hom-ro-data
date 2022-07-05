@@ -301,6 +301,7 @@ public class App {
         saveGSMDataInDB(hom_parameters, hFieldsGSM);
         saveContractDataInDB(hom_parameters, hFieldContract);
         saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
+        saveProductsInDB(hom_parameters, hProducts);
 
         // Check the data
         /*
@@ -338,6 +339,86 @@ public class App {
          */
     }
 
+    /**
+     * Save Product Characterization data in DB
+     * 
+     * @param hom_parameters
+     * @param hProducts
+     */
+    public static void saveProductsInDB(final HOMParameters hom_parameters,
+            final Map<String, ProductCharacterization> hProducts) {
+        Connection connection = null;
+        Statement _deleteTableDtataStmt = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL ProductCharacterization] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL ProductCharacterization] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            // Clear table data first.
+            _deleteTableDtataStmt = connection.createStatement();
+            String _deleteTableData = "TRUNCATE TABLE ProductCharacterization";
+            _deleteTableDtataStmt.executeUpdate(_deleteTableData);
+
+            String query = "INSERT INTO ProductCharacterization VALUES (?,?,?,?,?,?)";
+            PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            for (final Entry<String, ProductCharacterization> entry : hProducts.entrySet()) {
+                ProductCharacterization d = entry.getValue();
+                slf4jLogger.debug("[MySQL ProductCharacterization] {}", d);
+
+                String name = d.getName();
+                String highestHarvestMoisture = d.getHighestHarvestMoisture();
+                String lowestHarvestMoisture = d.getLowestHarvestMoisture();
+                String huskingDifficulty = d.getHuskingDifficulty();
+                int lowest_rec = d.getLowest_rec();
+                int highest_rec = d.getHighest_rec();
+
+                prepStmt.setString(1, name);
+                prepStmt.setString(2, highestHarvestMoisture);
+                prepStmt.setString(3, lowestHarvestMoisture);
+                prepStmt.setString(4, huskingDifficulty);
+                prepStmt.setInt(5, lowest_rec);
+                prepStmt.setInt(6, highest_rec);
+                prepStmt.addBatch();
+            }
+
+            int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL FieldManualPlan] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL FieldManualPlan] Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+    }
+
+    /**
+     * Save list of fields in manual plan in DB
+     * 
+     * @param hom_parameters
+     * @param hFieldsManualPlan
+     */
     public static void saveFieldManualPlanInDB(final HOMParameters hom_parameters,
             final Map<String, FieldManualPlan> hFieldsManualPlan) {
         Connection connection = null;
