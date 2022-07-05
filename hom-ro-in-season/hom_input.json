@@ -5731,8 +5731,8 @@
   "user" : "Domino",
   "region" : "romania",
   "method" : "ear+bulk",
-  "tabu_size" : 0,
-  "max_iter" : 0,
+  "tabu_size" : 1,
+  "max_iter" : 2,
   "max_days" : 130,
   "pickers" : [ {
     "id" : "GR1",
