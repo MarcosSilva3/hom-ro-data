@@ -303,6 +303,7 @@ public class App {
         saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
         saveProductsInDB(hom_parameters, hProducts);
         saveScoutDataInDB(hom_parameters, hFieldsScout);
+        saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
 
         // Check the data
         /*
@@ -338,6 +339,100 @@ public class App {
          * slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}",
          * lFieldsHOM.size());
          */
+    }
+
+    /**
+     * Save fields used in HOM in the database
+     * 
+     * @param hom_parameters
+     * @param lFieldsHOM
+     */
+    public static void saveFieldsHOMInDB(final HOMParameters hom_parameters, final List<FieldHOM> lFieldsHOM) {
+        Connection connection = null;
+        Statement _deleteTableDtataStmt = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL FieldHOM] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL FieldHOM] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            // Clear table data first.
+            _deleteTableDtataStmt = connection.createStatement();
+            String _deleteTableData = "TRUNCATE TABLE FieldHOM";
+            _deleteTableDtataStmt.executeUpdate(_deleteTableData);
+
+            String query = "INSERT INTO FieldHOM VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            for (final FieldHOM d : lFieldsHOM) {
+                slf4jLogger.debug("[MySQL FieldHOM] {}", d);
+
+                String lot = d.getLot();
+                String hybrid = d.getHybrid();
+                int sitekey = d.getSitekey();
+                String region = d.getRegion();
+                String cluster = d.getCluster();
+                String twstart = d.getTwstart();
+                String twend = d.getTwend();
+                double area = d.getArea();
+                double drydown_rate = d.getDrydown_rate();
+                double latitude = d.getLatitude();
+                double longitude = d.getLongitude();
+                int lowest_harvest_moisture = d.getLowest_harvest_moisture();
+                int highest_harvest_moisture = d.getHighest_harvest_moisture();
+                double tonha = d.getTonha();
+                double kg = d.getKg();
+                String abc = d.getAbc();
+                String harv_type = d.getHarv_type();
+
+                prepStmt.setString(1, lot);
+                prepStmt.setString(2, hybrid);
+                prepStmt.setInt(3, sitekey);
+                prepStmt.setString(4, region);
+                prepStmt.setString(5, cluster);
+                prepStmt.setDate(6, java.sql.Date.valueOf(twstart));
+                prepStmt.setDate(7, java.sql.Date.valueOf(twend));
+                prepStmt.setDouble(8, area);
+                prepStmt.setDouble(9, drydown_rate);
+                prepStmt.setDouble(10, latitude);
+                prepStmt.setDouble(11, longitude);
+                prepStmt.setInt(12, lowest_harvest_moisture);
+                prepStmt.setInt(13, highest_harvest_moisture);
+                prepStmt.setDouble(14, tonha);
+                prepStmt.setDouble(15, kg);
+                prepStmt.setString(16, abc);
+                prepStmt.setString(17, harv_type);
+                prepStmt.addBatch();
+            }
+
+            int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL FieldHOM] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL FieldHOM] Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
     }
 
     /**
