@@ -399,10 +399,10 @@ public class App {
             int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
-                    slf4jLogger.debug("[MySQL FieldManualPlan] Execution {}: unknown number of rows updated",
+                    slf4jLogger.debug("[MySQL ProductCharacterization] Execution {}: unknown number of rows updated",
                             String.format("%d", i));
                 else
-                    slf4jLogger.debug("[MySQL FieldManualPlan] Execution {} successful: {}", String.format("%d", i),
+                    slf4jLogger.debug("[MySQL ProductCharacterization] Execution {} successful: {}", String.format("%d", i),
                             String.format("%d", numUpdates[i]));
             }
             connection.commit();
