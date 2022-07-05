@@ -366,28 +366,28 @@ public class App {
 
             // Clear table data first.
             _deleteTableDtataStmt = connection.createStatement();
-            String _deleteTableData = "TRUNCATE TABLE Site";
+            final String _deleteTableData = "TRUNCATE TABLE Site";
             _deleteTableDtataStmt.executeUpdate(_deleteTableData);
 
-            String query = "INSERT INTO Site VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement prepStmt = connection.prepareStatement(query);
+            final String query = "INSERT INTO Site VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
 
             for (final Site d : lSite) {
                 slf4jLogger.debug("[MySQL lSite] {}", d);
 
-                String site_name = d.getSite_name();
-                int sitekey = d.getSitekey();
-                int caphy_bulk = d.getCaphy_bulk();
-                int caphy_ear = d.getCaphy_ear();
-                int caphy_only_ear = d.getCaphy_only_ear();
-                double capton_ear = d.getCapton_ear();
-                double capton_bulk = d.getCapton_bulk();
-                double capton_only_ear = d.getCapton_only_ear();
-                int captrucks_ear = d.getCaptrucks_ear();
-                int captrucks_bulk = d.getCaptrucks_bulk();
-                int captrucks_only_ear = d.getCaptrucks_only_ear();
-                String date = d.getDate();
-                String day_of_week = d.getDay_of_week();
+                final String site_name = d.getSite_name();
+                final int sitekey = d.getSitekey();
+                final int caphy_bulk = d.getCaphy_bulk();
+                final int caphy_ear = d.getCaphy_ear();
+                final int caphy_only_ear = d.getCaphy_only_ear();
+                final double capton_ear = d.getCapton_ear();
+                final double capton_bulk = d.getCapton_bulk();
+                final double capton_only_ear = d.getCapton_only_ear();
+                final int captrucks_ear = d.getCaptrucks_ear();
+                final int captrucks_bulk = d.getCaptrucks_bulk();
+                final int captrucks_only_ear = d.getCaptrucks_only_ear();
+                final String date = d.getDate();
+                final String day_of_week = d.getDay_of_week();
 
                 prepStmt.setString(1, site_name);
                 prepStmt.setInt(2, sitekey);
@@ -405,7 +405,7 @@ public class App {
                 prepStmt.addBatch();
             }
 
-            int[] numUpdates = prepStmt.executeBatch();
+            final int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
                     slf4jLogger.debug("[MySQL Site] Execution {}: unknown number of rows updated",
@@ -417,12 +417,10 @@ public class App {
             connection.commit();
             prepStmt.close();
             connection.close();
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             System.out.println(exception);
         }
     }
-
-
 
     /**
      * Save fields used in HOM in the database
@@ -454,32 +452,32 @@ public class App {
 
             // Clear table data first.
             _deleteTableDtataStmt = connection.createStatement();
-            String _deleteTableData = "TRUNCATE TABLE FieldHOM";
+            final String _deleteTableData = "TRUNCATE TABLE FieldHOM";
             _deleteTableDtataStmt.executeUpdate(_deleteTableData);
 
-            String query = "INSERT INTO FieldHOM VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement prepStmt = connection.prepareStatement(query);
+            final String query = "INSERT INTO FieldHOM VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
 
             for (final FieldHOM d : lFieldsHOM) {
                 slf4jLogger.debug("[MySQL FieldHOM] {}", d);
 
-                String lot = d.getLot();
-                String hybrid = d.getHybrid();
-                int sitekey = d.getSitekey();
-                String region = d.getRegion();
-                String cluster = d.getCluster();
-                String twstart = d.getTwstart();
-                String twend = d.getTwend();
-                double area = d.getArea();
-                double drydown_rate = d.getDrydown_rate();
-                double latitude = d.getLatitude();
-                double longitude = d.getLongitude();
-                int lowest_harvest_moisture = d.getLowest_harvest_moisture();
-                int highest_harvest_moisture = d.getHighest_harvest_moisture();
-                double tonha = d.getTonha();
-                double kg = d.getKg();
-                String abc = d.getAbc();
-                String harv_type = d.getHarv_type();
+                final String lot = d.getLot();
+                final String hybrid = d.getHybrid();
+                final int sitekey = d.getSitekey();
+                final String region = d.getRegion();
+                final String cluster = d.getCluster();
+                final String twstart = d.getTwstart();
+                final String twend = d.getTwend();
+                final double area = d.getArea();
+                final double drydown_rate = d.getDrydown_rate();
+                final double latitude = d.getLatitude();
+                final double longitude = d.getLongitude();
+                final int lowest_harvest_moisture = d.getLowest_harvest_moisture();
+                final int highest_harvest_moisture = d.getHighest_harvest_moisture();
+                final double tonha = d.getTonha();
+                final double kg = d.getKg();
+                final String abc = d.getAbc();
+                final String harv_type = d.getHarv_type();
 
                 prepStmt.setString(1, lot);
                 prepStmt.setString(2, hybrid);
@@ -501,7 +499,7 @@ public class App {
                 prepStmt.addBatch();
             }
 
-            int[] numUpdates = prepStmt.executeBatch();
+            final int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
                     slf4jLogger.debug("[MySQL FieldHOM] Execution {}: unknown number of rows updated",
@@ -513,7 +511,7 @@ public class App {
             connection.commit();
             prepStmt.close();
             connection.close();
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             System.out.println(exception);
         }
     }
@@ -549,21 +547,21 @@ public class App {
 
             // Clear table data first.
             _deleteTableDtataStmt = connection.createStatement();
-            String _deleteTableData = "TRUNCATE TABLE ScoutData";
+            final String _deleteTableData = "TRUNCATE TABLE ScoutData";
             _deleteTableDtataStmt.executeUpdate(_deleteTableData);
 
-            String query = "INSERT INTO ScoutData VALUES (?,?,?,?,?)";
-            PreparedStatement prepStmt = connection.prepareStatement(query);
+            final String query = "INSERT INTO ScoutData VALUES (?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
 
             for (final Entry<String, ScoutData> entry : hFieldsScout.entrySet()) {
-                ScoutData d = entry.getValue();
+                final ScoutData d = entry.getValue();
                 slf4jLogger.debug("[MySQL ScoutData] {}", d);
 
-                String entity_id = d.getEntity_id();
-                String wkt = d.getWkt();
-                double lat = d.getLat();
-                double lon = d.getLon();
-                double yield = d.getYield();
+                final String entity_id = d.getEntity_id();
+                final String wkt = d.getWkt();
+                final double lat = d.getLat();
+                final double lon = d.getLon();
+                final double yield = d.getYield();
 
                 prepStmt.setString(1, entity_id);
                 prepStmt.setString(2, wkt);
@@ -573,7 +571,7 @@ public class App {
                 prepStmt.addBatch();
             }
 
-            int[] numUpdates = prepStmt.executeBatch();
+            final int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
                     slf4jLogger.debug("[MySQL ScoutData] Execution {}: unknown number of rows updated",
@@ -585,7 +583,7 @@ public class App {
             connection.commit();
             prepStmt.close();
             connection.close();
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             System.out.println(exception);
         }
     }
@@ -621,22 +619,22 @@ public class App {
 
             // Clear table data first.
             _deleteTableDtataStmt = connection.createStatement();
-            String _deleteTableData = "TRUNCATE TABLE ProductCharacterization";
+            final String _deleteTableData = "TRUNCATE TABLE ProductCharacterization";
             _deleteTableDtataStmt.executeUpdate(_deleteTableData);
 
-            String query = "INSERT INTO ProductCharacterization VALUES (?,?,?,?,?,?)";
-            PreparedStatement prepStmt = connection.prepareStatement(query);
+            final String query = "INSERT INTO ProductCharacterization VALUES (?,?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
 
             for (final Entry<String, ProductCharacterization> entry : hProducts.entrySet()) {
-                ProductCharacterization d = entry.getValue();
+                final ProductCharacterization d = entry.getValue();
                 slf4jLogger.debug("[MySQL ProductCharacterization] {}", d);
 
-                String name = d.getName();
-                String highestHarvestMoisture = d.getHighestHarvestMoisture();
-                String lowestHarvestMoisture = d.getLowestHarvestMoisture();
-                String huskingDifficulty = d.getHuskingDifficulty();
-                int lowest_rec = d.getLowest_rec();
-                int highest_rec = d.getHighest_rec();
+                final String name = d.getName();
+                final String highestHarvestMoisture = d.getHighestHarvestMoisture();
+                final String lowestHarvestMoisture = d.getLowestHarvestMoisture();
+                final String huskingDifficulty = d.getHuskingDifficulty();
+                final int lowest_rec = d.getLowest_rec();
+                final int highest_rec = d.getHighest_rec();
 
                 prepStmt.setString(1, name);
                 prepStmt.setString(2, highestHarvestMoisture);
@@ -647,7 +645,7 @@ public class App {
                 prepStmt.addBatch();
             }
 
-            int[] numUpdates = prepStmt.executeBatch();
+            final int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
                     slf4jLogger.debug("[MySQL ProductCharacterization] Execution {}: unknown number of rows updated",
@@ -659,7 +657,7 @@ public class App {
             connection.commit();
             prepStmt.close();
             connection.close();
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             System.out.println(exception);
         }
     }
@@ -695,33 +693,33 @@ public class App {
 
             // Clear table data first.
             _deleteTableDtataStmt = connection.createStatement();
-            String _deleteTableData = "TRUNCATE TABLE FieldManualPlan";
+            final String _deleteTableData = "TRUNCATE TABLE FieldManualPlan";
             _deleteTableDtataStmt.executeUpdate(_deleteTableData);
 
-            String query = "INSERT INTO FieldManualPlan VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement prepStmt = connection.prepareStatement(query);
+            final String query = "INSERT INTO FieldManualPlan VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
 
             for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
-                FieldManualPlan d = entry.getValue();
+                final FieldManualPlan d = entry.getValue();
                 slf4jLogger.debug("[MySQL FieldManualPlan] {}", d);
 
-                String region = d.getRegion();
-                String seed_plant = d.getSeed_plant();
-                String dh_qualifyed = d.getDh_qualifyed();
-                String grower = d.getGrower();
-                String tracking_number = d.getTracking_number();
-                String hybrid = d.getHybrid();
-                String suspect = d.getSuspect();
-                String suspect_comments = d.getSuspect_comments();
-                String husking_difficulty = d.getHusking_difficulty();
-                String female = d.getFemale();
-                String male = d.getMale();
-                double active_ha = d.getActive_ha();
-                double yield_ton_ha = d.getYield_ton_ha();
-                String picker_group = d.getPicker_group();
-                String harvest_date = d.getHarvest_date();
-                String harvest_window_start = d.getHarvest_window_start();
-                String harvest_window_end = d.getHarvest_window_end();
+                final String region = d.getRegion();
+                final String seed_plant = d.getSeed_plant();
+                final String dh_qualifyed = d.getDh_qualifyed();
+                final String grower = d.getGrower();
+                final String tracking_number = d.getTracking_number();
+                final String hybrid = d.getHybrid();
+                final String suspect = d.getSuspect();
+                final String suspect_comments = d.getSuspect_comments();
+                final String husking_difficulty = d.getHusking_difficulty();
+                final String female = d.getFemale();
+                final String male = d.getMale();
+                final double active_ha = d.getActive_ha();
+                final double yield_ton_ha = d.getYield_ton_ha();
+                final String picker_group = d.getPicker_group();
+                final String harvest_date = d.getHarvest_date();
+                final String harvest_window_start = d.getHarvest_window_start();
+                final String harvest_window_end = d.getHarvest_window_end();
 
                 prepStmt.setString(1, region);
                 prepStmt.setString(2, seed_plant);
@@ -743,7 +741,7 @@ public class App {
                 prepStmt.addBatch();
             }
 
-            int[] numUpdates = prepStmt.executeBatch();
+            final int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
                     slf4jLogger.debug("[MySQL FieldManualPlan] Execution {}: unknown number of rows updated",
@@ -755,7 +753,7 @@ public class App {
             connection.commit();
             prepStmt.close();
             connection.close();
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             System.out.println(exception);
         }
     }
@@ -791,29 +789,29 @@ public class App {
 
             // Clear table data first.
             _deleteTableDtataStmt = connection.createStatement();
-            String _deleteTableData = "TRUNCATE TABLE Contract";
+            final String _deleteTableData = "TRUNCATE TABLE Contract";
             _deleteTableDtataStmt.executeUpdate(_deleteTableData);
 
-            String query = "INSERT INTO Contract VALUES (?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement prepStmt = connection.prepareStatement(query);
+            final String query = "INSERT INTO Contract VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
 
             for (final Entry<String, Contract> entry : hFieldContract.entrySet()) {
-                Contract d = entry.getValue();
+                final Contract d = entry.getValue();
                 slf4jLogger.debug("[MySQL Contract] {}", d);
-                String contractNumber = d.getContractNumber();
-                String plantNumber = d.getPlantNumber();
-                String year = d.getYear();
-                String fieldNumber = d.getFieldNumber();
-                String growerName = d.getGrowerName();
-                String acronym = d.getAcronym();
-                String trackingNumber = d.getTrackingNumber();
+                final String contractNumber = d.getContractNumber();
+                final String plantNumber = d.getPlantNumber();
+                final String year = d.getYear();
+                final String fieldNumber = d.getFieldNumber();
+                final String growerName = d.getGrowerName();
+                final String acronym = d.getAcronym();
+                final String trackingNumber = d.getTrackingNumber();
                 String lastHarvestReceiptDate = d.getLastHarvestReceiptDate();
                 if (lastHarvestReceiptDate == null || lastHarvestReceiptDate.equalsIgnoreCase("null")) {
                     lastHarvestReceiptDate = "";
                 }
-                String contractLineDeleteFlag = d.getContractLineDeleteFlag();
-                double harvestedFemaleArea = d.getHarvestedFemaleArea();
-                double moisturePercentage = d.getMoisturePercentage();
+                final String contractLineDeleteFlag = d.getContractLineDeleteFlag();
+                final double harvestedFemaleArea = d.getHarvestedFemaleArea();
+                final double moisturePercentage = d.getMoisturePercentage();
 
                 prepStmt.setString(1, contractNumber);
                 prepStmt.setString(2, plantNumber);
@@ -829,7 +827,7 @@ public class App {
                 prepStmt.addBatch();
             }
 
-            int[] numUpdates = prepStmt.executeBatch();
+            final int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
                     slf4jLogger.debug("[MySQL Contract] Execution {}: unknown number of rows updated",
@@ -841,7 +839,7 @@ public class App {
             connection.commit();
             prepStmt.close();
             connection.close();
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             System.out.println(exception);
         }
     }
@@ -876,98 +874,98 @@ public class App {
 
             // Clear table data first.
             _deleteTableDtataStmt = connection.createStatement();
-            String _deleteTableData = "TRUNCATE TABLE GSMData";
+            final String _deleteTableData = "TRUNCATE TABLE GSMData";
             _deleteTableDtataStmt.executeUpdate(_deleteTableData);
 
-            String query = "INSERT INTO GSMData VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-            PreparedStatement prepStmt = connection.prepareStatement(query);
+            final String query = "INSERT INTO GSMData VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
 
             for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
-                GSMData d = entry.getValue();
+                final GSMData d = entry.getValue();
                 slf4jLogger.debug("[MySQL GSM] {}", d);
-                String entityid = d.getEntityid();
-                String production_field_id = d.getProduction_field_id();
-                String country = d.getCountry();
-                String site_key = d.getSite_key();
-                String plant = d.getPlant();
-                String field_num = d.getField_num();
-                int planting_area_id = d.getPlanting_area_id();
-                String planting_area_name = d.getPlanting_area_name();
-                String macrozone = d.getMacrozone();
-                String seedsman_area = d.getSeedsman_area();
-                String pfo_name = d.getPfo_name();
-                String user_group = d.getUser_group();
-                String tracking_number = d.getTracking_number();
-                String contract_number = d.getContract_number();
-                int year = d.getYear();
-                String season = d.getSeason();
+                final String entityid = d.getEntityid();
+                final String production_field_id = d.getProduction_field_id();
+                final String country = d.getCountry();
+                final String site_key = d.getSite_key();
+                final String plant = d.getPlant();
+                final String field_num = d.getField_num();
+                final int planting_area_id = d.getPlanting_area_id();
+                final String planting_area_name = d.getPlanting_area_name();
+                final String macrozone = d.getMacrozone();
+                final String seedsman_area = d.getSeedsman_area();
+                final String pfo_name = d.getPfo_name();
+                final String user_group = d.getUser_group();
+                final String tracking_number = d.getTracking_number();
+                final String contract_number = d.getContract_number();
+                final int year = d.getYear();
+                final String season = d.getSeason();
 
                 String sPlantingDate = d.getPlanting_date();
                 if (sPlantingDate == null || sPlantingDate.equalsIgnoreCase("null")) {
                     sPlantingDate = "0000-00-00";
                 }
-                Date planting_date = new SimpleDateFormat("yyyy-MM-dd").parse(sPlantingDate);
+                final Date planting_date = new SimpleDateFormat("yyyy-MM-dd").parse(sPlantingDate);
 
-                String planting_window = d.getPlanting_window();
-                String female_fertile = d.getFemale_fertile();
-                String female_sterile = d.getFemale_sterile();
-                String variety = d.getVariety();
-                double planted_surface = d.getPlanted_surface();
-                double tot_female_area = d.getTot_female_area();
-                double ff_area = d.getFf_area();
-                double fs_area = d.getFs_area();
-                double tot_area = d.getTot_area();
-                String area_uom = d.getArea_uom();
-                String growth_stage = d.getGrowth_stage();
-                double gdu_curr = d.getGdu_curr();
+                final String planting_window = d.getPlanting_window();
+                final String female_fertile = d.getFemale_fertile();
+                final String female_sterile = d.getFemale_sterile();
+                final String variety = d.getVariety();
+                final double planted_surface = d.getPlanted_surface();
+                final double tot_female_area = d.getTot_female_area();
+                final double ff_area = d.getFf_area();
+                final double fs_area = d.getFs_area();
+                final double tot_area = d.getTot_area();
+                final String area_uom = d.getArea_uom();
+                final String growth_stage = d.getGrowth_stage();
+                final double gdu_curr = d.getGdu_curr();
 
                 String sMoist35Date = d.getMoist35_date();
                 if (sMoist35Date == null || sMoist35Date.equalsIgnoreCase("null")) {
                     sMoist35Date = "0000-00-00";
                 }
-                Date moist35_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMoist35Date);
+                final Date moist35_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMoist35Date);
 
-                double drydown_rate = d.getDrydown_rate();
-                double mst = d.getMst();
+                final double drydown_rate = d.getDrydown_rate();
+                final double mst = d.getMst();
 
                 String sMstDate = d.getMst_date();
                 if (sMstDate == null || sMstDate.equalsIgnoreCase("null")) {
                     sMstDate = "0000-00-00";
                 }
-                Date mst_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMstDate);
+                final Date mst_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMstDate);
 
-                double mst_imputed = d.getMst_imputed();
-                double mst_imputed_field = d.getMst_imputed_field();
+                final double mst_imputed = d.getMst_imputed();
+                final double mst_imputed_field = d.getMst_imputed_field();
 
                 String sOptimalMstHarvestDate = d.getOptimal_mst_harvest_date();
                 if (sOptimalMstHarvestDate == null || sOptimalMstHarvestDate.equalsIgnoreCase("null")) {
                     sOptimalMstHarvestDate = "0000-00-00";
                 }
-                Date optimal_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sOptimalMstHarvestDate);
+                final Date optimal_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sOptimalMstHarvestDate);
 
                 String sMinMstHarvestDate = d.getMin_mst_harvest_date();
                 if (sMinMstHarvestDate == null || sMinMstHarvestDate.equalsIgnoreCase("null")) {
                     sMinMstHarvestDate = "0000-00-00";
                 }
-                Date min_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMinMstHarvestDate);
+                final Date min_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMinMstHarvestDate);
 
                 String sMaxMstHarvestDate = d.getMax_mst_harvest_date();
                 if (sMaxMstHarvestDate == null || sMaxMstHarvestDate.equalsIgnoreCase("null")) {
                     sMaxMstHarvestDate = "0000-00-00";
                 }
-                Date max_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMaxMstHarvestDate);
+                final Date max_mst_harvest_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMaxMstHarvestDate);
 
-                double lat = d.getLat();
-                double lon = d.getLon();
+                final double lat = d.getLat();
+                final double lon = d.getLon();
 
                 String sReportDate = d.getReport_date();
                 if (sReportDate == null || sReportDate.equalsIgnoreCase("null")) {
                     sReportDate = "0000-00-00";
                 }
-                Date report_date = new SimpleDateFormat("yyyy-MM-dd").parse(sReportDate);
+                final Date report_date = new SimpleDateFormat("yyyy-MM-dd").parse(sReportDate);
 
-                String region = d.getRegion();
-                String wkt = d.getWkt();
+                final String region = d.getRegion();
+                final String wkt = d.getWkt();
 
                 prepStmt.setString(1, entityid);
                 prepStmt.setString(2, production_field_id);
@@ -1015,7 +1013,7 @@ public class App {
                 prepStmt.addBatch();
             }
 
-            int[] numUpdates = prepStmt.executeBatch();
+            final int[] numUpdates = prepStmt.executeBatch();
             for (int i = 0; i < numUpdates.length; i++) {
                 if (numUpdates[i] == -2)
                     slf4jLogger.debug("[MySQL GSM] Execution {}: unknown number of rows updated",
@@ -1027,7 +1025,7 @@ public class App {
             connection.commit();
             prepStmt.close();
             connection.close();
-        } catch (Exception exception) {
+        } catch (final Exception exception) {
             System.out.println(exception);
         }
     }
