@@ -305,6 +305,7 @@ public class App {
         saveScoutDataInDB(hom_parameters, hFieldsScout);
         saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
         saveSiteCapacityInDB(hom_parameters, lSite);
+        saveHOMResultInDB(hom_parameters, tHOMResult, hFieldContract, timeStamp);
 
         // Check the data
         /*
@@ -342,6 +343,160 @@ public class App {
          */
     }
 
+    /**
+     * Save HOM results in DB
+     * 
+     * @param hom_parameters
+     * @param tHOMResult
+     * @param timeStamp
+     */
+    public static void saveHOMResultInDB(final HOMParameters hom_parameters,
+            final Table<String, Integer, HOMResult> tHOMResult, final Map<String, Contract> hFieldContract,
+            final String timeStamp) {
+
+        Connection connection = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL HOMResult] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL HOMResult] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            final String query = "INSERT INTO HOMResult VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            final Map<String, Boolean> hVisited = new HashMap<>();
+            for (final Table.Cell<String, Integer, HOMResult> cell : tHOMResult.cellSet()) {
+                if (hVisited.containsKey(cell.getRowKey())) {
+                    continue;
+                }
+                final HOMResult r1 = tHOMResult.get(cell.getRowKey(), 1);
+                slf4jLogger.debug("[MySQL HOMResult] {}", r1);
+
+                final String tracking_number = r1.getTracking_number();
+                final int part = cell.getColumnKey();
+                final String field = r1.getField();
+                final String picker = r1.getPicker();
+                final String variety = r1.getVariety();
+                final String harv_date = r1.getHarv_date();
+                final double total_area = r1.getTotal_area();
+                final double area_harv = r1.getArea_harv();
+                final double total_tonrw = r1.getTotal_tonrw();
+                final double tonrw_harv = r1.getTonrw_harv();
+                final double lat = r1.getLat();
+                final double lon = r1.getLon();
+                String grower = r1.getGrower();
+                final double moisture = r1.getMoisture();
+                final int lateness = r1.getLateness();
+
+                if (hFieldContract.containsKey(cell.getRowKey())) {
+                    grower = hFieldContract.get(cell.getRowKey()).getGrowerName();
+                }
+
+                prepStmt.setString(1, tracking_number);
+                prepStmt.setInt(2, part);
+                prepStmt.setString(3, field);
+                prepStmt.setString(4, picker);
+                prepStmt.setString(5, variety);
+                prepStmt.setDate(6, java.sql.Date.valueOf(harv_date));
+                prepStmt.setDouble(7, total_area);
+                prepStmt.setDouble(8, area_harv);
+                prepStmt.setDouble(9, total_tonrw);
+                prepStmt.setDouble(10, tonrw_harv);
+                prepStmt.setDouble(11, lat);
+                prepStmt.setDouble(12, lon);
+                prepStmt.setString(13, grower);
+                prepStmt.setDouble(14, moisture);
+                prepStmt.setInt(15, lateness);
+                prepStmt.setTimestamp(16, java.sql.Timestamp.valueOf(timeStamp));
+                prepStmt.addBatch();
+
+                if (tHOMResult.contains(cell.getRowKey(), 2)) {
+                    final HOMResult r2 = tHOMResult.get(cell.getRowKey(), 2);
+                    prepStmt.setInt(2, 2);
+                    prepStmt.setString(3, r2.getField());
+                    prepStmt.setDate(6, java.sql.Date.valueOf(r2.getHarv_date()));
+                    prepStmt.setDouble(8, r2.getArea_harv());
+                    prepStmt.setDouble(10, r2.getTonrw_harv());
+                    prepStmt.setDouble(14, r2.getMoisture());
+                    prepStmt.setInt(15, r2.getLateness());
+                    prepStmt.addBatch();
+                }
+
+                if (tHOMResult.contains(cell.getRowKey(), 3)) {
+                    final HOMResult r3 = tHOMResult.get(cell.getRowKey(), 3);
+                    prepStmt.setInt(2, 3);
+                    prepStmt.setString(3, r3.getField());
+                    prepStmt.setDate(6, java.sql.Date.valueOf(r3.getHarv_date()));
+                    prepStmt.setDouble(8, r3.getArea_harv());
+                    prepStmt.setDouble(10, r3.getTonrw_harv());
+                    prepStmt.setDouble(14, r3.getMoisture());
+                    prepStmt.setInt(15, r3.getLateness());
+                    prepStmt.addBatch();
+                }
+
+                if (tHOMResult.contains(cell.getRowKey(), 4)) {
+                    final HOMResult r4 = tHOMResult.get(cell.getRowKey(), 4);
+                    prepStmt.setInt(2, 4);
+                    prepStmt.setString(3, r4.getField());
+                    prepStmt.setDate(6, java.sql.Date.valueOf(r4.getHarv_date()));
+                    prepStmt.setDouble(8, r4.getArea_harv());
+                    prepStmt.setDouble(10, r4.getTonrw_harv());
+                    prepStmt.setDouble(14, r4.getMoisture());
+                    prepStmt.setInt(15, r4.getLateness());
+                    prepStmt.addBatch();
+                }
+
+                if (tHOMResult.contains(cell.getRowKey(), 5)) {
+                    final HOMResult r5 = tHOMResult.get(cell.getRowKey(), 5);
+                    prepStmt.setInt(2, 5);
+                    prepStmt.setString(3, r5.getField());
+                    prepStmt.setDate(6, java.sql.Date.valueOf(r5.getHarv_date()));
+                    prepStmt.setDouble(8, r5.getArea_harv());
+                    prepStmt.setDouble(10, r5.getTonrw_harv());
+                    prepStmt.setDouble(14, r5.getMoisture());
+                    prepStmt.setInt(15, r5.getLateness());
+                    prepStmt.addBatch();
+                }
+
+                hVisited.put(cell.getRowKey(), true);
+            }
+
+            final int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL HOMResult] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL HOMResult] Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (final Exception exception) {
+            System.out.println(exception);
+        }
+    }
+
+    /**
+     * Save site capacity in DB
+     * 
+     * @param hom_parameters
+     * @param lSite
+     */
     public static void saveSiteCapacityInDB(final HOMParameters hom_parameters, final List<Site> lSite) {
         Connection connection = null;
         Statement _deleteTableDtataStmt = null;
