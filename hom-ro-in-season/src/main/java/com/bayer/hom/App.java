@@ -304,6 +304,7 @@ public class App {
         saveProductsInDB(hom_parameters, hProducts);
         saveScoutDataInDB(hom_parameters, hFieldsScout);
         saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
+        saveSiteCapacityInDB(hom_parameters, lSite);
 
         // Check the data
         /*
@@ -340,6 +341,88 @@ public class App {
          * lFieldsHOM.size());
          */
     }
+
+    public static void saveSiteCapacityInDB(final HOMParameters hom_parameters, final List<Site> lSite) {
+        Connection connection = null;
+        Statement _deleteTableDtataStmt = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL Site] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL Site] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            // Clear table data first.
+            _deleteTableDtataStmt = connection.createStatement();
+            String _deleteTableData = "TRUNCATE TABLE Site";
+            _deleteTableDtataStmt.executeUpdate(_deleteTableData);
+
+            String query = "INSERT INTO Site VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            for (final Site d : lSite) {
+                slf4jLogger.debug("[MySQL lSite] {}", d);
+
+                String site_name = d.getSite_name();
+                int sitekey = d.getSitekey();
+                int caphy_bulk = d.getCaphy_bulk();
+                int caphy_ear = d.getCaphy_ear();
+                int caphy_only_ear = d.getCaphy_only_ear();
+                double capton_ear = d.getCapton_ear();
+                double capton_bulk = d.getCapton_bulk();
+                double capton_only_ear = d.getCapton_only_ear();
+                int captrucks_ear = d.getCaptrucks_ear();
+                int captrucks_bulk = d.getCaptrucks_bulk();
+                int captrucks_only_ear = d.getCaptrucks_only_ear();
+                String date = d.getDate();
+                String day_of_week = d.getDay_of_week();
+
+                prepStmt.setString(1, site_name);
+                prepStmt.setInt(2, sitekey);
+                prepStmt.setInt(3, caphy_bulk);
+                prepStmt.setInt(4, caphy_ear);
+                prepStmt.setInt(5, caphy_only_ear);
+                prepStmt.setDouble(6, capton_ear);
+                prepStmt.setDouble(7, capton_bulk);
+                prepStmt.setDouble(8, capton_only_ear);
+                prepStmt.setInt(9, captrucks_ear);
+                prepStmt.setInt(10, captrucks_bulk);
+                prepStmt.setInt(11, captrucks_only_ear);
+                prepStmt.setDate(12, java.sql.Date.valueOf(date));
+                prepStmt.setString(13, day_of_week);
+                prepStmt.addBatch();
+            }
+
+            int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL Site] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL Site] Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
+    }
+
+
 
     /**
      * Save fields used in HOM in the database
