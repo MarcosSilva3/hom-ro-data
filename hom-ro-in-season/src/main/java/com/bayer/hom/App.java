@@ -10,7 +10,6 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
@@ -25,6 +24,26 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.bettercloud.vault.Vault;
+import com.bettercloud.vault.VaultConfig;
+import com.bettercloud.vault.VaultException;
+import com.bettercloud.vault.response.AuthResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
@@ -36,27 +55,6 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.spi.LogbackLock;
-
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
-
-import com.bettercloud.vault.Vault;
-import com.bettercloud.vault.VaultConfig;
-import com.bettercloud.vault.VaultException;
-import com.bettercloud.vault.response.AuthResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
 /**
  * Romania in-season
@@ -302,6 +300,7 @@ public class App {
         saveResultsInCSW(fileNameTimeStamp, hAWS);
         saveGSMDataInDB(hom_parameters, hFieldsGSM);
         saveContractDataInDB(hom_parameters, hFieldContract);
+        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
 
         // Check the data
         /*
@@ -337,6 +336,96 @@ public class App {
          * slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}",
          * lFieldsHOM.size());
          */
+    }
+
+    public static void saveFieldManualPlanInDB(final HOMParameters hom_parameters,
+            final Map<String, FieldManualPlan> hFieldsManualPlan) {
+        Connection connection = null;
+        Statement _deleteTableDtataStmt = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL FieldManualPlan] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL FieldManualPlan] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            // Clear table data first.
+            _deleteTableDtataStmt = connection.createStatement();
+            String _deleteTableData = "TRUNCATE TABLE FieldManualPlan";
+            _deleteTableDtataStmt.executeUpdate(_deleteTableData);
+
+            String query = "INSERT INTO FieldManualPlan VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
+                FieldManualPlan d = entry.getValue();
+                slf4jLogger.debug("[MySQL FieldManualPlan] {}", d);
+
+                String region = d.getRegion();
+                String seed_plant = d.getSeed_plant();
+                String dh_qualifyed = d.getDh_qualifyed();
+                String grower = d.getGrower();
+                String tracking_number = d.getTracking_number();
+                String hybrid = d.getHybrid();
+                String suspect = d.getSuspect();
+                String suspect_comments = d.getSuspect_comments();
+                String husking_difficulty = d.getHusking_difficulty();
+                String female = d.getFemale();
+                String male = d.getMale();
+                double active_ha = d.getActive_ha();
+                double yield_ton_ha = d.getYield_ton_ha();
+                String picker_group = d.getPicker_group();
+                String harvest_date = d.getHarvest_date();
+                String harvest_window_start = d.getHarvest_window_start();
+                String harvest_window_end = d.getHarvest_window_end();
+
+                prepStmt.setString(1, region);
+                prepStmt.setString(2, seed_plant);
+                prepStmt.setString(3, dh_qualifyed);
+                prepStmt.setString(4, grower);
+                prepStmt.setString(5, tracking_number);
+                prepStmt.setString(6, hybrid);
+                prepStmt.setString(7, suspect);
+                prepStmt.setString(8, suspect_comments);
+                prepStmt.setString(9, husking_difficulty);
+                prepStmt.setString(10, female);
+                prepStmt.setString(11, male);
+                prepStmt.setDouble(12, active_ha);
+                prepStmt.setDouble(13, yield_ton_ha);
+                prepStmt.setString(14, picker_group);
+                prepStmt.setDate(15, java.sql.Date.valueOf(harvest_date));
+                prepStmt.setDate(16, java.sql.Date.valueOf(harvest_window_start));
+                prepStmt.setDate(17, java.sql.Date.valueOf(harvest_window_end));
+                prepStmt.addBatch();
+            }
+
+            int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL FieldManualPlan] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL FieldManualPlan] Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (Exception exception) {
+            System.out.println(exception);
+        }
     }
 
     /**
