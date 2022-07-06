@@ -94,7 +94,7 @@ public class ManualPlan {
             if (connection.isValid(10000)) {
                 slf4jLogger.debug("[MySQL Site] Connected!");
             }
-            String query = "SELECT * FROM FieldManualPlan and seed_plant='Sinesti'";
+            String query = "SELECT * FROM FieldManualPlan WHERE seed_plant='Sinesti'";
 
             // create the java statement
             Statement st = connection.createStatement();
@@ -124,6 +124,13 @@ public class ManualPlan {
                 FieldManualPlan f = new FieldManualPlan(region, seed_plant, dh_qualifyed, grower, tracking_number,
                         hybrid, suspect, suspect_comments, husking_difficulty, female, male, active_ha, yield_ton_ha,
                         picker_group, harvest_date, harvest_window_start, harvest_window_end);
+
+                if (hFields.containsKey(tracking_number)) {
+                    slf4jLogger.warn("[Manual Plan DB] duplicated entry for field {}", tracking_number);
+                } else {
+                    hFields.put(tracking_number, f);
+                }
+                slf4jLogger.debug("[Manual Plan DB] Field {}", f);
             }
             st.close();
             connection.close();
