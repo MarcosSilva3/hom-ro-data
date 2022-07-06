@@ -58,7 +58,6 @@ import ch.qos.logback.core.spi.LogbackLock;
 
 /**
  * Romania in-season
- *
  */
 public class App {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
@@ -128,8 +127,8 @@ public class App {
 
         // Read fields from manual plan in Excel or from the Database
         ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
-        // manual_plan.readManualPlanExcel();
-        manual_plan.readManualPlanDB(hom_parameters);
+        manual_plan.readManualPlanExcel();
+//        manual_plan.readManualPlanDB(hom_parameters);
         hFieldsManualPlan = manual_plan.getHFields();
 
 
@@ -316,30 +315,30 @@ public class App {
          * for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
          * slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue()); }
          * slf4jLogger.debug("[GSM] Total number of fields: {}", hFieldsGSM.size());
-         * 
+         *
          * for (final Entry<String, FieldPFO> entry : hFieldsPFO.entrySet()) {
          * slf4jLogger.debug("[PFO] {} => {}}", entry.getKey(), entry.getValue()); }
          * slf4jLogger.debug("[PFO] Total number of fields: {}", hFieldsPFO.size());
-         * 
+         *
          * for (final Entry<String, Contract> entry : hFieldContract.entrySet()) {
          * slf4jLogger.debug("[Contract] {} => {}}", entry.getKey(), entry.getValue());
          * } slf4jLogger.debug("[Contract] Total number of fields: {}",
          * hFieldContract.size());
-         * 
+         *
          * for (final Entry<String, ProductCharacterization> entry :
          * hProducts.entrySet()) {
          * slf4jLogger.debug("[Product Characterization] {} => {}}", entry.getKey(),
          * entry.getValue()); }
          * slf4jLogger.debug("[Product Characterization] Total number of products: {}",
          * hProducts.size());
-         * 
+         *
          * for (final Entry<String, FieldManualPlan> entry :
          * hFieldsManualPlan.entrySet()) {
          * slf4jLogger.debug("[Manual Plan Excel] {} => {}", entry.getKey(),
          * entry.getValue()); }
          * slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}",
          * hFieldsManualPlan.size());
-         * 
+         *
          * // Fields to be included in the optimization for (final FieldHOM f :
          * lFieldsHOM) { slf4jLogger.debug("[Fields HOM-OPT] {}", f); }
          * slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}",
@@ -349,14 +348,14 @@ public class App {
 
     /**
      * Save HOM results in DB
-     * 
+     *
      * @param hom_parameters
      * @param tHOMResult
      * @param timeStamp
      */
     public static void saveHOMResultInDB(final HOMParameters hom_parameters,
-            final Table<String, Integer, HOMResult> tHOMResult, final Map<String, Contract> hFieldContract,
-            final String timeStamp) {
+                                         final Table<String, Integer, HOMResult> tHOMResult, final Map<String, Contract> hFieldContract,
+                                         final String timeStamp) {
 
         Connection connection = null;
         try {
@@ -497,7 +496,7 @@ public class App {
 
     /**
      * Save site capacity in DB
-     * 
+     *
      * @param hom_parameters
      * @param lSite
      */
@@ -583,7 +582,7 @@ public class App {
 
     /**
      * Save fields used in HOM in the database
-     * 
+     *
      * @param hom_parameters
      * @param lFieldsHOM
      */
@@ -677,12 +676,12 @@ public class App {
 
     /**
      * Save Scout data in DB
-     * 
+     *
      * @param hom_parameters
      * @param hFieldsScout
      */
     public static void saveScoutDataInDB(final HOMParameters hom_parameters,
-            final Map<String, ScoutData> hFieldsScout) {
+                                         final Map<String, ScoutData> hFieldsScout) {
         Connection connection = null;
         Statement _deleteTableDtataStmt = null;
         try {
@@ -749,12 +748,12 @@ public class App {
 
     /**
      * Save Product Characterization data in DB
-     * 
+     *
      * @param hom_parameters
      * @param hProducts
      */
     public static void saveProductsInDB(final HOMParameters hom_parameters,
-            final Map<String, ProductCharacterization> hProducts) {
+                                        final Map<String, ProductCharacterization> hProducts) {
         Connection connection = null;
         Statement _deleteTableDtataStmt = null;
         try {
@@ -823,12 +822,12 @@ public class App {
 
     /**
      * Save list of fields in manual plan in DB
-     * 
+     *
      * @param hom_parameters
      * @param hFieldsManualPlan
      */
     public static void saveFieldManualPlanInDB(final HOMParameters hom_parameters,
-            final Map<String, FieldManualPlan> hFieldsManualPlan) {
+                                               final Map<String, FieldManualPlan> hFieldsManualPlan) {
         Connection connection = null;
         Statement _deleteTableDtataStmt = null;
         try {
@@ -919,12 +918,12 @@ public class App {
 
     /**
      * Add contract data in MySQL database
-     * 
+     *
      * @param hom_parameters
      * @param hFieldContract
      */
     public static void saveContractDataInDB(final HOMParameters hom_parameters,
-            final Map<String, Contract> hFieldContract) {
+                                            final Map<String, Contract> hFieldContract) {
         Connection connection = null;
         Statement _deleteTableDtataStmt = null;
         try {
@@ -1005,7 +1004,7 @@ public class App {
 
     /**
      * Insert GSM data in database
-     * 
+     *
      * @param hom_parameters
      * @param hFieldsGSM
      */
@@ -1191,7 +1190,7 @@ public class App {
 
     /**
      * Read list of pickers in parameters file.
-     * 
+     *
      * @param filename
      * @return
      * @throws FileNotFoundException
@@ -1222,7 +1221,7 @@ public class App {
 
     /**
      * Download result file in JSON format from AWS S3
-     * 
+     *
      * @param hom_parameters
      * @param model
      * @return result file path in JSON format
@@ -1246,14 +1245,17 @@ public class App {
         slf4jLogger.debug("[AWS] Result key: {}", key);
         final S3Object s3object = s3client.getObject(bucketName, key);
         final S3ObjectInputStream inputStream = s3object.getObjectContent();
-        FileUtils.copyInputStreamToFile(inputStream, new File(hom_parameters.getWork_dir() + result_file));
-        final String result_file_path = hom_parameters.getWork_dir() + result_file;
+        System.out.println(inputStream);
+        // FileUtils.copyInputStreamToFile(inputStream, new File(hom_parameters.getWork_dir() + result_file));
+        FileUtils.copyInputStreamToFile(inputStream, new File(hom_parameters.getHom_result_file()));
+//        final String result_file_path = hom_parameters.getWork_dir() + result_file;
+        final String result_file_path = hom_parameters.getHom_result_file();
         return result_file_path;
     }
 
     /**
      * Generate site capacity for each day.
-     * 
+     *
      * @param hom_parameters
      * @return
      * @throws java.text.ParseException
@@ -1312,7 +1314,7 @@ public class App {
 
     /**
      * Create list of fields to be included in the optimization.
-     * 
+     *
      * @param hFieldsManualPlan
      * @param hFieldsGSM
      * @param hFieldContract
@@ -1322,9 +1324,9 @@ public class App {
      * @return
      */
     public static List<FieldHOM> generateFieldsHOM(final Map<String, FieldManualPlan> hFieldsManualPlan,
-            final Map<String, GSMData> hFieldsGSM, final Map<String, Contract> hFieldContract,
-            final Map<String, ScoutData> hFieldsScout, final Map<String, FieldPFO> hFieldsPFO,
-            final Map<String, ProductCharacterization> hProducts) {
+                                                   final Map<String, GSMData> hFieldsGSM, final Map<String, Contract> hFieldContract,
+                                                   final Map<String, ScoutData> hFieldsScout, final Map<String, FieldPFO> hFieldsPFO,
+                                                   final Map<String, ProductCharacterization> hProducts) {
         final List<FieldHOM> lFieldsHOM = new ArrayList<>();
 
         for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
@@ -1439,7 +1441,7 @@ public class App {
 
     /**
      * Read parameters file for HOM.
-     * 
+     *
      * @param filename
      * @return
      * @throws FileNotFoundException
@@ -1481,6 +1483,7 @@ public class App {
         String env_hom_db_pwd = "HOM_DB_PWD";
         String hom_db_name = "hom_romania";
         String work_dir = "/mnt/";
+        String hom_result_file = "hom_result.json";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -1606,16 +1609,19 @@ public class App {
             work_dir = (String) o.get("work_dir");
         }
 
+        if (o.get("hom_result_file") != null) {
+            work_dir = (String) o.get("hom_result_file");
+        }
+
         final HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season,
                 private_key_file, project_id, regionCode, cropCycleCode, env_client_id, env_client_secret,
                 manual_plan_excel_path, hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region,
                 hom_max_days, hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber,
-                env_hom_db_host, env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir);
+                env_hom_db_host, env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file);
         return p;
     }
 
     /**
-     * 
      * @param fileNameTimeStamp
      * @param hAWS
      */
@@ -1632,7 +1638,6 @@ public class App {
     }
 
     /**
-     * 
      * @param lCSWRows
      * @param fileNameTimeStamp
      * @throws IOException
@@ -1640,7 +1645,7 @@ public class App {
     public static void generateCSV(final List<CSWOutput> lCSWRows, final String fileNameTimeStamp) throws IOException {
         final String csv_file = "hom_output_" + fileNameTimeStamp + ".csv";
         final FileWriter out = new FileWriter(csv_file);
-        final String[] HEADERS = { "country", "plant", "crop_year", "global_fiscal_year", "crop_code", "season",
+        final String[] HEADERS = {"country", "plant", "crop_year", "global_fiscal_year", "crop_code", "season",
                 "field", "field_name", "grower_name", "feature_id", "hybrid", "field_supervisor", "environment",
                 "seedsman_area", "picker", "total_area", "total_weight", "harvest_date_01", "harvest_date_02",
                 "harvest_date_03", "harvest_date_04", "harvest_date_05", "harvest_date_01_area", "harvest_date_02_area",
@@ -1650,7 +1655,7 @@ public class App {
                 "harvest_moisture_05", "drydown_rate", "optimal_harvest_moisture_range_min",
                 "optimal_harvest_moisture_range_max", "lateness", "hybrid_drying_sensitivity_classification",
                 "harvest_type", "estimated_number_of_trucks", "field_moisture", "moisture_collected_date", "field_lat",
-                "field_lon", "wkt", "model_timestamp" };
+                "field_lon", "wkt", "model_timestamp"};
 
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(HEADERS))) {
             for (final CSWOutput row : lCSWRows) {
@@ -1724,7 +1729,7 @@ public class App {
 
     /**
      * Get a diff between two dates
-     * 
+     *
      * @param date1    the oldest date
      * @param date2    the newest date
      * @param timeUnit the unit in which you want the diff
@@ -1737,7 +1742,7 @@ public class App {
 
     /**
      * Get Location360 AWS credentials from Vault
-     * 
+     *
      * @return
      * @throws VaultException
      * @throws JsonMappingException
@@ -1773,7 +1778,7 @@ public class App {
 
     /**
      * Get results from json file.
-     * 
+     *
      * @param hom_result_file_path
      * @return
      * @throws FileNotFoundException
@@ -1811,7 +1816,7 @@ public class App {
 
     /**
      * Check if string looks like a number.
-     * 
+     *
      * @param str
      * @return
      */
