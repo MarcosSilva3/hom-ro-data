@@ -32,6 +32,7 @@ public class HOMParameters {
     private String env_hom_db_user;
     private String env_hom_db_pwd;
     private String hom_db_name;
+    private String work_dir;
 
     public HOMParameters() {
     }
@@ -42,7 +43,7 @@ public class HOMParameters {
             int hom_tabu_size, int hom_max_iter, int hom_picker_cap, String hom_region, int hom_max_days,
             String hom_method, String clientIdEngine, String clientSecretEngine, String awsBucketName,
             String plantNumber, String env_hom_db_host, String env_hom_db_port, String env_hom_db_user,
-            String env_hom_db_pwd, String hom_db_name) {
+            String env_hom_db_pwd, String hom_db_name, String work_dir) {
         this.log_config_file = log_config_file;
         this.country = country;
         this.year = year;
@@ -72,6 +73,7 @@ public class HOMParameters {
         this.env_hom_db_user = env_hom_db_user;
         this.env_hom_db_pwd = env_hom_db_pwd;
         this.hom_db_name = hom_db_name;
+        this.work_dir = work_dir;
     }
 
     public String getLog_config_file() {
@@ -306,6 +308,14 @@ public class HOMParameters {
         this.hom_db_name = hom_db_name;
     }
 
+    public String getWork_dir() {
+        return this.work_dir;
+    }
+
+    public void setWork_dir(String work_dir) {
+        this.work_dir = work_dir;
+    }
+
     public HOMParameters log_config_file(String log_config_file) {
         this.log_config_file = log_config_file;
         return this;
@@ -451,6 +461,11 @@ public class HOMParameters {
         return this;
     }
 
+    public HOMParameters work_dir(String work_dir) {
+        this.work_dir = work_dir;
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this)
@@ -482,7 +497,8 @@ public class HOMParameters {
                 && Objects.equals(env_hom_db_port, hOMParameters.env_hom_db_port)
                 && Objects.equals(env_hom_db_user, hOMParameters.env_hom_db_user)
                 && Objects.equals(env_hom_db_pwd, hOMParameters.env_hom_db_pwd)
-                && Objects.equals(hom_db_name, hOMParameters.hom_db_name);
+                && Objects.equals(hom_db_name, hOMParameters.hom_db_name)
+                && Objects.equals(work_dir, hOMParameters.work_dir);
     }
 
     @Override
@@ -491,7 +507,7 @@ public class HOMParameters {
                 regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path, hom_day_one,
                 hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days, hom_method,
                 clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host, env_hom_db_port,
-                env_hom_db_user, env_hom_db_pwd, hom_db_name);
+                env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir);
     }
 
     @Override
@@ -510,7 +526,7 @@ public class HOMParameters {
                 + ", awsBucketName='" + getAwsBucketName() + "'" + ", plantNumber='" + getPlantNumber() + "'"
                 + ", env_hom_db_host='" + getEnv_hom_db_host() + "'" + ", env_hom_db_port='" + getEnv_hom_db_port()
                 + "'" + ", env_hom_db_user='" + getEnv_hom_db_user() + "'" + ", env_hom_db_pwd='" + getEnv_hom_db_pwd()
-                + "'" + ", hom_db_name='" + getHom_db_name() + "'" + "}";
+                + "'" + ", hom_db_name='" + getHom_db_name() + "'" + ", work_dir='" + getWork_dir() + "'" + "}";
     }
 
 }

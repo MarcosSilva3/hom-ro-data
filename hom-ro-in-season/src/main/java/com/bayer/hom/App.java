@@ -1237,13 +1237,13 @@ public class App {
         final AWSCredentials credentials = new BasicAWSCredentials(AccessKeyId, SecretAccessKey);
         final AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_2).build();
-        final String bucketName = hom_parameters.getAwsBucketName(); // s3://romania-models/harvest-opt/output/archive/json/
+        final String bucketName = hom_parameters.getAwsBucketName();
         final String key = "harvest-opt/output/archive/json/" + result_file;
         slf4jLogger.debug("[AWS] Result key: {}", key);
         final S3Object s3object = s3client.getObject(bucketName, key);
         final S3ObjectInputStream inputStream = s3object.getObjectContent();
-        FileUtils.copyInputStreamToFile(inputStream, new File("/mnt/" + result_file));
-        final String result_file_path = "/mnt/" + result_file;
+        FileUtils.copyInputStreamToFile(inputStream, new File(hom_parameters.getWork_dir() + result_file));
+        final String result_file_path = hom_parameters.getWork_dir() + result_file;
         return result_file_path;
     }
 
@@ -1476,6 +1476,7 @@ public class App {
         String env_hom_db_user = "HOM_DB_USER";
         String env_hom_db_pwd = "HOM_DB_PWD";
         String hom_db_name = "hom_romania";
+        String work_dir = "/mnt/";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -1597,11 +1598,15 @@ public class App {
             hom_db_name = (String) o.get("hom_db_name");
         }
 
+        if (o.get("work_dir") != null) {
+            work_dir = (String) o.get("work_dir");
+        }
+
         final HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season,
                 private_key_file, project_id, regionCode, cropCycleCode, env_client_id, env_client_secret,
                 manual_plan_excel_path, hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region,
                 hom_max_days, hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber,
-                env_hom_db_host, env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name);
+                env_hom_db_host, env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir);
         return p;
     }
 
