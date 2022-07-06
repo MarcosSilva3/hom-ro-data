@@ -126,8 +126,12 @@ public class App {
         // Get product characterization data
         hProducts = (new ProductCharacterizationData(token, log_config_file, regionCode, cropCycleCode)).getHProducts();
 
-        // Read fields from manual plan in Excel
-        hFieldsManualPlan = (new ManualPlanExcel(hom_parameters.getManual_plan_excel_path())).getHFields();
+        // Read fields from manual plan in Excel or from the Database
+        ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
+        // manual_plan.readManualPlanExcel();
+        manual_plan.readManualPlanDB(hom_parameters);
+        hFieldsManualPlan = manual_plan.getHFields();
+
 
         // Get the list of fields to be included in the optimzation.
         lFieldsHOM = generateFieldsHOM(hFieldsManualPlan, hFieldsGSM, hFieldContract, hFieldsScout, hFieldsPFO,

@@ -3,6 +3,10 @@ package com.bayer.hom;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
@@ -18,19 +22,18 @@ import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.core.spi.LogbackLock;
 
-public class ManualPlanExcel {
+public class ManualPlan {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
 
     private String excel_file_path;
     private Map<String, FieldManualPlan> hFields;
 
-    public ManualPlanExcel(String excel_file_path) throws IOException {
+    public ManualPlan(String excel_file_path) throws IOException {
         this.excel_file_path = excel_file_path;
         this.hFields = new HashMap<>();
-        readManualPlan();
     }
 
-    private void readManualPlan() throws IOException {
+    public void readManualPlanExcel() throws IOException {
         FileInputStream fis = new FileInputStream(new File(excel_file_path));
         XSSFWorkbook wb = new XSSFWorkbook(fis);
         XSSFSheet sheet = wb.getSheet("Corn Harvest Plan 2022");
@@ -68,6 +71,64 @@ public class ManualPlanExcel {
                 }
                 slf4jLogger.debug("[Manual Plan Excel] Field {}", f);
             }
+        }
+    }
+
+    public void readManualPlanDB(final HOMParameters hom_parameters) {
+        Connection connection = null;
+        Statement _deleteTableDtataStmt = null;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL Site] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL Site] Connected!");
+            }
+            String query = "SELECT * FROM FieldManualPlan and seed_plant='Sinesti'";
+
+            // create the java statement
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+
+            // iterate through the java resultset
+            while (rs.next()) {
+                String region = rs.getString("region");
+                String seed_plant = rs.getString("seed_plant");
+                String dh_qualifyed = rs.getString("dh_qualifyed");
+                String grower = rs.getString("grower");
+                String tracking_number = rs.getString("tracking_number");
+                String hybrid = rs.getString("hybrid");
+                String suspect = rs.getString("suspect");
+                String suspect_comments = rs.getString("suspect_comments");
+                String husking_difficulty = rs.getString("husking_difficulty");
+                String female = rs.getString("female");
+                String male = rs.getString("male");
+                double active_ha = rs.getDouble("active_ha");
+                double yield_ton_ha = rs.getDouble("yield_ton_ha");
+                String picker_group = rs.getString("picker_group");
+                String harvest_date = rs.getDate("harvest_date").toString();
+                String harvest_window_start = rs.getDate("harvest_window_start").toString();
+                String harvest_window_end = rs.getDate("harvest_window_end").toString();
+                FieldManualPlan f = new FieldManualPlan(region, seed_plant, dh_qualifyed, grower, tracking_number,
+                        hybrid, suspect, suspect_comments, husking_difficulty, female, male, active_ha, yield_ton_ha,
+                        picker_group, harvest_date, harvest_window_start, harvest_window_end);
+            }
+            st.close();
+            connection.close();
+        } catch (final Exception exception) {
+            System.out.println(exception);
         }
     }
 

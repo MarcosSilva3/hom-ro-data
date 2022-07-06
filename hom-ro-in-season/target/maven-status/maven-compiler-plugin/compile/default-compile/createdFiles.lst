@@ -1,5 +1,6 @@
 com/bayer/hom/HOMResult.class
 com/bayer/hom/ProductCharacterizationData.class
+com/bayer/hom/ManualPlan.class
 com/bayer/hom/FieldManualPlan.class
 com/bayer/hom/Contract.class
 com/bayer/hom/App.class
@@ -16,7 +17,6 @@ com/bayer/hom/ContractData.class
 com/bayer/hom/HOMParameters.class
 com/bayer/hom/Site.class
 com/bayer/hom/FieldHOM.class
-com/bayer/hom/ManualPlanExcel.class
 com/bayer/hom/CSWOutput.class
 com/bayer/hom/HOMInput.class
 com/bayer/hom/HybridData.class
