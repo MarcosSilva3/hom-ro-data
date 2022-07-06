@@ -1,29 +1,7 @@
 package com.bayer.hom;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.TimeUnit;
-
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.spi.LogbackLock;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -43,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.io.FileUtils;
@@ -53,8 +30,18 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.core.spi.LogbackLock;
+import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Romania in-season
@@ -62,7 +49,7 @@ import ch.qos.logback.core.spi.LogbackLock;
 public class App {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
 
-    public static void main(final String[] args) throws InterruptedException, Exception {
+    public static void main(final String[] args) throws Exception {
         final HOMParameters hom_parameters = readConfigFile("hom-config.json");
 
         final String log_config_file = hom_parameters.getLog_config_file();
@@ -91,14 +78,14 @@ public class App {
         final String token = new ClientToken(client_id, client_secret, log_config_file).getToken();
 
         Map<String, String> hAWS = new HashMap<>();
-        Map<String, GSMData> hFieldsGSM = new HashMap<>();
-        Map<String, Contract> hFieldContract = new HashMap<>();
-        Map<String, ProductCharacterization> hProducts = new HashMap<>();
+        Map<String, GSMData> hFieldsGSM;
+        Map<String, Contract> hFieldContract;
+        Map<String, ProductCharacterization> hProducts;
         final Map<String, ScoutData> hFieldsScout = new HashMap<>();
-        Map<String, FieldManualPlan> hFieldsManualPlan = new HashMap<>();
-        List<FieldHOM> lFieldsHOM = new ArrayList<>();
-        List<Site> lSite = new ArrayList<>();
-        List<Picker> lPickers = new ArrayList<>();
+        Map<String, FieldManualPlan> hFieldsManualPlan;
+        List<FieldHOM> lFieldsHOM;
+        List<Site> lSite;
+        List<Picker> lPickers;
         lPickers = readPickerData("hom-config.json");
 
         final List<String> lSites = new ArrayList<>();
@@ -132,7 +119,7 @@ public class App {
         hFieldsManualPlan = manual_plan.getHFields();
 
 
-        // Get the list of fields to be included in the optimzation.
+        // Get the list of fields to be included in the optimization.
         lFieldsHOM = generateFieldsHOM(hFieldsManualPlan, hFieldsGSM, hFieldContract, hFieldsScout, hFieldsPFO,
                 hProducts);
 
@@ -163,7 +150,7 @@ public class App {
         final String result_file_path = get_hom_results_s3(hom_parameters, solve_model);
 
         // Save the results in CSW
-        Table<String, Integer, HOMResult> tHOMResult = HashBasedTable.create();
+        Table<String, Integer, HOMResult> tHOMResult;
         tHOMResult = getHOMResultTable(result_file_path);
         try {
             hAWS = getAWSCredentials();
@@ -198,6 +185,7 @@ public class App {
                 final String field_supervisor = "";
                 final String environment = "";
                 final String seedsman_area = "";
+                assert r1 != null;
                 final String picker = r1.getPicker();
                 final double total_area = r1.getTotal_area();
                 final double total_weight = r1.getTotal_tonrw();
@@ -214,6 +202,7 @@ public class App {
 
                 if (tHOMResult.contains(cell.getRowKey(), 2)) {
                     final HOMResult r2 = tHOMResult.get(cell.getRowKey(), 2);
+                    assert r2 != null;
                     harvest_date_02 = r2.getHarv_date();
                     harvest_date_02_area = r2.getArea_harv();
                     harvest_date_02_weight = r2.getTonrw_harv();
@@ -227,6 +216,7 @@ public class App {
 
                 if (tHOMResult.contains(cell.getRowKey(), 3)) {
                     final HOMResult r3 = tHOMResult.get(cell.getRowKey(), 3);
+                    assert r3 != null;
                     harvest_date_03 = r3.getHarv_date();
                     harvest_date_03_area = r3.getArea_harv();
                     harvest_date_03_weight = r3.getTonrw_harv();
@@ -240,6 +230,7 @@ public class App {
 
                 if (tHOMResult.contains(cell.getRowKey(), 4)) {
                     final HOMResult r4 = tHOMResult.get(cell.getRowKey(), 4);
+                    assert r4 != null;
                     harvest_date_04 = r4.getHarv_date();
                     harvest_date_04_area = r4.getArea_harv();
                     harvest_date_04_weight = r4.getTonrw_harv();
@@ -253,6 +244,7 @@ public class App {
 
                 if (tHOMResult.contains(cell.getRowKey(), 5)) {
                     final HOMResult r5 = tHOMResult.get(cell.getRowKey(), 5);
+                    assert r5 != null;
                     harvest_date_05 = r5.getHarv_date();
                     harvest_date_05_area = r5.getArea_harv();
                     harvest_date_05_weight = r5.getTonrw_harv();
@@ -280,7 +272,6 @@ public class App {
                 final double field_lat = r1.getLat();
                 final double field_lon = r1.getLon();
                 final String wkt = g.getWkt();
-                final String model_timestamp = timeStamp;
 
                 final CSWOutput csw_out = new CSWOutput(country, plant, _crop_year, global_fiscal_year, crop_code,
                         season, field, field_name, grower_name, feature_id, hybrid, field_supervisor, environment,
@@ -292,7 +283,7 @@ public class App {
                         harvest_moisture_05, drydown_rate, optimal_harvest_moisture_range_min,
                         optimal_harvest_moisture_range_max, lateness, hybrid_drying_sensitivity_classification,
                         harvest_type, estimated_number_of_trucks, field_moisture, moisture_collected_date, field_lat,
-                        field_lon, wkt, model_timestamp);
+                        field_lon, wkt, timeStamp);
 
                 slf4jLogger.debug("[HOM-Output] {}", csw_out);
                 lCSWRows.add(csw_out);
@@ -349,15 +340,12 @@ public class App {
     /**
      * Save HOM results in DB
      *
-     * @param hom_parameters
-     * @param tHOMResult
-     * @param timeStamp
      */
     public static void saveHOMResultInDB(final HOMParameters hom_parameters,
                                          final Table<String, Integer, HOMResult> tHOMResult, final Map<String, Contract> hFieldContract,
                                          final String timeStamp) {
 
-        Connection connection = null;
+        Connection connection;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -388,6 +376,7 @@ public class App {
                 final HOMResult r1 = tHOMResult.get(cell.getRowKey(), 1);
                 slf4jLogger.debug("[MySQL HOMResult] {}", r1);
 
+                assert r1 != null;
                 final String tracking_number = r1.getTracking_number();
                 final int part = cell.getColumnKey();
                 final String field = r1.getField();
@@ -429,6 +418,7 @@ public class App {
                 if (tHOMResult.contains(cell.getRowKey(), 2)) {
                     final HOMResult r2 = tHOMResult.get(cell.getRowKey(), 2);
                     prepStmt.setInt(2, 2);
+                    assert r2 != null;
                     prepStmt.setString(3, r2.getField());
                     prepStmt.setDate(6, java.sql.Date.valueOf(r2.getHarv_date()));
                     prepStmt.setDouble(8, r2.getArea_harv());
@@ -441,6 +431,7 @@ public class App {
                 if (tHOMResult.contains(cell.getRowKey(), 3)) {
                     final HOMResult r3 = tHOMResult.get(cell.getRowKey(), 3);
                     prepStmt.setInt(2, 3);
+                    assert r3 != null;
                     prepStmt.setString(3, r3.getField());
                     prepStmt.setDate(6, java.sql.Date.valueOf(r3.getHarv_date()));
                     prepStmt.setDouble(8, r3.getArea_harv());
@@ -453,6 +444,7 @@ public class App {
                 if (tHOMResult.contains(cell.getRowKey(), 4)) {
                     final HOMResult r4 = tHOMResult.get(cell.getRowKey(), 4);
                     prepStmt.setInt(2, 4);
+                    assert r4 != null;
                     prepStmt.setString(3, r4.getField());
                     prepStmt.setDate(6, java.sql.Date.valueOf(r4.getHarv_date()));
                     prepStmt.setDouble(8, r4.getArea_harv());
@@ -465,6 +457,7 @@ public class App {
                 if (tHOMResult.contains(cell.getRowKey(), 5)) {
                     final HOMResult r5 = tHOMResult.get(cell.getRowKey(), 5);
                     prepStmt.setInt(2, 5);
+                    assert r5 != null;
                     prepStmt.setString(3, r5.getField());
                     prepStmt.setDate(6, java.sql.Date.valueOf(r5.getHarv_date()));
                     prepStmt.setDouble(8, r5.getArea_harv());
@@ -490,19 +483,17 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
      * Save site capacity in DB
      *
-     * @param hom_parameters
-     * @param lSite
      */
     public static void saveSiteCapacityInDB(final HOMParameters hom_parameters, final List<Site> lSite) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
+        Statement _deleteTableDtataStmt;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -576,19 +567,18 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
-     * Save fields used in HOM in the database
-     *
-     * @param hom_parameters
-     * @param lFieldsHOM
+     * Save in Database
+     * @param hom_parameters parameters of the optimization
+     * @param lFieldsHOM list of fields in HOM
      */
     public static void saveFieldsHOMInDB(final HOMParameters hom_parameters, final List<FieldHOM> lFieldsHOM) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
+        Statement _deleteTableDtataStmt;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -670,20 +660,20 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
      * Save Scout data in DB
      *
-     * @param hom_parameters
-     * @param hFieldsScout
+     * @param hom_parameters parameters of the model
+     * @param hFieldsScout fields with Scout data
      */
     public static void saveScoutDataInDB(final HOMParameters hom_parameters,
                                          final Map<String, ScoutData> hFieldsScout) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
+        Statement _deleteTableDtataStmt;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -742,20 +732,20 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
      * Save Product Characterization data in DB
      *
-     * @param hom_parameters
-     * @param hProducts
+     * @param hom_parameters parameters of the optimization
+     * @param hProducts list of products
      */
     public static void saveProductsInDB(final HOMParameters hom_parameters,
                                         final Map<String, ProductCharacterization> hProducts) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
+        Statement _deleteTableDtataStmt;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -816,20 +806,20 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
      * Save list of fields in manual plan in DB
      *
-     * @param hom_parameters
-     * @param hFieldsManualPlan
+     * @param hom_parameters parameters of the optimization
+     * @param hFieldsManualPlan fields in the manual plan
      */
     public static void saveFieldManualPlanInDB(final HOMParameters hom_parameters,
                                                final Map<String, FieldManualPlan> hFieldsManualPlan) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
+        Statement _deleteTableDtataStmt;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -912,20 +902,20 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
      * Add contract data in MySQL database
      *
-     * @param hom_parameters
-     * @param hFieldContract
+     * @param hom_parameters parameters for the optimization
+     * @param hFieldContract list of fields in contracts api
      */
     public static void saveContractDataInDB(final HOMParameters hom_parameters,
                                             final Map<String, Contract> hFieldContract) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
+        Statement _deleteTableDtataStmt;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -998,19 +988,19 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
      * Insert GSM data in database
      *
-     * @param hom_parameters
-     * @param hFieldsGSM
+     * @param hom_parameters parameters for the optimization
+     * @param hFieldsGSM list of fields in GSM
      */
     public static void saveGSMDataInDB(final HOMParameters hom_parameters, final Map<String, GSMData> hFieldsGSM) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
+        Statement _deleteTableDtataStmt;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -1184,30 +1174,27 @@ public class App {
             prepStmt.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
     /**
      * Read list of pickers in parameters file.
      *
-     * @param filename
-     * @return
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ParseException
+     * @param filename json input file
+     * @return list of pickers available
+     *
      */
     public static List<Picker> readPickerData(final String filename)
-            throws FileNotFoundException, IOException, ParseException {
+            throws IOException, ParseException {
         final List<Picker> lPickers = new ArrayList<>();
         final JSONParser parser = new JSONParser();
         final JSONObject o = (JSONObject) parser.parse(new FileReader(filename));
 
         if (o.containsKey("pickers")) {
             final JSONArray pickers = (JSONArray) o.get("pickers");
-            final Iterator i = pickers.iterator();
-            while (i.hasNext()) {
-                final JSONObject picker = (JSONObject) i.next();
+            for (Object value : pickers) {
+                final JSONObject picker = (JSONObject) value;
                 final String id = (String) picker.get("id");
                 final String type = (String) picker.get("type");
                 final double harvest_capacity = ((Number) picker.get("harvest_capacity")).doubleValue();
@@ -1222,10 +1209,10 @@ public class App {
     /**
      * Download result file in JSON format from AWS S3
      *
-     * @param hom_parameters
-     * @param model
+     * @param hom_parameters parameters for the optimization
+     * @param model object
      * @return result file path in JSON format
-     * @throws IOException
+     * @throws IOException error
      */
     public static String get_hom_results_s3(final HOMParameters hom_parameters, final SolveModel model)
             throws IOException {
@@ -1235,7 +1222,7 @@ public class App {
         final String timestamp = model.getTimestamp();
         final String user = model.getUser();
         final int jobid = model.getJobid();
-        final String result_file = "hom-result-" + timestamp + "-jobid-" + Integer.toString(jobid) + "-" + user
+        final String result_file = "hom-result-" + timestamp + "-jobid-" + jobid + "-" + user
                 + ".json";
         final AWSCredentials credentials = new BasicAWSCredentials(AccessKeyId, SecretAccessKey);
         final AmazonS3 s3client = AmazonS3ClientBuilder.standard()
@@ -1246,19 +1233,16 @@ public class App {
         final S3Object s3object = s3client.getObject(bucketName, key);
         final S3ObjectInputStream inputStream = s3object.getObjectContent();
         System.out.println(inputStream);
-        // FileUtils.copyInputStreamToFile(inputStream, new File(hom_parameters.getWork_dir() + result_file));
         FileUtils.copyInputStreamToFile(inputStream, new File(hom_parameters.getHom_result_file()));
-//        final String result_file_path = hom_parameters.getWork_dir() + result_file;
-        final String result_file_path = hom_parameters.getHom_result_file();
-        return result_file_path;
+        return hom_parameters.getHom_result_file();
     }
 
     /**
      * Generate site capacity for each day.
      *
-     * @param hom_parameters
-     * @return
-     * @throws java.text.ParseException
+     * @param hom_parameters parameters for the optimization
+     * @return list of days with site capacity
+     * @throws java.text.ParseException error
      */
     public static List<Site> generateSiteCapHOM(final HOMParameters hom_parameters) throws java.text.ParseException {
         final List<Site> lSite = new ArrayList<>();
@@ -1315,13 +1299,13 @@ public class App {
     /**
      * Create list of fields to be included in the optimization.
      *
-     * @param hFieldsManualPlan
-     * @param hFieldsGSM
-     * @param hFieldContract
-     * @param hFieldsScout
-     * @param hFieldsPFO
-     * @param hProducts
-     * @return
+     * @param hFieldsManualPlan list of fields in manual plan
+     * @param hFieldsGSM list of fields in GSM output
+     * @param hFieldContract list of fields in Contracts API
+     * @param hFieldsScout list of fields with Scout data
+     * @param hFieldsPFO list of fields in PFO
+     * @param hProducts list of products
+     * @return list of fields to be considered in the optimization
      */
     public static List<FieldHOM> generateFieldsHOM(final Map<String, FieldManualPlan> hFieldsManualPlan,
                                                    final Map<String, GSMData> hFieldsGSM, final Map<String, Contract> hFieldContract,
@@ -1333,18 +1317,14 @@ public class App {
             final String lot = entry.getKey();
             final FieldManualPlan field_manual_plan = entry.getValue();
             GSMData field_gsm = new GSMData();
-            Contract field_contract = new Contract();
             ScoutData field_scout = new ScoutData();
-            FieldPFO field_pfo = new FieldPFO();
-            ProductCharacterization product = new ProductCharacterization();
+            FieldPFO field_pfo;
+            ProductCharacterization product;
             String entityid = null;
             String abc = "B";
 
             boolean contains_gsm_data = false;
-            boolean contains_contract_data = false;
             boolean contains_scout_data = false;
-            final boolean contains_product_data = false;
-            boolean contains_pfo_data = false;
 
             final String hybrid = field_manual_plan.getHybrid().toUpperCase().replaceAll("\\s+", "").replaceAll("STE",
                     "");
@@ -1366,8 +1346,7 @@ public class App {
             }
 
             if (entityid != null && !entityid.isEmpty() && hFieldContract.containsKey(lot)) {
-                field_contract = hFieldContract.get(lot);
-                contains_contract_data = true;
+                slf4jLogger.debug("[Fields HOM] Field {} found in Contract", lot);
             } else {
                 slf4jLogger.error("[Fields HOM] Field {} not found in Contract", lot);
             }
@@ -1387,7 +1366,6 @@ public class App {
                 field_pfo = hFieldsPFO.get(entityid);
                 if (sitekey == 0) {
                     sitekey = Integer.parseInt(field_pfo.getPlant());
-                    contains_pfo_data = true;
                 }
             } else {
                 slf4jLogger.error("[Fields HOM] Field {} not found in PFO", lot);
@@ -1442,11 +1420,11 @@ public class App {
     /**
      * Read parameters file for HOM.
      *
-     * @param filename
-     * @return
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ParseException
+     * @param filename json configuration file
+     * @return list of parameters
+     * @throws FileNotFoundException error
+     * @throws IOException error
+     * @throws ParseException error
      */
     public static HOMParameters readConfigFile(final String filename)
             throws FileNotFoundException, IOException, ParseException {
@@ -1613,17 +1591,16 @@ public class App {
             work_dir = (String) o.get("hom_result_file");
         }
 
-        final HOMParameters p = new HOMParameters(log_config_file, country, year, year_for_contract, season,
+        return new HOMParameters(log_config_file, country, year, year_for_contract, season,
                 private_key_file, project_id, regionCode, cropCycleCode, env_client_id, env_client_secret,
                 manual_plan_excel_path, hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region,
                 hom_max_days, hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber,
                 env_hom_db_host, env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file);
-        return p;
     }
 
     /**
-     * @param fileNameTimeStamp
-     * @param hAWS
+     * @param fileNameTimeStamp timestamp
+     * @param hAWS aws parameters
      */
     public static void saveResultsInCSW(final String fileNameTimeStamp, final Map<String, String> hAWS) {
         final AWSCredentials credentials = new BasicAWSCredentials(hAWS.get("AccessKeyId"),
@@ -1638,9 +1615,9 @@ public class App {
     }
 
     /**
-     * @param lCSWRows
-     * @param fileNameTimeStamp
-     * @throws IOException
+     * @param lCSWRows rows to be added in CSW table
+     * @param fileNameTimeStamp timestamp
+     * @throws IOException error
      */
     public static void generateCSV(final List<CSWOutput> lCSWRows, final String fileNameTimeStamp) throws IOException {
         final String csv_file = "hom_output_" + fileNameTimeStamp + ".csv";
@@ -1728,29 +1705,16 @@ public class App {
     }
 
     /**
-     * Get a diff between two dates
-     *
-     * @param date1    the oldest date
-     * @param date2    the newest date
-     * @param timeUnit the unit in which you want the diff
-     * @return the diff value, in the provided unit
-     */
-    public static long getDateDiff(final Date date1, final Date date2, final TimeUnit timeUnit) {
-        final long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
-    }
-
-    /**
      * Get Location360 AWS credentials from Vault
      *
-     * @return
-     * @throws VaultException
-     * @throws JsonMappingException
-     * @throws JsonProcessingException
+     * @return aws credentials
+     * @throws VaultException error
+     * @throws JsonMappingException error
+     * @throws JsonProcessingException error
      */
     public static Map<String, String> getAWSCredentials()
             throws VaultException, JsonMappingException, JsonProcessingException {
-        Map<String, String> result = new HashMap<>();
+        Map<String, String> result;
         final Map<String, String> hAWS = new HashMap<>();
         final String vault_address = System.getenv("VAULT_URL");
         final String role_id = System.getenv("MO_VAULT_APP_ROLE_ID");
@@ -1779,11 +1743,11 @@ public class App {
     /**
      * Get results from json file.
      *
-     * @param hom_result_file_path
-     * @return
-     * @throws FileNotFoundException
-     * @throws IOException
-     * @throws ParseException
+     * @param hom_result_file_path result file
+     * @return table with result rows
+     * @throws FileNotFoundException error
+     * @throws IOException error
+     * @throws ParseException error
      */
     public static Table<String, Integer, HOMResult> getHOMResultTable(final String hom_result_file_path)
             throws FileNotFoundException, IOException, ParseException {
@@ -1812,21 +1776,6 @@ public class App {
             hResult.put(tracking_number, part, r);
         }
         return hResult;
-    }
-
-    /**
-     * Check if string looks like a number.
-     *
-     * @param str
-     * @return
-     */
-    public static boolean isNumeric(final String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (final NumberFormatException e) {
-            return false;
-        }
     }
 
 }
