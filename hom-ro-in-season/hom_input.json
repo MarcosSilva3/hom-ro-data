@@ -2883,24 +2883,6 @@
     "abc" : "B",
     "harv_type" : "ear"
   }, {
-    "lot" : "222QOA",
-    "hybrid" : "DKC4598",
-    "sitekey" : 1299,
-    "region" : "North-East",
-    "cluster" : "GR1",
-    "twstart" : "2022-09-02",
-    "twend" : "2022-09-10",
-    "area" : 20.0,
-    "drydown_rate" : 1.0,
-    "latitude" : 44.99250069119379,
-    "longitude" : 27.60504515221844,
-    "lowest_harvest_moisture" : 28,
-    "highest_harvest_moisture" : 33,
-    "tonha" : 8.0,
-    "kg" : 160.0,
-    "abc" : "B",
-    "harv_type" : "ear"
-  }, {
     "lot" : "222R0A",
     "hybrid" : "DKC4712",
     "sitekey" : 1299,
@@ -3222,6 +3204,24 @@
     "highest_harvest_moisture" : 33,
     "tonha" : 8.0,
     "kg" : 240.0,
+    "abc" : "B",
+    "harv_type" : "ear"
+  }, {
+    "lot" : "222R2A",
+    "hybrid" : "DKC4598",
+    "sitekey" : 1299,
+    "region" : "North-East",
+    "cluster" : "GR1",
+    "twstart" : "2022-09-02",
+    "twend" : "2022-09-10",
+    "area" : 20.0,
+    "drydown_rate" : 1.0,
+    "latitude" : 44.091162712274254,
+    "longitude" : 28.576609185299894,
+    "lowest_harvest_moisture" : 28,
+    "highest_harvest_moisture" : 33,
+    "tonha" : 8.02,
+    "kg" : 160.39999999999998,
     "abc" : "B",
     "harv_type" : "ear"
   }, {
@@ -5749,8 +5749,8 @@
   "user" : "Domino",
   "region" : "romania",
   "method" : "ear+bulk",
-  "tabu_size" : 1,
-  "max_iter" : 2,
+  "tabu_size" : 0,
+  "max_iter" : 0,
   "max_days" : 130,
   "pickers" : [ {
     "id" : "GR1",

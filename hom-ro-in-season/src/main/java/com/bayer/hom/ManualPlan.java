@@ -43,7 +43,7 @@ public class ManualPlan {
         for (int i = 14; i <= nrows; i++) {
             Row row = sheet.getRow(i);
             String seed_plant = getStringValue(row.getCell(5));
-            if (seed_plant.equalsIgnoreCase("Sinesti")) {
+            if (seed_plant.equalsIgnoreCase("Sinesti") || seed_plant.equalsIgnoreCase("Agridelta")) {
                 String region = getStringValue(row.getCell(3));
                 String dh_qualifyed = getStringValue(row.getCell(6));
                 String grower = getStringValue(row.getCell(7));

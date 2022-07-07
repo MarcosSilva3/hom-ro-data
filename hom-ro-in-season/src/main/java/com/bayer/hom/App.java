@@ -112,9 +112,9 @@ public class App {
 
         // Read fields from manual plan in Excel or from the Database
         ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
-//        manual_plan.readManualPlanExcel();
+        manual_plan.readManualPlanExcel();
 
-        manual_plan.readManualPlanDB(hom_parameters);
+//        manual_plan.readManualPlanDB(hom_parameters);
         hFieldsManualPlan = manual_plan.getHFields();
 
 
@@ -300,7 +300,7 @@ public class App {
         saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
 
 //        saveSiteCapacityInDB(hom_parameters, lSite)
-//        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
+        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
 
 
         // Check the data
@@ -1397,8 +1397,12 @@ public class App {
         final List<FieldHOM> lFieldsHOM = new ArrayList<>();
 
         for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
+
             final String lot = entry.getKey();
             final FieldManualPlan field_manual_plan = entry.getValue();
+            if(!field_manual_plan.getSeed_plant().equalsIgnoreCase("Sinesti")) {
+                continue;
+            }
             GSMData field_gsm = new GSMData();
             ScoutData field_scout = new ScoutData();
             FieldPFO field_pfo;
