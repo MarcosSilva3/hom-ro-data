@@ -112,9 +112,9 @@ public class App {
 
         // Read fields from manual plan in Excel or from the Database
         ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
-        manual_plan.readManualPlanExcel();
+//        manual_plan.readManualPlanExcel();
 
-//        manual_plan.readManualPlanDB(hom_parameters);
+        manual_plan.readManualPlanDB(hom_parameters);
         hFieldsManualPlan = manual_plan.getHFields();
 
 
@@ -300,7 +300,7 @@ public class App {
         saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
 
 //        saveSiteCapacityInDB(hom_parameters, lSite)
-        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
+//        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
 
 
         // Check the data
