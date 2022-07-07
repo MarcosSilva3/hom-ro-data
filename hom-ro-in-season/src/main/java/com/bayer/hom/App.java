@@ -112,8 +112,9 @@ public class App {
 
         // Read fields from manual plan in Excel or from the Database
         ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
-        manual_plan.readManualPlanExcel();
-//        manual_plan.readManualPlanDB(hom_parameters);
+//        manual_plan.readManualPlanExcel();
+
+        manual_plan.readManualPlanDB(hom_parameters);
         hFieldsManualPlan = manual_plan.getHFields();
 
 
@@ -293,12 +294,14 @@ public class App {
         saveResultsInCSW(fileNameTimeStamp, hAWS);
         saveGSMDataInDB(hom_parameters, hFieldsGSM);
         saveContractDataInDB(hom_parameters, hFieldContract);
-        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
         saveProductsInDB(hom_parameters, hProducts);
         saveScoutDataInDB(hom_parameters, hFieldsScout);
-//        saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
-//        saveSiteCapacityInDB(hom_parameters, lSite);
         saveHOMResultInDB(hom_parameters, tHOMResult, hFieldContract, timeStamp);
+        saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
+
+//        saveSiteCapacityInDB(hom_parameters, lSite)
+//        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
+
 
         // Check the data
         /*
@@ -1312,7 +1315,7 @@ public class App {
             st.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
         return lSite;
     }
