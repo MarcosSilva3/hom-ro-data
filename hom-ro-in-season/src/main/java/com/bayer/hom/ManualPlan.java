@@ -1,6 +1,14 @@
 package com.bayer.hom;
 
-import java.io.File;
+import ch.qos.logback.core.spi.LogbackLock;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,29 +20,19 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.slf4j.LoggerFactory;
-
-import ch.qos.logback.core.spi.LogbackLock;
-
 public class ManualPlan {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
 
     private String excel_file_path;
     private Map<String, FieldManualPlan> hFields;
 
-    public ManualPlan(String excel_file_path) throws IOException {
+    public ManualPlan(String excel_file_path) {
         this.excel_file_path = excel_file_path;
         this.hFields = new HashMap<>();
     }
 
     public void readManualPlanExcel() throws IOException {
-        FileInputStream fis = new FileInputStream(new File(excel_file_path));
+        FileInputStream fis = new FileInputStream(excel_file_path);
         XSSFWorkbook wb = new XSSFWorkbook(fis);
         XSSFSheet sheet = wb.getSheet("Corn Harvest Plan 2022");
         int nrows = sheet.getLastRowNum();
@@ -134,7 +132,7 @@ public class ManualPlan {
             st.close();
             connection.close();
         } catch (final Exception exception) {
-            System.out.println(exception);
+            exception.printStackTrace();
         }
     }
 
@@ -143,6 +141,7 @@ public class ManualPlan {
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
             // This cell is empty
+            slf4jLogger.warn("[Manual Plan Excel] getDateValue :: cell is empty");
         } else {
             if (DateUtil.isCellDateFormatted(cell)) {
                 date = new SimpleDateFormat("yyyy-MM-dd").format(cell.getDateCellValue());
@@ -153,7 +152,7 @@ public class ManualPlan {
 
     /**
      *
-     * @param cell
+     * @param cell in spreadsheet
      * @return String cell value.
      */
     private String getStringValue(Cell cell) {
@@ -161,6 +160,7 @@ public class ManualPlan {
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
             // This cell is empty
+            slf4jLogger.warn("[Manual Plan Excel] getStringValue :: cell is empty");
         } else {
             if (cell.getCellType() == CellType.STRING) {
                 str = cell.getStringCellValue();
@@ -175,7 +175,7 @@ public class ManualPlan {
 
     /**
      *
-     * @param cell
+     * @param cell in spreadsheet
      * @return double cell value.
      */
     private double getNumericValue(Cell cell) {
@@ -183,6 +183,7 @@ public class ManualPlan {
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
             // This cell is empty
+            slf4jLogger.warn("[Manual Plan Excel] getNumericValue :: cell is empty");
         } else {
             if (cell.getCellType() == CellType.STRING) {
                 String s = cell.getStringCellValue();
@@ -199,15 +200,15 @@ public class ManualPlan {
 
     /**
      *
-     * @param cell
+     * @param cell in spreadsheet
      * @return time : int value in minutes.
-     * @throws ParseException
      */
-    private int getTimeValue(Cell cell) throws ParseException {
+    private int getTimeValue(Cell cell) {
         int time = 0;
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
             // This cell is empty
+            slf4jLogger.warn("[Manual Plan Excel] getTimeValue :: cell is empty");
         } else {
             if (cell.getCellType() == CellType.STRING) {
                 String s = cell.getStringCellValue();
