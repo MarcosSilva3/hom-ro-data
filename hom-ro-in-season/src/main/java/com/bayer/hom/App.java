@@ -31,15 +31,13 @@ import org.json.simple.parser.ParseException;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.Date;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
@@ -124,7 +122,8 @@ public class App {
                 hProducts);
 
         // Get list of site capacity per day.
-        lSite = generateSiteCapHOM(hom_parameters);
+//        lSite = generateSiteCapHOM(hom_parameters);
+        lSite = getSiteCapacityFromDB(hom_parameters);
 
         // Generate json
         final HOMInput hom_input = new HOMInput(lSite, lFieldsHOM, hom_parameters.getHom_day_one(),
@@ -297,8 +296,8 @@ public class App {
         saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
         saveProductsInDB(hom_parameters, hProducts);
         saveScoutDataInDB(hom_parameters, hFieldsScout);
-        saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
-        saveSiteCapacityInDB(hom_parameters, lSite);
+//        saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
+//        saveSiteCapacityInDB(hom_parameters, lSite);
         saveHOMResultInDB(hom_parameters, tHOMResult, hFieldContract, timeStamp);
 
         // Check the data
@@ -1235,6 +1234,87 @@ public class App {
         System.out.println(inputStream);
         FileUtils.copyInputStreamToFile(inputStream, new File(hom_parameters.getHom_result_file()));
         return hom_parameters.getHom_result_file();
+    }
+
+    /**
+     * Get site capacity from DB
+     *
+     * @param hom_parameters optimization parameters
+     * @return list of daily site capacities
+     */
+    public static List<Site> getSiteCapacityFromDB(final HOMParameters hom_parameters) {
+        List<Site> lSite = new ArrayList<>();
+        Connection connection;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL Site] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL Site] Connected!");
+            }
+            String query = "SELECT * FROM Site";
+
+            // create the java statement
+            Statement st = connection.createStatement();
+
+            // execute the query, and get a java resultset
+            ResultSet rs = st.executeQuery(query);
+            /*
+            +--------------------+--------------+------+-----+---------+-------+
+            | site_name          | varchar(100) | NO   |     | NULL    |       |
+            | sitekey            | int(11)      | YES  |     | NULL    |       |
+            | caphy_bulk         | int(11)      | YES  |     | NULL    |       |
+            | caphy_ear          | int(11)      | YES  |     | NULL    |       |
+            | caphy_only_ear     | int(11)      | YES  |     | NULL    |       |
+            | capton_ear         | double       | YES  |     | NULL    |       |
+            | capton_bulk        | double       | YES  |     | NULL    |       |
+            | capton_only_ear    | double       | YES  |     | NULL    |       |
+            | captrucks_ear      | int(11)      | YES  |     | NULL    |       |
+            | captrucks_bulk     | int(11)      | YES  |     | NULL    |       |
+            | captrucks_only_ear | int(11)      | YES  |     | NULL    |       |
+            | date               | date         | NO   |     | NULL    |       |
+            | day_of_week        | varchar(100) | NO   |     | NULL    |       |
+            +--------------------+--------------+------+-----+---------+-------+
+            */
+
+            // iterate through the java resultset
+            while (rs.next()) {
+                final String site_name = rs.getString("site_name");
+                final int sitekey = rs.getInt("sitekey");
+                final int caphy_bulk = rs.getInt("caphy_bulk");
+                final int caphy_ear = rs.getInt("caphy_ear");
+                final int caphy_only_ear = rs.getInt("caphy_only_ear");
+                final double capton_ear = rs.getDouble("capton_ear");
+                final double capton_bulk = rs.getDouble("capton_bulk");
+                final double capton_only_ear = rs.getDouble("capton_only_ear");
+                final int captrucks_ear = rs.getInt("captrucks_ear");
+                final int captrucks_bulk = rs.getInt("captrucks_bulk");
+                final int captrucks_only_ear = rs.getInt("captrucks_only_ear");
+                final String date = rs.getDate("date").toString();
+                final String day_of_week = rs.getString("day_of_week");
+
+                final Site s = new Site(site_name, sitekey, caphy_bulk, caphy_ear, caphy_only_ear, capton_ear, capton_bulk,
+                        capton_only_ear, captrucks_ear, captrucks_bulk, captrucks_only_ear, date, day_of_week);
+
+                lSite.add(s);
+                slf4jLogger.debug("[Site Capacity DB] {}", s);
+            }
+            st.close();
+            connection.close();
+        } catch (final Exception exception) {
+            System.out.println(exception);
+        }
+        return lSite;
     }
 
     /**

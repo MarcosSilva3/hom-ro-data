@@ -75,8 +75,7 @@ public class ManualPlan {
     }
 
     public void readManualPlanDB(final HOMParameters hom_parameters) {
-        Connection connection = null;
-        Statement _deleteTableDtataStmt = null;
+        Connection connection;
         try {
             // below two lines are used for connectivity.
             Class.forName("com.mysql.cj.jdbc.Driver");
