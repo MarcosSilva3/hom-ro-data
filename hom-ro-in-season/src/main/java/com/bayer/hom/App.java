@@ -298,6 +298,7 @@ public class App {
         saveScoutDataInDB(hom_parameters, hFieldsScout);
         saveHOMResultInDB(hom_parameters, tHOMResult, hFieldContract, timeStamp);
         saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
+        updateRecommendedHarvDate(hom_parameters, tHOMResult);
 
 //        saveSiteCapacityInDB(hom_parameters, lSite)
 //        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
@@ -337,6 +338,69 @@ public class App {
          * slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}",
          * lFieldsHOM.size());
          */
+    }
+
+    /**
+     * Update harvest date in manual plan table in order to allow correct visualization in the UI
+     *
+     * @param hom_parameters : parameters to be used in the optimization
+     * @param tHOMResult : table with the results of the model
+     */
+    public static void updateRecommendedHarvDate(final HOMParameters hom_parameters,
+                                                 final Table<String, Integer, HOMResult> tHOMResult) {
+        Connection connection;
+        try {
+            // below two lines are used for connectivity.
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            final Map<String, String> env = System.getenv();
+            final String host = env.get(hom_parameters.getEnv_hom_db_host());
+            final String port = env.get(hom_parameters.getEnv_hom_db_port());
+            final String dbname = hom_parameters.getHom_db_name();
+            final String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname
+                    + "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
+            final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
+            final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
+            connection = DriverManager.getConnection(url, dbuser, dbpwd);
+
+            slf4jLogger.debug("[MySQL FieldManualPlan] url: {}", url);
+            if (connection.isValid(10000)) {
+                slf4jLogger.debug("[MySQL FieldManualPlan] Connected!");
+            }
+            connection.setAutoCommit(false);
+
+            final String query = "UPDATE FieldManualPlan set harvest_date = ? where tracking_number = ?";
+            final PreparedStatement prepStmt = connection.prepareStatement(query);
+
+            final Map<String, Boolean> hVisited = new HashMap<>();
+            for (final Table.Cell<String, Integer, HOMResult> cell : tHOMResult.cellSet()) {
+                if (hVisited.containsKey(cell.getRowKey())) {
+                    continue;
+                }
+                final HOMResult r1 = tHOMResult.get(cell.getRowKey(), 1);
+                slf4jLogger.debug("[MySQL FieldManualPlan] {}", r1);
+
+                assert r1 != null;
+                prepStmt.setDate(1, java.sql.Date.valueOf(r1.getHarv_date()));
+                prepStmt.setString(2, r1.getTracking_number());
+                prepStmt.addBatch();
+                hVisited.put(cell.getRowKey(), true);
+            }
+
+            final int[] numUpdates = prepStmt.executeBatch();
+            for (int i = 0; i < numUpdates.length; i++) {
+                if (numUpdates[i] == -2)
+                    slf4jLogger.debug("[MySQL FieldManualPlan] Execution {}: unknown number of rows updated",
+                            String.format("%d", i));
+                else
+                    slf4jLogger.debug("[MySQL FieldManualPlan] Update harvest date ::  Execution {} successful: {}", String.format("%d", i),
+                            String.format("%d", numUpdates[i]));
+            }
+            connection.commit();
+            prepStmt.close();
+            connection.close();
+        } catch (final Exception exception) {
+            exception.printStackTrace();
+        }
     }
 
     /**
