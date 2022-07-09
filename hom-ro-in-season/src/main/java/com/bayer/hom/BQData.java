@@ -234,9 +234,12 @@ public class BQData {
                         final double drydown_rate = Double.parseDouble(row.get("drydown_rate").getStringValue());
                         final double mst = Double.parseDouble(row.get("mst").getStringValue());
 
-                        final String mst_date = Objects.toString(
+                        String mst_date = Objects.toString(
                                         row.get("mst_date").getValue() != null ? row.get("mst_date").getValue()
                                                         : row.get("mst_date").getValue());
+                        if(mst_date.equalsIgnoreCase("null")) {
+                                mst_date = "0000-00-00";
+                        }
 
                         final String s_mst_inputed = Objects.toString(
                                         row.get("mst_imputed").getValue() != null ? row.get("mst_imputed").getValue()

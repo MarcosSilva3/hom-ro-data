@@ -1143,9 +1143,9 @@ public class App {
                 final double mst = d.getMst();
 
                 String sMstDate = d.getMst_date();
-                if (sMstDate == null || sMstDate.equalsIgnoreCase("null")) {
-                    sMstDate = "0000-00-00";
-                }
+//                if (sMstDate == null || sMstDate.equalsIgnoreCase("null")) {
+//                    sMstDate = "0000-00-00";
+//                }
                 final Date mst_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMstDate);
 
                 final double mst_imputed = d.getMst_imputed();
