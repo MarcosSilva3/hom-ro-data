@@ -36,7 +36,7 @@ public class ScoutData {
     public ScoutData(String entity_id, String token) throws ClientProtocolException, IOException, ParseException {
         this.entity_id = entity_id;
         this.token = token;
-        getWkData();
+//        getWkData();
         getYieldData();
     }
 
@@ -127,7 +127,6 @@ public class ScoutData {
                 result.append(line);
             }
 
-            slf4jLogger.debug("[Scout Yield] Start of entity_id: {}", entity_id);
             final Object obj = new JSONParser().parse(result.toString());
             final JSONObject jsonObject = (JSONObject) obj;
             if (jsonObject.containsKey("features")) {
@@ -138,6 +137,7 @@ public class ScoutData {
                     final JSONObject properties = (JSONObject) feature.get("properties");
                     try {
                         this.yield = 2.0 * Double.parseDouble((String) properties.get("value"));
+                        slf4jLogger.debug("[Scout Yield] Entity_id: {} :: yield: {}", entity_id, this.yield);
                     } catch (Exception ex) {
                         slf4jLogger.error("[Scout Yield] entity_id {} with error in coordinates", entity_id);
                     }

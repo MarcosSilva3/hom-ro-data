@@ -104,6 +104,7 @@ public class App {
             final GSMData g = entry.getValue();
             final String entity_id = g.getEntityid();
             final ScoutData wkt = new ScoutData(entity_id, token);
+            wkt.setWkt(g.getWkt());
             hFieldsScout.put(entity_id, wkt);
         }
 
