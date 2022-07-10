@@ -340,8 +340,8 @@ public class App {
          * lFieldsHOM.size());
          */
     }
-
-    /**
+    
+     /**
      * Update harvest date in manual plan table in order to allow correct visualization in the UI
      *
      * @param hom_parameters : parameters to be used in the optimization
