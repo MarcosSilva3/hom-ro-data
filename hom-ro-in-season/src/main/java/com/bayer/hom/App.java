@@ -48,7 +48,7 @@ public class App {
     private static final org.slf4j.Logger slf4jLogger = LoggerFactory.getLogger(LogbackLock.class);
 
     public static void main(final String[] args) throws Exception {
-        final HOMParameters hom_parameters = readConfigFile("hom-config.json");
+        final HOMParameters hom_parameters = readConfigFile("hom-ro-config.json");
 
         final String log_config_file = hom_parameters.getLog_config_file();
         final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -84,7 +84,7 @@ public class App {
         List<FieldHOM> lFieldsHOM;
         List<Site> lSite;
         List<Picker> lPickers;
-        lPickers = readPickerData("hom-config.json");
+        lPickers = readPickerData("hom-ro-config.json");
 
         final List<String> lSites = new ArrayList<>();
 

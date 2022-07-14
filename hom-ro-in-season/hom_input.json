@@ -4989,24 +4989,6 @@
     "abc" : "B",
     "harv_type" : "ear"
   }, {
-    "lot" : "222UOA",
-    "hybrid" : "DKC6715",
-    "sitekey" : 1299,
-    "region" : "North-East",
-    "cluster" : "GR4",
-    "twstart" : "2022-09-14",
-    "twend" : "2022-09-22",
-    "area" : 50.0,
-    "drydown_rate" : 1.0,
-    "latitude" : 45.39377952644451,
-    "longitude" : 28.062467218055744,
-    "lowest_harvest_moisture" : 28,
-    "highest_harvest_moisture" : 33,
-    "tonha" : 6.02,
-    "kg" : 301.0,
-    "abc" : "B",
-    "harv_type" : "ear"
-  }, {
     "lot" : "222QVA",
     "hybrid" : "DKC4098",
     "sitekey" : 1299,
@@ -5749,8 +5731,8 @@
   "user" : "Domino",
   "region" : "romania",
   "method" : "ear+bulk",
-  "tabu_size" : 5,
-  "max_iter" : 10,
+  "tabu_size" : 0,
+  "max_iter" : 0,
   "max_days" : 130,
   "pickers" : [ {
     "id" : "GR1",
