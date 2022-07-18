@@ -57,7 +57,7 @@ public class PFOData {
         // tmp_str.append(") and year=").append(Integer.toString(year)).append(" and
         // deleted='false' and crop='Corn'");
         tmp_str.append(") and year=").append(Integer.toString(year)).append(" and crop='Corn'").append(" and season='")
-                .append(season).append("'").append(" and deleted=false");
+                .append(season).append("'");// .append(" and deleted=false");
         url += URLEncoder.encode(tmp_str.toString(), "UTF-8");
         final HttpGet get = new HttpGet(url);
         get.setHeader("Authorization", "Bearer " + token);

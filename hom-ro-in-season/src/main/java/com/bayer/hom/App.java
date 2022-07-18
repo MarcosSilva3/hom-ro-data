@@ -138,7 +138,6 @@ public class App {
         out.close();
 
         // Check the data
-
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
             slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
         }
@@ -169,6 +168,13 @@ public class App {
             slf4jLogger.debug("[Fields HOM-OPT] {}", f);
         }
         slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
+
+        // Check fields in GSM and not in Manual Plan
+        for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
+            if(!hFieldsManualPlan.containsKey(entry.getKey())) {
+                slf4jLogger.debug("[GSM x Manual Plan] Field {} => not found in Manual Plan:  {}", entry.getKey(), entry.getValue());
+            }
+        }
 
         System.exit(1);
 
