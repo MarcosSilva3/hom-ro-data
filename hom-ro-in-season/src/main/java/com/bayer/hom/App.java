@@ -112,19 +112,18 @@ public class App {
         hProducts = (new ProductCharacterizationData(token, log_config_file, regionCode, cropCycleCode)).getHProducts();
 
         // Read fields from manual plan in Excel or from the Database
-        ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
-//        manual_plan.readManualPlanExcel();
+        final ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
+        // manual_plan.readManualPlanExcel();
 
         manual_plan.readManualPlanDB(hom_parameters);
         hFieldsManualPlan = manual_plan.getHFields();
-
 
         // Get the list of fields to be included in the optimization.
         lFieldsHOM = generateFieldsHOM(hFieldsManualPlan, hFieldsGSM, hFieldContract, hFieldsScout, hFieldsPFO,
                 hProducts);
 
         // Get list of site capacity per day.
-//        lSite = generateSiteCapHOM(hom_parameters);
+        // lSite = generateSiteCapHOM(hom_parameters);
         lSite = getSiteCapacityFromDB(hom_parameters);
 
         // Generate json
@@ -137,6 +136,41 @@ public class App {
         final BufferedWriter out = new BufferedWriter(new FileWriter("hom_input.json"));
         out.write(hom_input_json);
         out.close();
+
+        // Check the data
+
+        for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
+            slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
+        }
+        slf4jLogger.debug("[GSM] Total number of fields: {}", hFieldsGSM.size());
+
+        for (final Entry<String, FieldPFO> entry : hFieldsPFO.entrySet()) {
+            slf4jLogger.debug("[PFO] {} => {}}", entry.getKey(), entry.getValue());
+        }
+        slf4jLogger.debug("[PFO] Total number of fields: {}", hFieldsPFO.size());
+
+        for (final Entry<String, Contract> entry : hFieldContract.entrySet()) {
+            slf4jLogger.debug("[Contract] {} => {}}", entry.getKey(), entry.getValue());
+        }
+        slf4jLogger.debug("[Contract] Total number of fields: {}", hFieldContract.size());
+
+        for (final Entry<String, ProductCharacterization> entry : hProducts.entrySet()) {
+            slf4jLogger.debug("[Product Characterization] {} => {}}", entry.getKey(), entry.getValue());
+        }
+        slf4jLogger.debug("[Product Characterization] Total number of products: {}", hProducts.size());
+
+        for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
+            slf4jLogger.debug("[Manual Plan Excel] {} => {}", entry.getKey(), entry.getValue());
+        }
+        slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}", hFieldsManualPlan.size());
+
+        // Fields to be included in the optimization
+        for (final FieldHOM f : lFieldsHOM) {
+            slf4jLogger.debug("[Fields HOM-OPT] {}", f);
+        }
+        slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}", lFieldsHOM.size());
+
+        System.exit(1);
 
         // solve model
         final SolveModel solve_model = new SolveModel(hom_input_json, hom_parameters);
@@ -301,54 +335,20 @@ public class App {
         saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
         updateRecommendedHarvDate(hom_parameters, tHOMResult);
 
-//        saveSiteCapacityInDB(hom_parameters, lSite)
-//        saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
+        // saveSiteCapacityInDB(hom_parameters, lSite)
+        // saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
 
-
-        // Check the data
-        /*
-         * for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
-         * slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue()); }
-         * slf4jLogger.debug("[GSM] Total number of fields: {}", hFieldsGSM.size());
-         *
-         * for (final Entry<String, FieldPFO> entry : hFieldsPFO.entrySet()) {
-         * slf4jLogger.debug("[PFO] {} => {}}", entry.getKey(), entry.getValue()); }
-         * slf4jLogger.debug("[PFO] Total number of fields: {}", hFieldsPFO.size());
-         *
-         * for (final Entry<String, Contract> entry : hFieldContract.entrySet()) {
-         * slf4jLogger.debug("[Contract] {} => {}}", entry.getKey(), entry.getValue());
-         * } slf4jLogger.debug("[Contract] Total number of fields: {}",
-         * hFieldContract.size());
-         *
-         * for (final Entry<String, ProductCharacterization> entry :
-         * hProducts.entrySet()) {
-         * slf4jLogger.debug("[Product Characterization] {} => {}}", entry.getKey(),
-         * entry.getValue()); }
-         * slf4jLogger.debug("[Product Characterization] Total number of products: {}",
-         * hProducts.size());
-         *
-         * for (final Entry<String, FieldManualPlan> entry :
-         * hFieldsManualPlan.entrySet()) {
-         * slf4jLogger.debug("[Manual Plan Excel] {} => {}", entry.getKey(),
-         * entry.getValue()); }
-         * slf4jLogger.debug("[Manual Plan Excel] Total number of fields in excel: {}",
-         * hFieldsManualPlan.size());
-         *
-         * // Fields to be included in the optimization for (final FieldHOM f :
-         * lFieldsHOM) { slf4jLogger.debug("[Fields HOM-OPT] {}", f); }
-         * slf4jLogger.debug("[Fields HOM-OPT] Total number of fields in excel: {}",
-         * lFieldsHOM.size());
-         */
     }
-    
-     /**
-     * Update harvest date in manual plan table in order to allow correct visualization in the UI
+
+    /**
+     * Update harvest date in manual plan table in order to allow correct
+     * visualization in the UI
      *
      * @param hom_parameters : parameters to be used in the optimization
-     * @param tHOMResult : table with the results of the model
+     * @param tHOMResult     : table with the results of the model
      */
     public static void updateRecommendedHarvDate(final HOMParameters hom_parameters,
-                                                 final Table<String, Integer, HOMResult> tHOMResult) {
+            final Table<String, Integer, HOMResult> tHOMResult) {
         Connection connection;
         try {
             // below two lines are used for connectivity.
@@ -393,8 +393,8 @@ public class App {
                     slf4jLogger.debug("[MySQL FieldManualPlan] Execution {}: unknown number of rows updated",
                             String.format("%d", i));
                 else
-                    slf4jLogger.debug("[MySQL FieldManualPlan] Update harvest date ::  Execution {} successful: {}", String.format("%d", i),
-                            String.format("%d", numUpdates[i]));
+                    slf4jLogger.debug("[MySQL FieldManualPlan] Update harvest date ::  Execution {} successful: {}",
+                            String.format("%d", i), String.format("%d", numUpdates[i]));
             }
             connection.commit();
             prepStmt.close();
@@ -409,8 +409,8 @@ public class App {
      *
      */
     public static void saveHOMResultInDB(final HOMParameters hom_parameters,
-                                         final Table<String, Integer, HOMResult> tHOMResult, final Map<String, Contract> hFieldContract,
-                                         final String timeStamp) {
+            final Table<String, Integer, HOMResult> tHOMResult, final Map<String, Contract> hFieldContract,
+            final String timeStamp) {
 
         Connection connection;
         try {
@@ -640,8 +640,9 @@ public class App {
 
     /**
      * Save in Database
+     * 
      * @param hom_parameters parameters of the optimization
-     * @param lFieldsHOM list of fields in HOM
+     * @param lFieldsHOM     list of fields in HOM
      */
     public static void saveFieldsHOMInDB(final HOMParameters hom_parameters, final List<FieldHOM> lFieldsHOM) {
         Connection connection;
@@ -735,10 +736,10 @@ public class App {
      * Save Scout data in DB
      *
      * @param hom_parameters parameters of the model
-     * @param hFieldsScout fields with Scout data
+     * @param hFieldsScout   fields with Scout data
      */
     public static void saveScoutDataInDB(final HOMParameters hom_parameters,
-                                         final Map<String, ScoutData> hFieldsScout) {
+            final Map<String, ScoutData> hFieldsScout) {
         Connection connection;
         Statement _deleteTableDtataStmt;
         try {
@@ -807,10 +808,10 @@ public class App {
      * Save Product Characterization data in DB
      *
      * @param hom_parameters parameters of the optimization
-     * @param hProducts list of products
+     * @param hProducts      list of products
      */
     public static void saveProductsInDB(final HOMParameters hom_parameters,
-                                        final Map<String, ProductCharacterization> hProducts) {
+            final Map<String, ProductCharacterization> hProducts) {
         Connection connection;
         Statement _deleteTableDtataStmt;
         try {
@@ -880,11 +881,11 @@ public class App {
     /**
      * Save list of fields in manual plan in DB
      *
-     * @param hom_parameters parameters of the optimization
+     * @param hom_parameters    parameters of the optimization
      * @param hFieldsManualPlan fields in the manual plan
      */
     public static void saveFieldManualPlanInDB(final HOMParameters hom_parameters,
-                                               final Map<String, FieldManualPlan> hFieldsManualPlan) {
+            final Map<String, FieldManualPlan> hFieldsManualPlan) {
         Connection connection;
         Statement _deleteTableDtataStmt;
         try {
@@ -980,7 +981,7 @@ public class App {
      * @param hFieldContract list of fields in contracts api
      */
     public static void saveContractDataInDB(final HOMParameters hom_parameters,
-                                            final Map<String, Contract> hFieldContract) {
+            final Map<String, Contract> hFieldContract) {
         Connection connection;
         Statement _deleteTableDtataStmt;
         try {
@@ -1063,7 +1064,7 @@ public class App {
      * Insert GSM data in database
      *
      * @param hom_parameters parameters for the optimization
-     * @param hFieldsGSM list of fields in GSM
+     * @param hFieldsGSM     list of fields in GSM
      */
     public static void saveGSMDataInDB(final HOMParameters hom_parameters, final Map<String, GSMData> hFieldsGSM) {
         Connection connection;
@@ -1143,10 +1144,10 @@ public class App {
                 final double drydown_rate = d.getDrydown_rate();
                 final double mst = d.getMst();
 
-                String sMstDate = d.getMst_date();
-//                if (sMstDate == null || sMstDate.equalsIgnoreCase("null")) {
-//                    sMstDate = "0000-00-00";
-//                }
+                final String sMstDate = d.getMst_date();
+                // if (sMstDate == null || sMstDate.equalsIgnoreCase("null")) {
+                // sMstDate = "0000-00-00";
+                // }
                 final Date mst_date = new SimpleDateFormat("yyyy-MM-dd").parse(sMstDate);
 
                 final double mst_imputed = d.getMst_imputed();
@@ -1252,15 +1253,14 @@ public class App {
      * @return list of pickers available
      *
      */
-    public static List<Picker> readPickerData(final String filename)
-            throws IOException, ParseException {
+    public static List<Picker> readPickerData(final String filename) throws IOException, ParseException {
         final List<Picker> lPickers = new ArrayList<>();
         final JSONParser parser = new JSONParser();
         final JSONObject o = (JSONObject) parser.parse(new FileReader(filename));
 
         if (o.containsKey("pickers")) {
             final JSONArray pickers = (JSONArray) o.get("pickers");
-            for (Object value : pickers) {
+            for (final Object value : pickers) {
                 final JSONObject picker = (JSONObject) value;
                 final String id = (String) picker.get("id");
                 final String type = (String) picker.get("type");
@@ -1277,7 +1277,7 @@ public class App {
      * Download result file in JSON format from AWS S3
      *
      * @param hom_parameters parameters for the optimization
-     * @param model object
+     * @param model          object
      * @return result file path in JSON format
      * @throws IOException error
      */
@@ -1289,8 +1289,7 @@ public class App {
         final String timestamp = model.getTimestamp();
         final String user = model.getUser();
         final int jobid = model.getJobid();
-        final String result_file = "hom-result-" + timestamp + "-jobid-" + jobid + "-" + user
-                + ".json";
+        final String result_file = "hom-result-" + timestamp + "-jobid-" + jobid + "-" + user + ".json";
         final AWSCredentials credentials = new BasicAWSCredentials(AccessKeyId, SecretAccessKey);
         final AmazonS3 s3client = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(Regions.US_EAST_2).build();
@@ -1311,7 +1310,7 @@ public class App {
      * @return list of daily site capacities
      */
     public static List<Site> getSiteCapacityFromDB(final HOMParameters hom_parameters) {
-        List<Site> lSite = new ArrayList<>();
+        final List<Site> lSite = new ArrayList<>();
         Connection connection;
         try {
             // below two lines are used for connectivity.
@@ -1330,30 +1329,25 @@ public class App {
             if (connection.isValid(10000)) {
                 slf4jLogger.debug("[MySQL Site] Connected!");
             }
-            String query = "SELECT * FROM Site";
+            final String query = "SELECT * FROM Site";
 
             // create the java statement
-            Statement st = connection.createStatement();
+            final Statement st = connection.createStatement();
 
             // execute the query, and get a java resultset
-            ResultSet rs = st.executeQuery(query);
+            final ResultSet rs = st.executeQuery(query);
             /*
-            +--------------------+--------------+------+-----+---------+-------+
-            | site_name          | varchar(100) | NO   |     | NULL    |       |
-            | sitekey            | int(11)      | YES  |     | NULL    |       |
-            | caphy_bulk         | int(11)      | YES  |     | NULL    |       |
-            | caphy_ear          | int(11)      | YES  |     | NULL    |       |
-            | caphy_only_ear     | int(11)      | YES  |     | NULL    |       |
-            | capton_ear         | double       | YES  |     | NULL    |       |
-            | capton_bulk        | double       | YES  |     | NULL    |       |
-            | capton_only_ear    | double       | YES  |     | NULL    |       |
-            | captrucks_ear      | int(11)      | YES  |     | NULL    |       |
-            | captrucks_bulk     | int(11)      | YES  |     | NULL    |       |
-            | captrucks_only_ear | int(11)      | YES  |     | NULL    |       |
-            | date               | date         | NO   |     | NULL    |       |
-            | day_of_week        | varchar(100) | NO   |     | NULL    |       |
-            +--------------------+--------------+------+-----+---------+-------+
-            */
+             * +--------------------+--------------+------+-----+---------+-------+ |
+             * site_name | varchar(100) | NO | | NULL | | | sitekey | int(11) | YES | | NULL
+             * | | | caphy_bulk | int(11) | YES | | NULL | | | caphy_ear | int(11) | YES | |
+             * NULL | | | caphy_only_ear | int(11) | YES | | NULL | | | capton_ear | double
+             * | YES | | NULL | | | capton_bulk | double | YES | | NULL | | |
+             * capton_only_ear | double | YES | | NULL | | | captrucks_ear | int(11) | YES |
+             * | NULL | | | captrucks_bulk | int(11) | YES | | NULL | | | captrucks_only_ear
+             * | int(11) | YES | | NULL | | | date | date | NO | | NULL | | | day_of_week |
+             * varchar(100) | NO | | NULL | |
+             * +--------------------+--------------+------+-----+---------+-------+
+             */
 
             // iterate through the java resultset
             while (rs.next()) {
@@ -1371,8 +1365,9 @@ public class App {
                 final String date = rs.getDate("date").toString();
                 final String day_of_week = rs.getString("day_of_week");
 
-                final Site s = new Site(site_name, sitekey, caphy_bulk, caphy_ear, caphy_only_ear, capton_ear, capton_bulk,
-                        capton_only_ear, captrucks_ear, captrucks_bulk, captrucks_only_ear, date, day_of_week);
+                final Site s = new Site(site_name, sitekey, caphy_bulk, caphy_ear, caphy_only_ear, capton_ear,
+                        capton_bulk, capton_only_ear, captrucks_ear, captrucks_bulk, captrucks_only_ear, date,
+                        day_of_week);
 
                 lSite.add(s);
                 slf4jLogger.debug("[Site Capacity DB] {}", s);
@@ -1448,24 +1443,24 @@ public class App {
      * Create list of fields to be included in the optimization.
      *
      * @param hFieldsManualPlan list of fields in manual plan
-     * @param hFieldsGSM list of fields in GSM output
-     * @param hFieldContract list of fields in Contracts API
-     * @param hFieldsScout list of fields with Scout data
-     * @param hFieldsPFO list of fields in PFO
-     * @param hProducts list of products
+     * @param hFieldsGSM        list of fields in GSM output
+     * @param hFieldContract    list of fields in Contracts API
+     * @param hFieldsScout      list of fields with Scout data
+     * @param hFieldsPFO        list of fields in PFO
+     * @param hProducts         list of products
      * @return list of fields to be considered in the optimization
      */
     public static List<FieldHOM> generateFieldsHOM(final Map<String, FieldManualPlan> hFieldsManualPlan,
-                                                   final Map<String, GSMData> hFieldsGSM, final Map<String, Contract> hFieldContract,
-                                                   final Map<String, ScoutData> hFieldsScout, final Map<String, FieldPFO> hFieldsPFO,
-                                                   final Map<String, ProductCharacterization> hProducts) {
+            final Map<String, GSMData> hFieldsGSM, final Map<String, Contract> hFieldContract,
+            final Map<String, ScoutData> hFieldsScout, final Map<String, FieldPFO> hFieldsPFO,
+            final Map<String, ProductCharacterization> hProducts) {
         final List<FieldHOM> lFieldsHOM = new ArrayList<>();
 
         for (final Entry<String, FieldManualPlan> entry : hFieldsManualPlan.entrySet()) {
 
             final String lot = entry.getKey();
             final FieldManualPlan field_manual_plan = entry.getValue();
-            if(!field_manual_plan.getSeed_plant().equalsIgnoreCase("Sinesti")) {
+            if (!field_manual_plan.getSeed_plant().equalsIgnoreCase("Sinesti")) {
                 continue;
             }
             GSMData field_gsm = new GSMData();
@@ -1575,8 +1570,8 @@ public class App {
      * @param filename json configuration file
      * @return list of parameters
      * @throws FileNotFoundException error
-     * @throws IOException error
-     * @throws ParseException error
+     * @throws IOException           error
+     * @throws ParseException        error
      */
     public static HOMParameters readConfigFile(final String filename)
             throws FileNotFoundException, IOException, ParseException {
@@ -1613,7 +1608,7 @@ public class App {
         String env_hom_db_pwd = "HOM_DB_PWD";
         String hom_db_name = "hom_romania";
         String work_dir = "/mnt/";
-        String hom_result_file = "hom_result.json";
+        final String hom_result_file = "hom_result.json";
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -1743,16 +1738,16 @@ public class App {
             work_dir = (String) o.get("hom_result_file");
         }
 
-        return new HOMParameters(log_config_file, country, year, year_for_contract, season,
-                private_key_file, project_id, regionCode, cropCycleCode, env_client_id, env_client_secret,
-                manual_plan_excel_path, hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region,
-                hom_max_days, hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber,
-                env_hom_db_host, env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file);
+        return new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
+                project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
+                hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
+                hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host,
+                env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file);
     }
 
     /**
      * @param fileNameTimeStamp timestamp
-     * @param hAWS aws parameters
+     * @param hAWS              aws parameters
      */
     public static void saveResultsInCSW(final String fileNameTimeStamp, final Map<String, String> hAWS) {
         final AWSCredentials credentials = new BasicAWSCredentials(hAWS.get("AccessKeyId"),
@@ -1767,14 +1762,14 @@ public class App {
     }
 
     /**
-     * @param lCSWRows rows to be added in CSW table
+     * @param lCSWRows          rows to be added in CSW table
      * @param fileNameTimeStamp timestamp
      * @throws IOException error
      */
     public static void generateCSV(final List<CSWOutput> lCSWRows, final String fileNameTimeStamp) throws IOException {
         final String csv_file = "hom_output_" + fileNameTimeStamp + ".csv";
         final FileWriter out = new FileWriter(csv_file);
-        final String[] HEADERS = {"country", "plant", "crop_year", "global_fiscal_year", "crop_code", "season",
+        final String[] HEADERS = { "country", "plant", "crop_year", "global_fiscal_year", "crop_code", "season",
                 "field", "field_name", "grower_name", "feature_id", "hybrid", "field_supervisor", "environment",
                 "seedsman_area", "picker", "total_area", "total_weight", "harvest_date_01", "harvest_date_02",
                 "harvest_date_03", "harvest_date_04", "harvest_date_05", "harvest_date_01_area", "harvest_date_02_area",
@@ -1784,7 +1779,7 @@ public class App {
                 "harvest_moisture_05", "drydown_rate", "optimal_harvest_moisture_range_min",
                 "optimal_harvest_moisture_range_max", "lateness", "hybrid_drying_sensitivity_classification",
                 "harvest_type", "estimated_number_of_trucks", "field_moisture", "moisture_collected_date", "field_lat",
-                "field_lon", "wkt", "model_timestamp"};
+                "field_lon", "wkt", "model_timestamp" };
 
         try (CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(HEADERS))) {
             for (final CSWOutput row : lCSWRows) {
@@ -1860,8 +1855,8 @@ public class App {
      * Get Location360 AWS credentials from Vault
      *
      * @return aws credentials
-     * @throws VaultException error
-     * @throws JsonMappingException error
+     * @throws VaultException          error
+     * @throws JsonMappingException    error
      * @throws JsonProcessingException error
      */
     public static Map<String, String> getAWSCredentials()
@@ -1898,8 +1893,8 @@ public class App {
      * @param hom_result_file_path result file
      * @return table with result rows
      * @throws FileNotFoundException error
-     * @throws IOException error
-     * @throws ParseException error
+     * @throws IOException           error
+     * @throws ParseException        error
      */
     public static Table<String, Integer, HOMResult> getHOMResultTable(final String hom_result_file_path)
             throws FileNotFoundException, IOException, ParseException {
