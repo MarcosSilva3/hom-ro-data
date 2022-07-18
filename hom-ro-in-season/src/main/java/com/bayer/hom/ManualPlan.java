@@ -36,7 +36,7 @@ public class ManualPlan {
         final XSSFSheet sheet = wb.getSheet("Corn Harvest Plan 2022");
         final int nrows = sheet.getLastRowNum();
 
-        // Skip header starting at row 1.
+        // Skip header starting at row 14.
         for (int i = 14; i <= nrows; i++) {
             final Row row = sheet.getRow(i);
             final String seed_plant = getStringValue(row.getCell(5));
