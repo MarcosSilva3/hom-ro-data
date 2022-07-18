@@ -15,7 +15,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,49 +25,47 @@ public class ManualPlan {
     private String excel_file_path;
     private Map<String, FieldManualPlan> hFields;
 
-    public ManualPlan(String excel_file_path) {
+    public ManualPlan(final String excel_file_path) {
         this.excel_file_path = excel_file_path;
         this.hFields = new HashMap<>();
     }
 
     public void readManualPlanExcel() throws IOException {
-        FileInputStream fis = new FileInputStream(excel_file_path);
-        XSSFWorkbook wb = new XSSFWorkbook(fis);
-        XSSFSheet sheet = wb.getSheet("Corn Harvest Plan 2022");
-        int nrows = sheet.getLastRowNum();
+        final FileInputStream fis = new FileInputStream(excel_file_path);
+        final XSSFWorkbook wb = new XSSFWorkbook(fis);
+        final XSSFSheet sheet = wb.getSheet("Corn Harvest Plan 2022");
+        final int nrows = sheet.getLastRowNum();
 
         // Skip header starting at row 1.
         for (int i = 14; i <= nrows; i++) {
-            Row row = sheet.getRow(i);
-            String seed_plant = getStringValue(row.getCell(5));
-            if (seed_plant.equalsIgnoreCase("Sinesti") || seed_plant.equalsIgnoreCase("Agridelta")) {
-                String region = getStringValue(row.getCell(3));
-                String dh_qualifyed = getStringValue(row.getCell(6));
-                String grower = getStringValue(row.getCell(7));
-                String tracking_number = getStringValue(row.getCell(8));
-                String hybrid = getStringValue(row.getCell(9));
-                String suspect = getStringValue(row.getCell(10));
-                String suspect_comments = getStringValue(row.getCell(11));
-                String husking_difficulty = getStringValue(row.getCell(12));
-                String female = getStringValue(row.getCell(13));
-                String male = getStringValue(row.getCell(14));
-                double active_ha = getNumericValue(row.getCell(23));
-                double yield_ton_ha = getNumericValue(row.getCell(43));
-                String picker_group = getStringValue(row.getCell(42));
-                String harvest_date = getDateValue(row.getCell(46));
-                String harvest_window_start = getDateValue(row.getCell(47));
-                String harvest_window_end = getDateValue(row.getCell(48));
-                FieldManualPlan f = new FieldManualPlan(region, seed_plant, dh_qualifyed, grower, tracking_number,
-                        hybrid, suspect, suspect_comments, husking_difficulty, female, male, active_ha, yield_ton_ha,
-                        picker_group, harvest_date, harvest_window_start, harvest_window_end);
+            final Row row = sheet.getRow(i);
+            final String seed_plant = getStringValue(row.getCell(5));
+            final String region = getStringValue(row.getCell(3));
+            final String dh_qualifyed = getStringValue(row.getCell(6));
+            final String grower = getStringValue(row.getCell(7));
+            final String tracking_number = getStringValue(row.getCell(8));
+            final String hybrid = getStringValue(row.getCell(9));
+            final String suspect = getStringValue(row.getCell(10));
+            final String suspect_comments = getStringValue(row.getCell(11));
+            final String husking_difficulty = getStringValue(row.getCell(12));
+            final String female = getStringValue(row.getCell(13));
+            final String male = getStringValue(row.getCell(14));
+            final double active_ha = getNumericValue(row.getCell(23));
+            final double yield_ton_ha = getNumericValue(row.getCell(43));
+            final String picker_group = getStringValue(row.getCell(42));
+            final String harvest_date = getDateValue(row.getCell(46));
+            final String harvest_window_start = getDateValue(row.getCell(47));
+            final String harvest_window_end = getDateValue(row.getCell(48));
+            final FieldManualPlan f = new FieldManualPlan(region, seed_plant, dh_qualifyed, grower, tracking_number,
+                    hybrid, suspect, suspect_comments, husking_difficulty, female, male, active_ha, yield_ton_ha,
+                    picker_group, harvest_date, harvest_window_start, harvest_window_end);
 
-                if (hFields.containsKey(tracking_number)) {
-                    slf4jLogger.warn("[Manual Plan Excel] duplicated entry for field {}", tracking_number);
-                } else {
-                    hFields.put(tracking_number, f);
-                }
-                slf4jLogger.debug("[Manual Plan Excel] Field {}", f);
+            if (hFields.containsKey(tracking_number)) {
+                slf4jLogger.warn("[Manual Plan Excel] duplicated entry for field {}", tracking_number);
+            } else {
+                hFields.put(tracking_number, f);
             }
+            slf4jLogger.debug("[Manual Plan Excel] Field {}", f);
         }
     }
 
@@ -91,34 +88,34 @@ public class ManualPlan {
             if (connection.isValid(10000)) {
                 slf4jLogger.debug("[MySQL Site] Connected!");
             }
-            String query = "SELECT * FROM FieldManualPlan WHERE seed_plant='Sinesti'";
+            final String query = "SELECT * FROM FieldManualPlan WHERE seed_plant='Sinesti'";
 
             // create the java statement
-            Statement st = connection.createStatement();
+            final Statement st = connection.createStatement();
 
             // execute the query, and get a java resultset
-            ResultSet rs = st.executeQuery(query);
+            final ResultSet rs = st.executeQuery(query);
 
             // iterate through the java resultset
             while (rs.next()) {
-                String region = rs.getString("region");
-                String seed_plant = rs.getString("seed_plant");
-                String dh_qualifyed = rs.getString("dh_qualifyed");
-                String grower = rs.getString("grower");
-                String tracking_number = rs.getString("tracking_number");
-                String hybrid = rs.getString("hybrid");
-                String suspect = rs.getString("suspect");
-                String suspect_comments = rs.getString("suspect_comments");
-                String husking_difficulty = rs.getString("husking_difficulty");
-                String female = rs.getString("female");
-                String male = rs.getString("male");
-                double active_ha = rs.getDouble("active_ha");
-                double yield_ton_ha = rs.getDouble("yield_ton_ha");
-                String picker_group = rs.getString("picker_group");
-                String harvest_date = rs.getDate("harvest_date").toString();
-                String harvest_window_start = rs.getDate("harvest_window_start").toString();
-                String harvest_window_end = rs.getDate("harvest_window_end").toString();
-                FieldManualPlan f = new FieldManualPlan(region, seed_plant, dh_qualifyed, grower, tracking_number,
+                final String region = rs.getString("region");
+                final String seed_plant = rs.getString("seed_plant");
+                final String dh_qualifyed = rs.getString("dh_qualifyed");
+                final String grower = rs.getString("grower");
+                final String tracking_number = rs.getString("tracking_number");
+                final String hybrid = rs.getString("hybrid");
+                final String suspect = rs.getString("suspect");
+                final String suspect_comments = rs.getString("suspect_comments");
+                final String husking_difficulty = rs.getString("husking_difficulty");
+                final String female = rs.getString("female");
+                final String male = rs.getString("male");
+                final double active_ha = rs.getDouble("active_ha");
+                final double yield_ton_ha = rs.getDouble("yield_ton_ha");
+                final String picker_group = rs.getString("picker_group");
+                final String harvest_date = rs.getDate("harvest_date").toString();
+                final String harvest_window_start = rs.getDate("harvest_window_start").toString();
+                final String harvest_window_end = rs.getDate("harvest_window_end").toString();
+                final FieldManualPlan f = new FieldManualPlan(region, seed_plant, dh_qualifyed, grower, tracking_number,
                         hybrid, suspect, suspect_comments, husking_difficulty, female, male, active_ha, yield_ton_ha,
                         picker_group, harvest_date, harvest_window_start, harvest_window_end);
 
@@ -136,7 +133,7 @@ public class ManualPlan {
         }
     }
 
-    private String getDateValue(Cell cell) {
+    private String getDateValue(final Cell cell) {
         String date = null;
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
@@ -155,7 +152,7 @@ public class ManualPlan {
      * @param cell in spreadsheet
      * @return String cell value.
      */
-    private String getStringValue(Cell cell) {
+    private String getStringValue(final Cell cell) {
         String str = "";
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
@@ -178,7 +175,7 @@ public class ManualPlan {
      * @param cell in spreadsheet
      * @return double cell value.
      */
-    private double getNumericValue(Cell cell) {
+    private double getNumericValue(final Cell cell) {
         double val = 0;
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
@@ -203,7 +200,7 @@ public class ManualPlan {
      * @param cell in spreadsheet
      * @return time : int value in minutes.
      */
-    private int getTimeValue(Cell cell) {
+    private int getTimeValue(final Cell cell) {
         int time = 0;
 
         if (cell == null || cell.getCellType() == CellType.BLANK) {
@@ -211,16 +208,16 @@ public class ManualPlan {
             slf4jLogger.warn("[Manual Plan Excel] getTimeValue :: cell is empty");
         } else {
             if (cell.getCellType() == CellType.STRING) {
-                String s = cell.getStringCellValue();
+                final String s = cell.getStringCellValue();
                 if (s.contains(":")) {
-                    String[] t = s.split(":");
-                    int hour = 60 * Integer.parseInt(t[0]);
-                    int min = Integer.parseInt(t[1]);
+                    final String[] t = s.split(":");
+                    final int hour = 60 * Integer.parseInt(t[0]);
+                    final int min = Integer.parseInt(t[1]);
                     time = hour + min;
                 }
             }
             if (cell.getCellType() == CellType.NUMERIC) {
-                double val = 60 * 24 * cell.getNumericCellValue();
+                final double val = 60 * 24 * cell.getNumericCellValue();
                 time = (int) Math.ceil(val);
             }
         }
@@ -237,7 +234,7 @@ public class ManualPlan {
     /**
      * @param excel_file_path the excel_file_path to set
      */
-    public void setExcel_file_path(String excel_file_path) {
+    public void setExcel_file_path(final String excel_file_path) {
         this.excel_file_path = excel_file_path;
     }
 
@@ -251,7 +248,7 @@ public class ManualPlan {
     /**
      * @param hFields the hFields to set
      */
-    public void setHFields(Map<String, FieldManualPlan> hFields) {
+    public void setHFields(final Map<String, FieldManualPlan> hFields) {
         this.hFields = hFields;
     }
 
