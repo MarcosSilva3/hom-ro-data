@@ -113,9 +113,13 @@ public class App {
 
         // Read fields from manual plan in Excel or from the Database
         final ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
-        // manual_plan.readManualPlanExcel();
+        
+        if(hom_parameters.getReadManualPlanExcel()) {
+            manual_plan.readManualPlanExcel();
+        } else {
+            manual_plan.readManualPlanDB(hom_parameters);
+        }
 
-        manual_plan.readManualPlanDB(hom_parameters);
         hFieldsManualPlan = manual_plan.getHFields();
 
         // Get the list of fields to be included in the optimization.
@@ -171,12 +175,11 @@ public class App {
 
         // Check fields in GSM and not in Manual Plan
         for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
-            if(!hFieldsManualPlan.containsKey(entry.getKey())) {
-                slf4jLogger.debug("[GSM x Manual Plan] Field {} => not found in Manual Plan:  {}", entry.getKey(), entry.getValue());
+            if (!hFieldsManualPlan.containsKey(entry.getKey())) {
+                slf4jLogger.debug("[GSM x Manual Plan] Field {} => not found in Manual Plan:  {}", entry.getKey(),
+                        entry.getValue());
             }
         }
-
-        System.exit(1);
 
         // solve model
         final SolveModel solve_model = new SolveModel(hom_input_json, hom_parameters);
@@ -341,8 +344,14 @@ public class App {
         saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
         updateRecommendedHarvDate(hom_parameters, tHOMResult);
 
-        // saveSiteCapacityInDB(hom_parameters, lSite)
-        // saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
+        if(hom_parameters.getOverwriteSiteCapacityInDB()) {
+            saveSiteCapacityInDB(hom_parameters, lSite);
+        }
+
+        if(hom_parameters.getOverwrite_db_data_manual_plan()) {
+            saveFieldManualPlanInDB(hom_parameters, hFieldsManualPlan);
+        }
+        
 
     }
 
@@ -1615,6 +1624,9 @@ public class App {
         String hom_db_name = "hom_romania";
         String work_dir = "/mnt/";
         final String hom_result_file = "hom_result.json";
+        Boolean overwrite_db_data_manual_plan = false;
+        Boolean overwriteSiteCapacityInDB = false;
+        Boolean readManualPlanExcel = false;
 
         if (o.get("log_config_file") != null) {
             log_config_file = (String) o.get("log_config_file");
@@ -1744,11 +1756,24 @@ public class App {
             work_dir = (String) o.get("hom_result_file");
         }
 
+        if (o.get("overwrite_db_data_manual_plan") != null) {
+            overwrite_db_data_manual_plan = (Boolean) o.get("overwrite_db_data_manual_plan");
+        }
+
+        if (o.get("overwriteSiteCapacityInDB") != null) {
+            overwriteSiteCapacityInDB = (Boolean) o.get("overwriteSiteCapacityInDB");
+        }
+
+        if (o.get("readManualPlanExcel") != null) {
+            readManualPlanExcel = (Boolean) o.get("readManualPlanExcel");
+        }
+
         return new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
                 project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
                 hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
                 hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host,
-                env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file);
+                env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file,
+                overwrite_db_data_manual_plan, overwriteSiteCapacityInDB, readManualPlanExcel);
     }
 
     /**
