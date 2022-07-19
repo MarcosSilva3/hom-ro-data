@@ -39,6 +39,8 @@ public class HOMParameters {
 	private Boolean readManualPlanExcel;
 	private Boolean useCachedScoutData;
 	private Boolean saveResultsInCSW;
+	private String productDataExcelPath;
+	private Boolean useProductDataFromExcel;
 
 	public HOMParameters(String log_config_file, String country, int year, int year_for_contract, String season,
 			String private_key_file, String project_id, String regionCode, String cropCycleCode, String env_client_id,
@@ -48,7 +50,8 @@ public class HOMParameters {
 			String plantNumber, String env_hom_db_host, String env_hom_db_port, String env_hom_db_user,
 			String env_hom_db_pwd, String hom_db_name, String work_dir, String hom_result_file,
 			Boolean overwrite_db_data_manual_plan, Boolean overwriteSiteCapacityInDB, Boolean readManualPlanExcel,
-			Boolean useCachedScoutData, Boolean saveResultsInCSW) {
+			Boolean useCachedScoutData, Boolean saveResultsInCSW, String productDataExcelPath,
+			Boolean useProductDataFromExcel) {
 		super();
 		this.log_config_file = log_config_file;
 		this.country = country;
@@ -86,6 +89,8 @@ public class HOMParameters {
 		this.readManualPlanExcel = readManualPlanExcel;
 		this.useCachedScoutData = useCachedScoutData;
 		this.saveResultsInCSW = saveResultsInCSW;
+		this.productDataExcelPath = productDataExcelPath;
+		this.useProductDataFromExcel = useProductDataFromExcel;
 	}
 
 	/**
@@ -592,14 +597,43 @@ public class HOMParameters {
 		this.saveResultsInCSW = saveResultsInCSW;
 	}
 
+	/**
+	 * @return the productDataExcelPath
+	 */
+	public String getProductDataExcelPath() {
+		return productDataExcelPath;
+	}
+
+	/**
+	 * @param productDataExcelPath the productDataExcelPath to set
+	 */
+	public void setProductDataExcelPath(String productDataExcelPath) {
+		this.productDataExcelPath = productDataExcelPath;
+	}
+
+	/**
+	 * @return the useProductDataFromExcel
+	 */
+	public Boolean getUseProductDataFromExcel() {
+		return useProductDataFromExcel;
+	}
+
+	/**
+	 * @param useProductDataFromExcel the useProductDataFromExcel to set
+	 */
+	public void setUseProductDataFromExcel(Boolean useProductDataFromExcel) {
+		this.useProductDataFromExcel = useProductDataFromExcel;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(awsBucketName, clientIdEngine, clientSecretEngine, country, cropCycleCode, env_client_id,
 				env_client_secret, env_hom_db_host, env_hom_db_port, env_hom_db_pwd, env_hom_db_user, hom_day_one,
 				hom_db_name, hom_max_days, hom_max_iter, hom_method, hom_picker_cap, hom_region, hom_result_file,
 				hom_tabu_size, hom_user, log_config_file, manual_plan_excel_path, overwriteSiteCapacityInDB,
-				overwrite_db_data_manual_plan, plantNumber, private_key_file, project_id, readManualPlanExcel,
-				regionCode, saveResultsInCSW, season, useCachedScoutData, work_dir, year, year_for_contract);
+				overwrite_db_data_manual_plan, plantNumber, private_key_file, productDataExcelPath, project_id,
+				readManualPlanExcel, regionCode, saveResultsInCSW, season, useCachedScoutData, useProductDataFromExcel,
+				work_dir, year, year_for_contract);
 	}
 
 	@Override
@@ -632,11 +666,13 @@ public class HOMParameters {
 				&& Objects.equals(overwrite_db_data_manual_plan, other.overwrite_db_data_manual_plan)
 				&& Objects.equals(plantNumber, other.plantNumber)
 				&& Objects.equals(private_key_file, other.private_key_file)
+				&& Objects.equals(productDataExcelPath, other.productDataExcelPath)
 				&& Objects.equals(project_id, other.project_id)
 				&& Objects.equals(readManualPlanExcel, other.readManualPlanExcel)
 				&& Objects.equals(regionCode, other.regionCode)
 				&& Objects.equals(saveResultsInCSW, other.saveResultsInCSW) && Objects.equals(season, other.season)
 				&& Objects.equals(useCachedScoutData, other.useCachedScoutData)
+				&& Objects.equals(useProductDataFromExcel, other.useProductDataFromExcel)
 				&& Objects.equals(work_dir, other.work_dir) && year == other.year
 				&& year_for_contract == other.year_for_contract;
 	}
@@ -657,7 +693,8 @@ public class HOMParameters {
 				+ ", hom_result_file=" + hom_result_file + ", overwrite_db_data_manual_plan="
 				+ overwrite_db_data_manual_plan + ", overwriteSiteCapacityInDB=" + overwriteSiteCapacityInDB
 				+ ", readManualPlanExcel=" + readManualPlanExcel + ", useCachedScoutData=" + useCachedScoutData
-				+ ", saveResultsInCSW=" + saveResultsInCSW + "]";
+				+ ", saveResultsInCSW=" + saveResultsInCSW + ", productDataExcelPath=" + productDataExcelPath
+				+ ", useProductDataFromExcel=" + useProductDataFromExcel + "]";
 	}
 
 }

@@ -7,7 +7,7 @@
 
     <appender name="fileAppender" class="ch.qos.logback.core.FileAppender">
         <file>C:/Users/Public/Romania/hom-ro-in-season.log</file>
-        <append>false</append>
+        <append>true</append>
         <encoder>
             <pattern>%d [%thread] %-5level  %logger{35} - %msg%n</pattern>
         </encoder>

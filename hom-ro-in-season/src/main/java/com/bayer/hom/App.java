@@ -142,7 +142,15 @@ public class App {
 		}
 
 		// Get product characterization data
-		hProducts = (new ProductCharacterizationData(token, log_config_file, regionCode, cropCycleCode)).getHProducts();
+		if (hom_parameters.getUseProductDataFromExcel()) {
+			// Read from excel shared.
+			hProducts = (new ProductCharacterizationManualFile(hom_parameters.getProductDataExcelPath()))
+					.gethProducts();
+		} else {
+			// use Product Characterization API
+			hProducts = (new ProductCharacterizationData(token, log_config_file, regionCode, cropCycleCode))
+					.getHProducts();
+		}
 
 		// Read fields from manual plan in Excel or from the Database
 		final ManualPlan manual_plan = new ManualPlan(hom_parameters.getManual_plan_excel_path());
@@ -368,7 +376,6 @@ public class App {
 			}
 		}
 		generateCSV(lCSWRows, fileNameTimeStamp);
-		saveResultsInCSW(fileNameTimeStamp, hAWS);
 		saveGSMDataInDB(hom_parameters, hFieldsGSM);
 		saveContractDataInDB(hom_parameters, hFieldContract);
 		saveProductsInDB(hom_parameters, hProducts);
@@ -376,6 +383,10 @@ public class App {
 		saveHOMResultInDB(hom_parameters, tHOMResult, hFieldContract, timeStamp);
 		saveFieldsHOMInDB(hom_parameters, lFieldsHOM);
 		updateRecommendedHarvDate(hom_parameters, tHOMResult);
+
+		if (hom_parameters.getSaveResultsInCSW()) {
+			saveResultsInCSW(fileNameTimeStamp, hAWS);
+		}
 
 		if (hom_parameters.getOverwriteSiteCapacityInDB()) {
 			saveSiteCapacityInDB(hom_parameters, lSite);
@@ -1594,15 +1605,31 @@ public class App {
 					"");
 			double latitude = 0.0;
 			double longitude = 0.0;
+
 			int lowest_harvest_moisture = 28;
 			int highest_harvest_moisture = 33;
 			int sitekey = 0;
+			
+			if (hProducts.containsKey(hybrid)) {
+				product = hProducts.get(hybrid);
+				lowest_harvest_moisture = product.getLowest_rec();
+				highest_harvest_moisture = product.getHighest_rec();
+				abc = product.getLowestHarvestMoisture();
+			}
+			
+			// Use excel for now while we validate GSM output.
+			String moist35_date = field_manual_plan.getHarvest_window_start();
+			String twstart = field_manual_plan.getHarvest_window_start();
+			String twend = field_manual_plan.getHarvest_window_end();
 
 			if (hFieldsGSM.containsKey(lot)) {
 				field_gsm = hFieldsGSM.get(lot);
 				entityid = field_gsm.getEntityid();
 				latitude = field_gsm.getLat();
 				longitude = field_gsm.getLon();
+				moist35_date = field_gsm.getMoist35_date();
+				twstart = calculateHarvDate(moist35_date, field_gsm.getDrydown_rate(), highest_harvest_moisture);
+				twend = calculateHarvDate(moist35_date, field_gsm.getDrydown_rate(), lowest_harvest_moisture);
 				sitekey = Integer.parseInt(field_gsm.getSite_key());
 				contains_gsm_data = true;
 			} else {
@@ -1635,12 +1662,7 @@ public class App {
 				slf4jLogger.error("[Fields HOM] Field {} not found in PFO", lot);
 			}
 
-			if (hProducts.containsKey(hybrid)) {
-				product = hProducts.get(hybrid);
-				lowest_harvest_moisture = product.getLowest_rec();
-				highest_harvest_moisture = product.getHighest_rec();
-				abc = product.getLowestHarvestMoisture();
-			}
+			
 
 			final String region = field_manual_plan.getRegion();
 			final String cluster = field_manual_plan.getPicker_group();
@@ -1651,9 +1673,7 @@ public class App {
 			 * ? field_gsm.getMin_mst_harvest_date() :
 			 * field_manual_plan.getHarvest_window_end();
 			 */
-			// Use excel for now while we validate GSM output.
-			final String twstart = field_manual_plan.getHarvest_window_start();
-			final String twend = field_manual_plan.getHarvest_window_end();
+			
 
 			// double area = contains_gsm_data ? field_gsm.getFf_area() :
 			// field_manual_plan.getActive_ha();
@@ -1682,6 +1702,34 @@ public class App {
 	}
 
 	/**
+	 * Calculate start harvesting date based on moist35_date, drydown_rate and
+	 * maximum_moisture recommended.
+	 * 
+	 * @param moist35_date             from GSM output
+	 * @param drydown_rate             from GSM output
+	 * @param highest_harvest_moisture from product characterization (api or excel)
+	 * @return start date
+	 */
+	public static String calculateHarvDate(final String moist35_date, final double drydown_rate,
+			final int highest_harvest_moisture) {
+		String harv_date = moist35_date;
+		int days = (int) Math.ceil((35 - highest_harvest_moisture) / drydown_rate);
+		
+		LocalDate date = LocalDate.parse(moist35_date);
+		
+		// add X days
+        date = date.plusDays(days);
+		harv_date = date.toString();
+		
+		slf4jLogger.debug(
+				"[Calculate Harvest Dates] moist35_date: {}, drydown_rate: {}, moisture: {} => harvest date: {} ",
+				moist35_date, String.format("%.2f", drydown_rate), String.format("%d", highest_harvest_moisture),
+						harv_date);
+
+		return harv_date;
+	}
+
+	/**
 	 * Read parameters file for HOM.
 	 *
 	 * @param filename json configuration file
@@ -1705,7 +1753,7 @@ public class App {
 		String cropCycleCode = "2022_EME";
 		String env_client_id = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_ID";
 		String env_client_secret = "ANALYTICS_DSSO_HARVEST_OPTIMIZATION_AZURE_PROD_SECRET";
-		String manual_plan_excel_path = "/mnt/Corn Harvesting plan RO 2022 v4.xlsx";
+		String manual_plan_excel_path = "/mnt/Romania/Corn Harvesting plan RO 2022 v4.xlsx";
 		String hom_day_one = "2022-08-01";
 		String hom_user = "Domino";
 		int hom_tabu_size = 1;
@@ -1731,6 +1779,8 @@ public class App {
 		Boolean readManualPlanExcel = false;
 		Boolean useCachedScoutData = false;
 		Boolean saveResultsInCSW = false;
+		String productDataExcelPath = "/mnt/Romania/RO  FY20 EME CROP PLAN POST MATURATION PROCESS GUIDELINE.xlsx";
+		Boolean useProductDataFromExcel = true;
 
 		if (o.get("log_config_file") != null) {
 			log_config_file = (String) o.get("log_config_file");
@@ -1880,13 +1930,21 @@ public class App {
 			saveResultsInCSW = (Boolean) o.get("saveResultsInCSW");
 		}
 
+		if (o.get("productDataExcelPath") != null) {
+			productDataExcelPath = (String) o.get("productDataExcelPath");
+		}
+
+		if (o.get("useProductDataFromExcel") != null) {
+			useProductDataFromExcel = (Boolean) o.get("useProductDataFromExcel");
+		}
+
 		return new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
 				project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
 				hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
 				hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host,
 				env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file,
 				overwrite_db_data_manual_plan, overwriteSiteCapacityInDB, readManualPlanExcel, useCachedScoutData,
-				saveResultsInCSW);
+				saveResultsInCSW, productDataExcelPath, useProductDataFromExcel);
 	}
 
 	/**
