@@ -1197,7 +1197,7 @@ public class App {
 					+ "?sessionVariables=sql_mode='NO_ENGINE_SUBSTITUTION'&jdbcCompliantTruncation=false";
 			final String dbuser = env.get(hom_parameters.getEnv_hom_db_user());
 			final String dbpwd = env.get(hom_parameters.getEnv_hom_db_pwd());
-			connection = DriverManager.getConnection(url, dbuser, dbpwd); 
+			connection = DriverManager.getConnection(url, dbuser, dbpwd);
 
 			slf4jLogger.debug("[MySQL GSM] url: {}", url);
 			if (connection.isValid(10000)) {
@@ -1730,6 +1730,7 @@ public class App {
 		Boolean overwriteSiteCapacityInDB = false;
 		Boolean readManualPlanExcel = false;
 		Boolean useCachedScoutData = false;
+		Boolean saveResultsInCSW = false;
 
 		if (o.get("log_config_file") != null) {
 			log_config_file = (String) o.get("log_config_file");
@@ -1875,12 +1876,17 @@ public class App {
 			useCachedScoutData = (Boolean) o.get("useCachedScoutData");
 		}
 
+		if (o.get("saveResultsInCSW") != null) {
+			saveResultsInCSW = (Boolean) o.get("saveResultsInCSW");
+		}
+
 		return new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
 				project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
 				hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
 				hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host,
 				env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file,
-				overwrite_db_data_manual_plan, overwriteSiteCapacityInDB, readManualPlanExcel, useCachedScoutData);
+				overwrite_db_data_manual_plan, overwriteSiteCapacityInDB, readManualPlanExcel, useCachedScoutData,
+				saveResultsInCSW);
 	}
 
 	/**

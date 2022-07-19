@@ -20,6 +20,7 @@
     "overwrite_db_data_manual_plan" : true,
     "overwriteSiteCapacityInDB" : false,
     "useCachedScoutData" : true,
+	"saveResultsInCSW" : true,
     "work_dir" : "/mnt/Romania",
     "result_file" : "hom_result.json",
     "hom_day_one" : "2022-08-01",
