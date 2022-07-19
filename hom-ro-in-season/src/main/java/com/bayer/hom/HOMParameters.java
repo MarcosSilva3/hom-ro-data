@@ -666,6 +666,54 @@ public class HOMParameters {
 				+ ", readManualPlanExcel=" + readManualPlanExcel + ", useCachedScoutData=" + useCachedScoutData + "]";
 	}
 
-    
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(awsBucketName, clientIdEngine, clientSecretEngine, country, cropCycleCode, env_client_id,
+				env_client_secret, env_hom_db_host, env_hom_db_port, env_hom_db_pwd, env_hom_db_user, hom_day_one,
+				hom_db_name, hom_max_days, hom_max_iter, hom_method, hom_picker_cap, hom_region, hom_result_file,
+				hom_tabu_size, hom_user, log_config_file, manual_plan_excel_path, overwriteSiteCapacityInDB,
+				overwrite_db_data_manual_plan, plantNumber, private_key_file, project_id, readManualPlanExcel,
+				regionCode, season, useCachedScoutData, work_dir, year, year_for_contract);
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		HOMParameters other = (HOMParameters) obj;
+		return Objects.equals(awsBucketName, other.awsBucketName)
+				&& Objects.equals(clientIdEngine, other.clientIdEngine)
+				&& Objects.equals(clientSecretEngine, other.clientSecretEngine)
+				&& Objects.equals(country, other.country) && Objects.equals(cropCycleCode, other.cropCycleCode)
+				&& Objects.equals(env_client_id, other.env_client_id)
+				&& Objects.equals(env_client_secret, other.env_client_secret)
+				&& Objects.equals(env_hom_db_host, other.env_hom_db_host)
+				&& Objects.equals(env_hom_db_port, other.env_hom_db_port)
+				&& Objects.equals(env_hom_db_pwd, other.env_hom_db_pwd)
+				&& Objects.equals(env_hom_db_user, other.env_hom_db_user)
+				&& Objects.equals(hom_day_one, other.hom_day_one) && Objects.equals(hom_db_name, other.hom_db_name)
+				&& hom_max_days == other.hom_max_days && hom_max_iter == other.hom_max_iter
+				&& Objects.equals(hom_method, other.hom_method) && hom_picker_cap == other.hom_picker_cap
+				&& Objects.equals(hom_region, other.hom_region)
+				&& Objects.equals(hom_result_file, other.hom_result_file) && hom_tabu_size == other.hom_tabu_size
+				&& Objects.equals(hom_user, other.hom_user) && Objects.equals(log_config_file, other.log_config_file)
+				&& Objects.equals(manual_plan_excel_path, other.manual_plan_excel_path)
+				&& Objects.equals(overwriteSiteCapacityInDB, other.overwriteSiteCapacityInDB)
+				&& Objects.equals(overwrite_db_data_manual_plan, other.overwrite_db_data_manual_plan)
+				&& Objects.equals(plantNumber, other.plantNumber)
+				&& Objects.equals(private_key_file, other.private_key_file)
+				&& Objects.equals(project_id, other.project_id)
+				&& Objects.equals(readManualPlanExcel, other.readManualPlanExcel)
+				&& Objects.equals(regionCode, other.regionCode) && Objects.equals(season, other.season)
+				&& Objects.equals(useCachedScoutData, other.useCachedScoutData)
+				&& Objects.equals(work_dir, other.work_dir) && year == other.year
+				&& year_for_contract == other.year_for_contract;
+	}
     
 }

@@ -3,10 +3,14 @@ package com.bayer.hom;
 import ch.qos.logback.core.spi.LogbackLock;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.openxml4j.util.ZipSecureFile;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.LoggerFactory;
@@ -55,10 +59,14 @@ public class ManualPlan {
 	}
 
 	public void readManualPlanExcel() throws IOException {
+		ZipSecureFile.setMinInflateRatio(0);
 		final FileInputStream fis = new FileInputStream(excel_file_path);
 		final XSSFWorkbook wb = new XSSFWorkbook(fis);
 		final XSSFSheet sheet = wb.getSheet("Corn Harvest Plan 2022");
 		final int nrows = sheet.getLastRowNum();
+		
+		DataFormatter objDefaultFormat = new DataFormatter();
+        FormulaEvaluator objFormulaEvaluator = new XSSFFormulaEvaluator((XSSFWorkbook) wb);
 
 		// Skip header starting at row 14.
 		for (int i = 14; i <= nrows; i++) {
@@ -77,7 +85,11 @@ public class ManualPlan {
 				final String male = getStringValue(row.getCell(14));
 				final double active_ha = getNumericValue(row.getCell(23));
 				final double yield_ton_ha = getNumericValue(row.getCell(43));
-				final String picker_group = getStringValue(row.getCell(42));
+				
+				// only way to read cell with formula as text
+				objFormulaEvaluator.evaluate(row.getCell(42));
+				final String picker_group = objDefaultFormat.formatCellValue(row.getCell(42), objFormulaEvaluator);
+				
 				final String harvest_date = getDateValue(row.getCell(46));
 				final String harvest_window_start = getDateValue(row.getCell(47));
 				final String harvest_window_end = getDateValue(row.getCell(48));
