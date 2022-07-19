@@ -1608,8 +1608,8 @@ public class App {
 			double latitude = 0.0;
 			double longitude = 0.0;
 
-			int lowest_harvest_moisture = 28;
-			int highest_harvest_moisture = 33;
+			int lowest_harvest_moisture = 25;
+			int highest_harvest_moisture = 38;
 			int sitekey = 0;
 			
 			if (hProducts.containsKey(hybrid)) {
