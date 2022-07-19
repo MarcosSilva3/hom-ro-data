@@ -36,8 +36,6 @@ public class ScoutData {
     public ScoutData(String entity_id, String token) throws ClientProtocolException, IOException, ParseException {
         this.entity_id = entity_id;
         this.token = token;
-//        getWkData();
-        getYieldData();
     }
 
     public void getWkData() throws ClientProtocolException, IOException, ParseException {
