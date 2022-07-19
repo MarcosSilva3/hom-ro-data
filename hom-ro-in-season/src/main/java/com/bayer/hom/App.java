@@ -337,12 +337,14 @@ public class App {
 				}
 
 				final double drydown_rate = g.getDrydown_rate();
-				double optimal_harvest_moisture_range_min = 28;
-				double optimal_harvest_moisture_range_max = 35;
+				double optimal_harvest_moisture_range_min = 25;
+				double optimal_harvest_moisture_range_max = 38;
 
 				if (hProducts.containsKey(g.getVariety())) {
 					optimal_harvest_moisture_range_min = hProducts.get(g.getVariety()).getLowest_rec();
 					optimal_harvest_moisture_range_max = hProducts.get(g.getVariety()).getHighest_rec();
+				} else {
+					slf4jLogger.error("[HOM-Output] not found hybrid {} in product characterization data", g.getVariety());
 				}
 
 				final int lateness = r1.getLateness();
@@ -1628,8 +1630,10 @@ public class App {
 				latitude = field_gsm.getLat();
 				longitude = field_gsm.getLon();
 				moist35_date = field_gsm.getMoist35_date();
-				twstart = calculateHarvDate(moist35_date, field_gsm.getDrydown_rate(), highest_harvest_moisture);
-				twend = calculateHarvDate(moist35_date, field_gsm.getDrydown_rate(), lowest_harvest_moisture);
+
+				// routine below deactivated for now. Needs to be validated with the team
+//				twstart = calculateHarvDate(moist35_date, field_gsm.getDrydown_rate(), highest_harvest_moisture);
+//				twend = calculateHarvDate(moist35_date, field_gsm.getDrydown_rate(), lowest_harvest_moisture);
 				sitekey = Integer.parseInt(field_gsm.getSite_key());
 				contains_gsm_data = true;
 			} else {
@@ -1661,8 +1665,6 @@ public class App {
 			} else {
 				slf4jLogger.error("[Fields HOM] Field {} not found in PFO", lot);
 			}
-
-			
 
 			final String region = field_manual_plan.getRegion();
 			final String cluster = field_manual_plan.getPicker_group();
