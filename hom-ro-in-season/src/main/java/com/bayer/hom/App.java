@@ -185,8 +185,6 @@ public class App {
 		out.write(hom_input_json);
 		out.close();
 
-		System.exit(1);
-
 		// Check the data
 		for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
 			slf4jLogger.debug("[GSM] {} => {}}", entry.getKey(), entry.getValue());
