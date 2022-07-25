@@ -168,8 +168,11 @@ public class App {
 				hProducts);
 
 		// Get list of site capacity per day.
-		// lSite = generateSiteCapHOM(hom_parameters);
-		lSite = getSiteCapacityFromDB(hom_parameters);
+		if (hom_parameters.getUseSiteCapacityFromDB()) {
+			lSite = getSiteCapacityFromDB(hom_parameters);
+		} else {
+			lSite = generateSiteCapHOM(hom_parameters);
+		}
 
 		// Generate json
 		final HOMInput hom_input = new HOMInput(lSite, lFieldsHOM, hom_parameters.getHom_day_one(),
@@ -181,6 +184,8 @@ public class App {
 		final BufferedWriter out = new BufferedWriter(new FileWriter("hom_input.json"));
 		out.write(hom_input_json);
 		out.close();
+
+		System.exit(1);
 
 		// Check the data
 		for (final Entry<String, GSMData> entry : hFieldsGSM.entrySet()) {
@@ -344,7 +349,8 @@ public class App {
 					optimal_harvest_moisture_range_min = hProducts.get(g.getVariety()).getLowest_rec();
 					optimal_harvest_moisture_range_max = hProducts.get(g.getVariety()).getHighest_rec();
 				} else {
-					slf4jLogger.error("[HOM-Output] not found hybrid {} in product characterization data", g.getVariety());
+					slf4jLogger.error("[HOM-Output] not found hybrid {} in product characterization data",
+							g.getVariety());
 				}
 
 				final int lateness = r1.getLateness();
@@ -1611,14 +1617,14 @@ public class App {
 			int lowest_harvest_moisture = 25;
 			int highest_harvest_moisture = 38;
 			int sitekey = 0;
-			
+
 			if (hProducts.containsKey(hybrid)) {
 				product = hProducts.get(hybrid);
 				lowest_harvest_moisture = product.getLowest_rec();
 				highest_harvest_moisture = product.getHighest_rec();
 				abc = product.getLowestHarvestMoisture();
 			}
-			
+
 			// Use excel for now while we validate GSM output.
 			String moist35_date = field_manual_plan.getHarvest_window_start();
 			String twstart = field_manual_plan.getHarvest_window_start();
@@ -1675,7 +1681,6 @@ public class App {
 			 * ? field_gsm.getMin_mst_harvest_date() :
 			 * field_manual_plan.getHarvest_window_end();
 			 */
-			
 
 			// double area = contains_gsm_data ? field_gsm.getFf_area() :
 			// field_manual_plan.getActive_ha();
@@ -1716,17 +1721,17 @@ public class App {
 			final int highest_harvest_moisture) {
 		String harv_date = moist35_date;
 		int days = (int) Math.ceil((35 - highest_harvest_moisture) / drydown_rate);
-		
+
 		LocalDate date = LocalDate.parse(moist35_date);
-		
+
 		// add X days
-        date = date.plusDays(days);
+		date = date.plusDays(days);
 		harv_date = date.toString();
-		
+
 		slf4jLogger.debug(
 				"[Calculate Harvest Dates] moist35_date: {}, drydown_rate: {}, moisture: {} => harvest date: {} ",
 				moist35_date, String.format("%.2f", drydown_rate), String.format("%d", highest_harvest_moisture),
-						harv_date);
+				harv_date);
 
 		return harv_date;
 	}
@@ -1783,6 +1788,7 @@ public class App {
 		Boolean saveResultsInCSW = false;
 		String productDataExcelPath = "/mnt/Romania/RO  FY20 EME CROP PLAN POST MATURATION PROCESS GUIDELINE.xlsx";
 		Boolean useProductDataFromExcel = true;
+		Boolean useSiteCapacityFromDB = true;
 
 		if (o.get("log_config_file") != null) {
 			log_config_file = (String) o.get("log_config_file");
@@ -1940,13 +1946,17 @@ public class App {
 			useProductDataFromExcel = (Boolean) o.get("useProductDataFromExcel");
 		}
 
+		if (o.get("useSiteCapacityFromDB") != null) {
+			useSiteCapacityFromDB = (Boolean) o.get("useSiteCapacityFromDB");
+		}
+
 		return new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
 				project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
 				hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
 				hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host,
 				env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file,
 				overwrite_db_data_manual_plan, overwriteSiteCapacityInDB, readManualPlanExcel, useCachedScoutData,
-				saveResultsInCSW, productDataExcelPath, useProductDataFromExcel);
+				saveResultsInCSW, productDataExcelPath, useProductDataFromExcel, useSiteCapacityFromDB);
 	}
 
 	/**

@@ -41,6 +41,7 @@ public class HOMParameters {
 	private Boolean saveResultsInCSW;
 	private String productDataExcelPath;
 	private Boolean useProductDataFromExcel;
+	private Boolean useSiteCapacityFromDB;
 
 	public HOMParameters(String log_config_file, String country, int year, int year_for_contract, String season,
 			String private_key_file, String project_id, String regionCode, String cropCycleCode, String env_client_id,
@@ -51,7 +52,7 @@ public class HOMParameters {
 			String env_hom_db_pwd, String hom_db_name, String work_dir, String hom_result_file,
 			Boolean overwrite_db_data_manual_plan, Boolean overwriteSiteCapacityInDB, Boolean readManualPlanExcel,
 			Boolean useCachedScoutData, Boolean saveResultsInCSW, String productDataExcelPath,
-			Boolean useProductDataFromExcel) {
+			Boolean useProductDataFromExcel, Boolean useSiteCapacityFromDB) {
 		super();
 		this.log_config_file = log_config_file;
 		this.country = country;
@@ -91,6 +92,7 @@ public class HOMParameters {
 		this.saveResultsInCSW = saveResultsInCSW;
 		this.productDataExcelPath = productDataExcelPath;
 		this.useProductDataFromExcel = useProductDataFromExcel;
+		this.useSiteCapacityFromDB = useSiteCapacityFromDB;
 	}
 
 	/**
@@ -625,6 +627,20 @@ public class HOMParameters {
 		this.useProductDataFromExcel = useProductDataFromExcel;
 	}
 
+	/**
+	 * @return the useSiteCapacityFromDB
+	 */
+	public Boolean getUseSiteCapacityFromDB() {
+		return useSiteCapacityFromDB;
+	}
+
+	/**
+	 * @param useSiteCapacityFromDB the useSiteCapacityFromDB to set
+	 */
+	public void setUseSiteCapacityFromDB(Boolean useSiteCapacityFromDB) {
+		this.useSiteCapacityFromDB = useSiteCapacityFromDB;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(awsBucketName, clientIdEngine, clientSecretEngine, country, cropCycleCode, env_client_id,
@@ -633,7 +649,7 @@ public class HOMParameters {
 				hom_tabu_size, hom_user, log_config_file, manual_plan_excel_path, overwriteSiteCapacityInDB,
 				overwrite_db_data_manual_plan, plantNumber, private_key_file, productDataExcelPath, project_id,
 				readManualPlanExcel, regionCode, saveResultsInCSW, season, useCachedScoutData, useProductDataFromExcel,
-				work_dir, year, year_for_contract);
+				useSiteCapacityFromDB, work_dir, year, year_for_contract);
 	}
 
 	@Override
@@ -673,6 +689,7 @@ public class HOMParameters {
 				&& Objects.equals(saveResultsInCSW, other.saveResultsInCSW) && Objects.equals(season, other.season)
 				&& Objects.equals(useCachedScoutData, other.useCachedScoutData)
 				&& Objects.equals(useProductDataFromExcel, other.useProductDataFromExcel)
+				&& Objects.equals(useSiteCapacityFromDB, other.useSiteCapacityFromDB)
 				&& Objects.equals(work_dir, other.work_dir) && year == other.year
 				&& year_for_contract == other.year_for_contract;
 	}
@@ -694,7 +711,8 @@ public class HOMParameters {
 				+ overwrite_db_data_manual_plan + ", overwriteSiteCapacityInDB=" + overwriteSiteCapacityInDB
 				+ ", readManualPlanExcel=" + readManualPlanExcel + ", useCachedScoutData=" + useCachedScoutData
 				+ ", saveResultsInCSW=" + saveResultsInCSW + ", productDataExcelPath=" + productDataExcelPath
-				+ ", useProductDataFromExcel=" + useProductDataFromExcel + "]";
+				+ ", useProductDataFromExcel=" + useProductDataFromExcel + ", useSiteCapacityFromDB="
+				+ useSiteCapacityFromDB + "]";
 	}
 
 }
