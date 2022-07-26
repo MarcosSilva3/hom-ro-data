@@ -407,7 +407,7 @@ public class App {
 		saveScoutDataInFile(hom_parameters, hFieldsScout);
 
 	}
-	
+
 	/**
 	 * Check if string is a valid date
 	 * 
@@ -417,11 +417,11 @@ public class App {
 	 */
 	public static boolean isValidDate(String inDate) throws java.text.ParseException {
 		try {
-            LocalDate.parse(inDate);
-        } catch (DateTimeParseException e) {
-            return false;
-        }
-        return true;
+			LocalDate.parse(inDate);
+		} catch (DateTimeParseException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
