@@ -16,6 +16,7 @@ import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -357,7 +358,7 @@ public class App {
 				final int estimated_number_of_trucks = (int) (r1.getTonrw_harv() / 23.0);
 				final double field_moisture = g.getMst();
 				String moisture_collected_date = g.getMst_date() != null ? g.getMst_date() : "";
-				if (moisture_collected_date.equalsIgnoreCase("null")) {
+				if (moisture_collected_date.equalsIgnoreCase("null") || !isValidDate(moisture_collected_date)) {
 					moisture_collected_date = "";
 				}
 				final double field_lat = r1.getLat();
@@ -405,6 +406,22 @@ public class App {
 		// Cache yield data in local file
 		saveScoutDataInFile(hom_parameters, hFieldsScout);
 
+	}
+	
+	/**
+	 * Check if string is a valid date
+	 * 
+	 * @param inDate date to be checked
+	 * @return true or false
+	 * @throws java.text.ParseException
+	 */
+	public static boolean isValidDate(String inDate) throws java.text.ParseException {
+		try {
+            LocalDate.parse(inDate);
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+        return true;
 	}
 
 	/**

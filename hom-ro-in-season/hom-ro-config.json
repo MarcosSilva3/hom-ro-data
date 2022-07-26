@@ -22,7 +22,7 @@
     "overwriteSiteCapacityInDB" : true,
 	"useSiteCapacityFromDB" : false,
     "useCachedScoutData" : true,
-	"saveResultsInCSW" : false,
+	"saveResultsInCSW" : true,
 	"useProductDataFromExcel" : true,
 	"work_dir" : "C:/Users/Public/Romania",
     "result_file" : "hom_result.json",
