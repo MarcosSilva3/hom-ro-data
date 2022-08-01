@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\src\main\java\com\bayer\hom\Site.java
 C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\src\main\java\com\bayer\hom\ClientToken.java
 C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\src\main\java\com\bayer\hom\ProductCharacterization.java
@@ -22,28 +21,3 @@ C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\src\main\java\com\bayer
 C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\src\main\java\com\bayer\hom\PFOData.java
 C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\src\main\java\com\bayer\hom\FieldPFO.java
 C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\src\main\java\com\bayer\hom\ProductCharacterizationManualFile.java
-=======
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/PFOData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/HybridData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ClientToken.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ManualPlan.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/CSWOutput.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/SolveModel.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/Site.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ContractData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ProductCharacterization.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/FieldManualPlan.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/FieldPFO.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/BQData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/GSMData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/HOMResult.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/Contract.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/HOMInput.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/App.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/FieldHOM.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ProductCharacterizationData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ScoutData.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/HOMParameters.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/ProductCharacterizationManualFile.java
-/repos/hom-ro-data/hom-ro-in-season/src/main/java/com/bayer/hom/Picker.java
->>>>>>> bdb14e04c0b2bd7ae5c6d74a8984af19bd1ebd03

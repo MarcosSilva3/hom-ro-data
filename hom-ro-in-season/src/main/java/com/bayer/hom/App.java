@@ -18,12 +18,14 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -167,6 +169,8 @@ public class App {
 		// Get the list of fields to be included in the optimization.
 		lFieldsHOM = generateFieldsHOM(hFieldsManualPlan, hFieldsGSM, hFieldContract, hFieldsScout, hFieldsPFO,
 				hProducts);
+		
+		lFieldsHOM = clusteringProcedure(lFieldsHOM, hom_parameters);
 
 		// Get list of site capacity per day.
 		if (hom_parameters.getUseSiteCapacityFromDB()) {
@@ -406,6 +410,115 @@ public class App {
 		// Cache yield data in local file
 		saveScoutDataInFile(hom_parameters, hFieldsScout);
 
+	}
+
+	/**
+	 * Run clustering procedure using greedy strategy
+	 * 
+	 * @param lFieldsHOM     list of fields to be harvested
+	 * @param hom_parameters parameters for the optimization
+	 * @return list of fields to be harvested with the assignment of field to
+	 *         pickers
+	 */
+	public static List<FieldHOM> clusteringProcedure(List<FieldHOM> lFieldsHOM, HOMParameters hom_parameters) {
+		List<FieldHOM> l_tmp = new ArrayList<>();
+		List<FieldHOM> l_result = new ArrayList<>();
+
+		// Ear harvest.
+		List<FieldHOM> l_ear = new ArrayList<>();
+		l_ear = lFieldsHOM.stream().filter(c -> c.getHarv_type() == "ear").collect(Collectors.toList());
+		l_ear.sort(Comparator.comparing(FieldHOM::getLongitude).thenComparing(FieldHOM::getLatitude));
+		
+		
+		double total_area_ear = l_ear.stream().mapToDouble(FieldHOM::getArea).sum();
+		double avg_area_ear = total_area_ear / hom_parameters.getQttyPickers();
+
+		double count = 0.0;
+		int i = 1;
+		for (FieldHOM f : l_ear) {
+			String picker = String.format("P%d", i);
+			f.setCluster(picker);
+			l_tmp.add(f);
+			count += f.getArea();
+			if (count >= avg_area_ear) {
+				++i;
+				count = 0;
+			}
+		}
+
+		// Bulk harvest.
+		List<FieldHOM> l_bulk = new ArrayList<>();
+		l_bulk = lFieldsHOM.stream().filter(c -> c.getHarv_type() == "bulk").collect(Collectors.toList());
+		l_bulk.sort(Comparator.comparing(FieldHOM::getLatitude).thenComparing(FieldHOM::getLongitude));
+		double total_area_bulk = l_bulk.stream().mapToDouble(FieldHOM::getArea).sum();
+		double avg_area_bulk = total_area_bulk / hom_parameters.getQttyCombines();
+
+		count = 0.0;
+		i = 1;
+		for (FieldHOM f : l_bulk) {
+			String combine = String.format("C%d", i);
+			f.setCluster(combine);
+			l_tmp.add(f);
+			count += f.getArea();
+			if (count >= avg_area_bulk) {
+				++i;
+				count = 0;
+			}
+		}
+
+		// (P1, P2, P3) => GR1
+		// (P4, P5, P6) => GR2
+		// (P7, P8) => GR3
+		// (P9, P10) => GR4
+		// (P11, P12) => GR5
+		for (FieldHOM f : l_tmp) {
+			String picker = f.getCluster();
+			switch (picker) {
+			case "P1":
+				f.setCluster("GR1");
+				break;
+			case "P2":
+				f.setCluster("GR1");
+				break;
+			case "P3":
+				f.setCluster("GR1");
+				break;
+			case "P4":
+				f.setCluster("GR2");
+				break;
+			case "P5":
+				f.setCluster("GR2");
+				break;
+			case "P6":
+				f.setCluster("GR2");
+				break;
+			case "P7":
+				f.setCluster("GR3");
+				break;
+			case "P8":
+				f.setCluster("GR3");
+				break;
+			case "P9":
+				f.setCluster("GR4");
+				break;
+			case "P10":
+				f.setCluster("GR4");
+				break;
+			case "P11":
+				f.setCluster("GR5");
+				break;
+			case "P12":
+				f.setCluster("GR5");
+				break;
+			default:
+				f.setCluster("GR6");
+			}
+			l_result.add(f);
+		}
+
+		assert (l_result.size() == lFieldsHOM.size());
+
+		return l_result;
 	}
 
 	/**
@@ -1644,7 +1757,7 @@ public class App {
 			String moist35_date = field_manual_plan.getHarvest_window_start();
 			String twstart = field_manual_plan.getHarvest_window_start();
 			String twend = field_manual_plan.getHarvest_window_end();
-
+			
 			if (hFieldsGSM.containsKey(lot)) {
 				field_gsm = hFieldsGSM.get(lot);
 				entityid = field_gsm.getEntityid();
@@ -1701,12 +1814,18 @@ public class App {
 			// field_manual_plan.getActive_ha();
 			// use manual plan in Excel for now since looks like we have some issues with
 			// the area.
-			final double area = field_manual_plan.getActive_ha();
+			double area = field_manual_plan.getActive_ha();
 			if (area <= 0 || (latitude == 0.0 && longitude == 0.0)) {
-				slf4jLogger.error(
-						"[Fields HOM] Field {} removed from the optimization due to missing data (lat, lon, area, ....)",
-						lot);
-				continue;
+				if (contains_gsm_data && field_gsm.getFf_area() > 0.) {
+					area = field_gsm.getFf_area();
+					latitude = field_gsm.getLat();
+					longitude = field_gsm.getLon();
+				} else {
+					slf4jLogger.error(
+							"[Fields HOM] Field {} removed from the optimization due to missing data (lat, lon, area, ....)",
+							lot);
+					continue;
+				}
 			}
 
 			final double drydown_rate = contains_gsm_data ? field_gsm.getDrydown_rate() : 1.0;
@@ -1804,6 +1923,8 @@ public class App {
 		String productDataExcelPath = "/mnt/Romania/RO  FY20 EME CROP PLAN POST MATURATION PROCESS GUIDELINE.xlsx";
 		Boolean useProductDataFromExcel = true;
 		Boolean useSiteCapacityFromDB = true;
+		int qttyPickers = 12;
+		int qttyCombines = 2;
 
 		if (o.get("log_config_file") != null) {
 			log_config_file = (String) o.get("log_config_file");
@@ -1965,13 +2086,22 @@ public class App {
 			useSiteCapacityFromDB = (Boolean) o.get("useSiteCapacityFromDB");
 		}
 
+		if (o.get("qttyPickers") != null) {
+			qttyPickers = ((Long) o.get("qttyPickers")).intValue();
+		}
+
+		if (o.get("qttyCombines") != null) {
+			qttyCombines = ((Long) o.get("qttyCombines")).intValue();
+		}
+
 		return new HOMParameters(log_config_file, country, year, year_for_contract, season, private_key_file,
 				project_id, regionCode, cropCycleCode, env_client_id, env_client_secret, manual_plan_excel_path,
 				hom_day_one, hom_user, hom_tabu_size, hom_max_iter, hom_picker_cap, hom_region, hom_max_days,
 				hom_method, clientIdEngine, clientSecretEngine, awsBucketName, plantNumber, env_hom_db_host,
 				env_hom_db_port, env_hom_db_user, env_hom_db_pwd, hom_db_name, work_dir, hom_result_file,
 				overwrite_db_data_manual_plan, overwriteSiteCapacityInDB, readManualPlanExcel, useCachedScoutData,
-				saveResultsInCSW, productDataExcelPath, useProductDataFromExcel, useSiteCapacityFromDB);
+				saveResultsInCSW, productDataExcelPath, useProductDataFromExcel, useSiteCapacityFromDB, qttyPickers,
+				qttyCombines);
 	}
 
 	/**

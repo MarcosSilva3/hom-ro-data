@@ -42,6 +42,13 @@ public class HOMParameters {
 	private String productDataExcelPath;
 	private Boolean useProductDataFromExcel;
 	private Boolean useSiteCapacityFromDB;
+	private int qttyPickers;
+	private int qttyCombines;
+
+	public HOMParameters() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public HOMParameters(String log_config_file, String country, int year, int year_for_contract, String season,
 			String private_key_file, String project_id, String regionCode, String cropCycleCode, String env_client_id,
@@ -52,7 +59,7 @@ public class HOMParameters {
 			String env_hom_db_pwd, String hom_db_name, String work_dir, String hom_result_file,
 			Boolean overwrite_db_data_manual_plan, Boolean overwriteSiteCapacityInDB, Boolean readManualPlanExcel,
 			Boolean useCachedScoutData, Boolean saveResultsInCSW, String productDataExcelPath,
-			Boolean useProductDataFromExcel, Boolean useSiteCapacityFromDB) {
+			Boolean useProductDataFromExcel, Boolean useSiteCapacityFromDB, int qttyPickers, int qttyCombines) {
 		super();
 		this.log_config_file = log_config_file;
 		this.country = country;
@@ -93,6 +100,8 @@ public class HOMParameters {
 		this.productDataExcelPath = productDataExcelPath;
 		this.useProductDataFromExcel = useProductDataFromExcel;
 		this.useSiteCapacityFromDB = useSiteCapacityFromDB;
+		this.qttyPickers = qttyPickers;
+		this.qttyCombines = qttyCombines;
 	}
 
 	/**
@@ -641,6 +650,34 @@ public class HOMParameters {
 		this.useSiteCapacityFromDB = useSiteCapacityFromDB;
 	}
 
+	/**
+	 * @return the qttyPickers
+	 */
+	public int getQttyPickers() {
+		return qttyPickers;
+	}
+
+	/**
+	 * @param qttyPickers the qttyPickers to set
+	 */
+	public void setQttyPickers(int qttyPickers) {
+		this.qttyPickers = qttyPickers;
+	}
+
+	/**
+	 * @return the qttyCombines
+	 */
+	public int getQttyCombines() {
+		return qttyCombines;
+	}
+
+	/**
+	 * @param qttyCombines the qttyCombines to set
+	 */
+	public void setQttyCombines(int qttyCombines) {
+		this.qttyCombines = qttyCombines;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(awsBucketName, clientIdEngine, clientSecretEngine, country, cropCycleCode, env_client_id,
@@ -648,8 +685,8 @@ public class HOMParameters {
 				hom_db_name, hom_max_days, hom_max_iter, hom_method, hom_picker_cap, hom_region, hom_result_file,
 				hom_tabu_size, hom_user, log_config_file, manual_plan_excel_path, overwriteSiteCapacityInDB,
 				overwrite_db_data_manual_plan, plantNumber, private_key_file, productDataExcelPath, project_id,
-				readManualPlanExcel, regionCode, saveResultsInCSW, season, useCachedScoutData, useProductDataFromExcel,
-				useSiteCapacityFromDB, work_dir, year, year_for_contract);
+				qttyCombines, qttyPickers, readManualPlanExcel, regionCode, saveResultsInCSW, season,
+				useCachedScoutData, useProductDataFromExcel, useSiteCapacityFromDB, work_dir, year, year_for_contract);
 	}
 
 	@Override
@@ -683,8 +720,8 @@ public class HOMParameters {
 				&& Objects.equals(plantNumber, other.plantNumber)
 				&& Objects.equals(private_key_file, other.private_key_file)
 				&& Objects.equals(productDataExcelPath, other.productDataExcelPath)
-				&& Objects.equals(project_id, other.project_id)
-				&& Objects.equals(readManualPlanExcel, other.readManualPlanExcel)
+				&& Objects.equals(project_id, other.project_id) && qttyCombines == other.qttyCombines
+				&& qttyPickers == other.qttyPickers && Objects.equals(readManualPlanExcel, other.readManualPlanExcel)
 				&& Objects.equals(regionCode, other.regionCode)
 				&& Objects.equals(saveResultsInCSW, other.saveResultsInCSW) && Objects.equals(season, other.season)
 				&& Objects.equals(useCachedScoutData, other.useCachedScoutData)
@@ -712,7 +749,7 @@ public class HOMParameters {
 				+ ", readManualPlanExcel=" + readManualPlanExcel + ", useCachedScoutData=" + useCachedScoutData
 				+ ", saveResultsInCSW=" + saveResultsInCSW + ", productDataExcelPath=" + productDataExcelPath
 				+ ", useProductDataFromExcel=" + useProductDataFromExcel + ", useSiteCapacityFromDB="
-				+ useSiteCapacityFromDB + "]";
+				+ useSiteCapacityFromDB + ", qttyPickers=" + qttyPickers + ", qttyCombines=" + qttyCombines + "]";
 	}
 
 }

@@ -22,7 +22,7 @@
     "overwriteSiteCapacityInDB" : true,
 	"useSiteCapacityFromDB" : false,
     "useCachedScoutData" : true,
-	"saveResultsInCSW" : true,
+	"saveResultsInCSW" : false,
 	"useProductDataFromExcel" : true,
 	"work_dir" : "C:/Users/Public/Romania",
     "result_file" : "hom_result.json",
@@ -38,6 +38,8 @@
     "clientSecretEngine" : "HOM_ENGINE_CLIENT_SECRET", 
     "awsBucketName" : "romania-models",
     "plantNumber" : "1299",
+	"qttyPickers" : 12,
+	"qttyCombines" : 0,
     "pickers" : [
         {
             "id" : "GR1",

@@ -1,84 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<<<<<<< HEAD
-<testsuite tests="1" failures="0" name="com.bayer.hom.AppTest" time="0.004" errors="0" skipped="0">
-=======
-<testsuite tests="1" failures="0" name="com.bayer.hom.AppTest" time="0.002" errors="0" skipped="0">
->>>>>>> bdb14e04c0b2bd7ae5c6d74a8984af19bd1ebd03
+<testsuite tests="1" failures="0" name="com.bayer.hom.AppTest" time="0.008" errors="0" skipped="0">
   <properties>
+    <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
-    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
-    <property name="java.vm.version" value="25.312-b07"/>
-    <property name="java.vm.vendor" value="Private Build"/>
-    <property name="maven.multiModuleProjectDirectory" value="/repos/hom-ro-data/hom-ro-in-season"/>
-    <property name="java.vendor.url" value="http://java.oracle.com/"/>
-    <property name="path.separator" value=":"/>
+    <property name="sun.boot.library.path" value="C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\bin"/>
+    <property name="java.vm.version" value="25.322-b06"/>
+    <property name="jdk.vendor.version" value="Zulu 8.60.0.21-CA-win64"/>
+    <property name="java.vm.vendor" value="Azul Systems, Inc."/>
+    <property name="maven.multiModuleProjectDirectory" value="C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season"/>
+    <property name="java.vendor.url" value="http://www.azul.com/"/>
+    <property name="path.separator" value=";"/>
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.script" value=""/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
-    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="sun.os.patch.level" value=""/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="/repos/hom-ro-data/hom-ro-in-season"/>
-    <property name="java.runtime.version" value="1.8.0_312-8u312-b07-0ubuntu1~18.04-b07"/>
-    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
-    <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/endorsed"/>
+    <property name="user.dir" value="C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season"/>
+    <property name="java.runtime.version" value="1.8.0_322-b06"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\endorsed"/>
     <property name="os.arch" value="amd64"/>
-    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.io.tmpdir" value="C:\Users\evsro\AppData\Local\Temp\"/>
     <property name="line.separator" value="
 "/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-<<<<<<< HEAD
     <property name="user.variant" value=""/>
     <property name="os.name" value="Windows 10"/>
-    <property name="classworlds.conf" value="C:\Users\evsro\apache-maven-3.8.5-bin\apache-maven-3.8.5\bin\m2.conf"/>
+    <property name="classworlds.conf" value="C:\Users\evsro\eclipse-workspace\.metadata\.plugins\org.eclipse.m2e.launching\launches\m2conf12854966664933867456.tmp"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files (x86)\Java\jdk-15.0.2\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Users\evsro\strawberry-perl-5.26.2.1-64bit-portable\perl\site\bin;C:\Users\evsro\strawberry-perl-5.26.2.1-64bit-portable\perl\bin;C:\Users\evsro\strawberry-perl-5.26.2.1-64bit-portable\c\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Sennheiser\SoftphoneSDK\;C:\Program Files (x86)\Java\jdk-15.0.2\bin\;C:\Users\evsro\Ubuntu;C:\Users\evsro\AppData\Local\Microsoft\WindowsApps;C:\Users\evsro\awscli\Amazon\AWSCLIV2;C:\Users\evsro\git-sdk-64\mingw64\bin;C:\Users\evsro\VSCode-win32-x64-1.65.2;C:\Users\evsro\cf-cli_6.53.0_winx64;C:\Users\evsro\winglpk-4.65\glpk-4.65\w64;C:\Users\evsro\vault_1.10.0_windows_amd64;C:\Users\evsro\apache-maven-3.8.5-bin\apache-maven-3.8.5\bin;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\bin;C:\Users\evsro\lightsail;C:\IBM\ILOG\ODME38\Developer\CPLEX_Studio\opl\bin\x64_win64;C:\IBM\ILOG\ODME38\Developer\CPLEX_Studio\cplex\bin\x64_win64;;C:\Users\evsro\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin;C:\Users\evsro\AppData\Local\Programs\Rancher Desktop\resources\resources\linux\bin;C:\Program Files\RedHat\Podman;."/>
-    <property name="maven.conf" value="C:\Users\evsro\apache-maven-3.8.5-bin\apache-maven-3.8.5/conf"/>
-    <property name="jdk.debug" value="release"/>
-    <property name="java.class.version" value="59.0"/>
-=======
-    <property name="os.name" value="Linux"/>
-    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
-    <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64:/usr/lib/jvm/java-8-openjdk-amd64/jre/../lib/amd64:/opt/oracle/instantclient_12_1:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64/server::/usr/java/packages/lib/amd64:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
-    <property name="maven.conf" value="/usr/share/maven/conf"/>
->>>>>>> bdb14e04c0b2bd7ae5c6d74a8984af19bd1ebd03
+    <property name="java.library.path" value="C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Users/evsro/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_18.0.1.v20220515-1614/jre/bin/server;C:/Users/evsro/.p2/pool/plugins/org.eclipse.justj.openjdk.hotspot.jre.full.win32.x86_64_18.0.1.v20220515-1614/jre/bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Sennheiser\SoftphoneSDK\;C:\Program Files (x86)\Java\jdk-15.0.2\bin\;C:\Users\evsro\Ubuntu;C:\Users\evsro\AppData\Local\Microsoft\WindowsApps;C:\Users\evsro\awscli\Amazon\AWSCLIV2;C:\Users\evsro\git-sdk-64\mingw64\bin;C:\Users\evsro\VSCode-win32-x64-1.65.2;C:\Users\evsro\cf-cli_6.53.0_winx64;C:\Users\evsro\winglpk-4.65\glpk-4.65\w64;C:\Users\evsro\vault_1.10.0_windows_amd64;C:\Users\evsro\apache-maven-3.8.5-bin\apache-maven-3.8.5\bin;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\bin;C:\Users\evsro\lightsail;C:\IBM\ILOG\ODME38\Developer\CPLEX_Studio\opl\bin\x64_win64;C:\IBM\ILOG\ODME38\Developer\CPLEX_Studio\cplex\bin\x64_win64;;C:\Users\evsro\AppData\Local\Programs\Rancher Desktop\resources\resources\win32\bin;C:\Users\evsro\AppData\Local\Programs\Rancher Desktop\resources\resources\linux\bin;C:\Program Files\RedHat\Podman;C:\Users\evsro\OneDrive - Bayer\Desktop;;."/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="52.0"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
-    <property name="os.version" value="4.4.0-1114-aws"/>
-    <property name="library.jansi.path" value="/usr/share/maven/lib/jansi-native"/>
-    <property name="user.home" value="/home/ubuntu"/>
-    <property name="user.timezone" value="Etc/UTC"/>
-    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="os.version" value="10.0"/>
+    <property name="user.home" value="C:\Users\evsro"/>
+    <property name="user.timezone" value="America/Sao_Paulo"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
     <property name="java.specification.version" value="1.8"/>
     <property name="file.encoding" value="UTF-8"/>
-    <property name="user.name" value="ubuntu"/>
-    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="user.name" value="EVSRO"/>
+    <property name="java.class.path" value="C:\Users\evsro\.p2\pool\plugins\org.eclipse.m2e.maven.runtime_1.18.3.20220227-1319\jars\plexus-classworlds-2.6.0.jar"/>
     <property name="java.vm.specification.version" value="1.8"/>
     <property name="sun.arch.data.model" value="64"/>
-    <property name="java.home" value="/usr/lib/jvm/java-8-openjdk-amd64/jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean package"/>
+    <property name="java.home" value="C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher -B package"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="en"/>
-    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
     <property name="java.vm.info" value="mixed mode"/>
-    <property name="java.version" value="1.8.0_312"/>
-    <property name="java.ext.dirs" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/ext:/usr/java/packages/lib/ext"/>
-    <property name="securerandom.source" value="file:/dev/./urandom"/>
-    <property name="sun.boot.class.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/resources.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/rt.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jsse.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jce.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/charsets.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/jfr.jar:/usr/lib/jvm/java-8-openjdk-amd64/jre/classes"/>
-    <property name="java.vendor" value="Private Build"/>
-    <property name="maven.home" value="/usr/share/maven"/>
-    <property name="file.separator" value="/"/>
-    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="java.version" value="1.8.0_322"/>
+    <property name="java.ext.dirs" value="C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\resources.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\rt.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\sunrsasign.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\jsse.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\jce.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\charsets.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\jfr.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\lib\cat.jar;C:\Users\evsro\zulu8.60.0.21-ca-jdk8.0.322-win_x64\jre\classes"/>
+    <property name="java.vendor" value="Azul Systems, Inc."/>
+    <property name="maven.home" value="C:\Users\evsro\source\repos\hom-ro-data\hom-ro-in-season\EMBEDDED"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://www.azul.com/support/"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
-    <property name="sun.cpu.isalist" value=""/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-<<<<<<< HEAD
-  <testcase classname="com.bayer.hom.AppTest" name="shouldAnswerWithTrue" time="0.004"/>
-=======
-  <testcase classname="com.bayer.hom.AppTest" name="shouldAnswerWithTrue" time="0.002"/>
->>>>>>> bdb14e04c0b2bd7ae5c6d74a8984af19bd1ebd03
+  <testcase classname="com.bayer.hom.AppTest" name="shouldAnswerWithTrue" time="0.008"/>
 </testsuite>
